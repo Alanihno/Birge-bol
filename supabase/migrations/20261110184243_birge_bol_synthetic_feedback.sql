@@ -1,0 +1,5 @@
+create or replace function public.submit_feedback(p_child_id uuid,p_specialist_id uuid,p_answers jsonb,p_review text default null) returns uuid language plpgsql security invoker set search_path='' as $$ declare fid uuid;begin
+ if auth.uid() is null then raise exception 'authentication required';end if;
+ if not exists(select 1 from public.children where id=p_child_id and parent_id=auth.uid()) then raise exception 'child not found';end if;
+ insert into public.session_feedback(parent_id,child_id,specialist_id,contact,adaptation,explained,goal,comfortable) values(auth.uid(),p_child_id,p_specialist_id,(p_answers->>'contact')::integer,p_answers->>'adaptation',(p_answers->>'explained')::boolean,(p_answers->>'goal')::boolean,(p_answers->>'comfortable')::boolean) returning id into fid;
+ if p_review is not null then insert into public.reviews(parent_id,specialist_id,feedback_id,body,contact,status,is_demo) values(auth.uid(),p_specialist_id,fid,p_review,(p_answers->>'contact')::integer,'pending',true);end if;return fid;end $$;

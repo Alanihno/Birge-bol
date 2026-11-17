@@ -1,0 +1,44 @@
+begin;
+create temp table qr_test(k text primary key,v text);
+grant all on qr_test to authenticated;
+set local role authenticated;
+select set_config('request.jwt.claims','{"sub":"20000000-0000-4000-8000-000000000002","role":"authenticated","email":"specialist@birge.example"}',true);
+insert into qr_test values('qr',public.care_specialist_qr()->>'code');
+do $$begin if public.care_specialist_qr()->>'code'<>(select v from qr_test where k='qr') then raise exception 'Printed code changed';end if;end$$;
+reset role;
+-- Isolated confirmed fixtures; no existing appointment is edited.
+insert into public.children(id,parent_id,label,age,city,district,concerns,experience,budget,format,case_group) values('11000000-0000-4000-8000-000000000001','20000000-0000-4000-8000-000000000001','QR тест · демо','4–5','Алматы','Бостандыкский',array['speech'],'first',20000,'offline','speech');
+insert into public.appointments(id,parent_id,child_id,specialist_id,starts_at,ends_at,status,service,contact,share_diary,is_demo,clinic_id) values('51000000-0000-4000-8000-000000000001','20000000-0000-4000-8000-000000000001','11000000-0000-4000-8000-000000000001','00000000-0000-4000-8000-000000000001',now()-interval '20 minutes',now()+interval '5 minutes','confirmed','Тест QR','parent@birge.example',true,true,'30000000-0000-4000-8000-000000000001');
+insert into public.appointments(id,parent_id,child_id,specialist_id,starts_at,ends_at,status,service,contact,is_demo) values('51000000-0000-4000-8000-000000000002','20000000-0000-4000-8000-000000000001','11000000-0000-4000-8000-000000000001','00000000-0000-4000-8000-000000000001',now()+interval '100 days',now()+interval '100 days 45 minutes','confirmed','Тест вне времени','parent@birge.example',true);
+set local role authenticated;
+select set_config('request.jwt.claims','{"sub":"20000000-0000-4000-8000-000000000003","role":"authenticated","email":"clinic@birge.example"}',true);
+do $$declare blocked boolean=false;begin begin perform public.care_confirm_qr((select v from qr_test where k='qr'));exception when others then blocked=true;end;if not blocked then raise exception 'Clinic confirmed parent visit';end if;end$$;
+select set_config('request.jwt.claims','{"sub":"20000000-0000-4000-8000-000000000001","role":"authenticated","email":"parent@birge.example"}',true);
+do $$declare result jsonb;blocked boolean=false;begin
+ if not public.care_confirm_qr((select v from qr_test where k='qr'),'51000000-0000-4000-8000-000000000002') ? 'error' then raise exception 'Outside window accepted';end if;
+ result=public.care_confirm_qr((select v from qr_test where k='qr'),'51000000-0000-4000-8000-000000000001');
+ if result->>'status'<>'completed' or result->>'visited_at' is null then raise exception 'Visit not recorded';end if;
+ if not public.care_confirm_qr((select v from qr_test where k='qr'),'51000000-0000-4000-8000-000000000001') ? 'error' then raise exception 'Duplicate visit accepted';end if;
+ perform public.care_submit_review('{"appointment_id":"51000000-0000-4000-8000-000000000001","contact":5,"adaptation":"yes","explained":true,"goal":true,"comfortable":true,"strengths":[],"body":"Проверенный текст собственного опыта · тест","case_consent":true}');
+ begin perform public.care_submit_review('{"appointment_id":"51000000-0000-4000-8000-000000000001","contact":5,"body":"Повторный отзыв запрещён"}');exception when others then blocked=true;end;
+ if not blocked then raise exception 'Duplicate review accepted';end if;
+ insert into qr_test values('calendar',public.care_calendar_link()->>'token');
+ blocked=false;begin perform public.care_calendar_feed((select v from qr_test where k='calendar'));exception when insufficient_privilege then blocked=true;end;
+ if not blocked then raise exception 'Client may call privileged calendar feed';end if;
+end$$;
+reset role;
+do $$declare feed jsonb;begin
+ if not exists(select 1 from private.review_case_features where review_id=(select id from public.reviews where appointment_id='51000000-0000-4000-8000-000000000001')) then raise exception 'Consented case metadata missing';end if;
+ update public.reviews set status='verified' where appointment_id='51000000-0000-4000-8000-000000000001';
+ if not exists(select 1 from private.rating_values(4.5,'speech','offline') where specialist_id='00000000-0000-4000-8000-000000000001' and similar_count>=1 and overall between 1 and 5) then raise exception 'Bayesian rating missing';end if;
+ feed=public.care_calendar_feed((select v from qr_test where k='calendar'));
+ if feed is null or not exists(select 1 from jsonb_array_elements(feed->'appointments') a where a->>'id'='51000000-0000-4000-8000-000000000001') then raise exception 'Calendar event missing';end if;
+ if feed::text like '%child_id%' or feed::text like '%diagnosis%' or feed::text like '%parent_id%' then raise exception 'Calendar leaks private data';end if;
+end$$;
+set local role authenticated;
+select set_config('request.jwt.claims','{"sub":"20000000-0000-4000-8000-000000000001","role":"authenticated","email":"parent@birge.example"}',true);
+select public.care_calendar_link(true);
+reset role;
+do $$begin if public.care_calendar_feed((select v from qr_test where k='calendar')) is not null then raise exception 'Revoked feed still accessible';end if;end$$;
+select 'PASS: stable QR, role/time checks, unique visit/review, case consent, Bayesian score, private revocable calendar' as result;
+rollback;

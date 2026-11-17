@@ -1,0 +1,28 @@
+import { test, expect } from '@playwright/test';
+import { parentLogin } from './auth-helper';
+test('provider availability updates in the parent tab and removed selections cannot be booked', async ({ page, context }) => {
+    await parentLogin(page, '/specialists/00000000-0000-4000-8000-000000000001');
+    const pro = await context.newPage();
+    await pro.goto('/auth');
+    await pro.getByRole('button', { name: /Специалист.*specialist@/ }).click();
+    await pro.waitForURL('**/pro');
+    await pro.goto('/pro/profile');
+    await pro.getByRole('button', { name: 'Изменить расписание', exact: true }).click();
+    await pro.getByLabel('Дата', { exact: true }).fill('2027-02-16');
+    await pro.getByLabel('Время Алматы', { exact: true }).fill('12:15');
+    await pro.getByRole('button', { name: 'Добавить окно · 45 мин', exact: true }).click();
+    const slots = page.getByRole('combobox', { name: 'Свободная дата и время · Алматы', exact: true });
+    const added = slots.getByRole('option', { name: /16 февраля.*12:15/ });
+    await expect(added).toHaveCount(1);
+    await slots.selectOption((await added.getAttribute('value'))!);
+    await page.locator('.booking-details summary').click();
+    await page.getByLabel('Причина обращения', { exact: true }).fill('Проверка расписания · демо');
+    await page.getByLabel('Контакт для записи', { exact: true }).fill('parent@birge.example');
+    await expect(page.getByRole('button', { name: 'Записаться', exact: true })).toBeEnabled();
+    await pro.getByRole('dialog').getByRole('button', { name: 'Удалить', exact: true }).click();
+    await expect(added).toHaveCount(0);
+    await expect(slots).toHaveValue('');
+    await expect(page.getByRole('button', { name: 'Записаться', exact: true })).toBeDisabled();
+    await page.getByRole('button', { name: 'Обновить слоты', exact: true }).click();
+    await expect(added).toHaveCount(0);
+});

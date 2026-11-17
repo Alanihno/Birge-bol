@@ -1,0 +1,2 @@
+import { authorize, failure, response } from '../_shared/http.ts';
+Deno.serve(async req=>{if(req.method==='OPTIONS')return response(req,{ok:true});try{await authorize(req,'telegram');return response(req,{status:'disabled',provider:'in-app',message:'Telegram не подключён. Вопросы доступны в приложении. Защищённая привязка наставниц и согласие на рассылку требуют отдельного этапа.'},200);}catch(error){return failure(req,error);}});

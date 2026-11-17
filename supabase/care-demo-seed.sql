@@ -1,0 +1,23 @@
+-- Three explicit shared demonstration accounts, email already confirmed.
+-- Do not use these accounts for real families. No administrator account is created.
+do $$declare item record;begin
+ for item in select * from (values
+ ('20000000-0000-4000-8000-000000000001'::uuid,'parent@birge.example','parent'),
+ ('20000000-0000-4000-8000-000000000002'::uuid,'specialist@birge.example','specialist'),
+ ('20000000-0000-4000-8000-000000000003'::uuid,'clinic@birge.example','clinic')) v(id,email,role) loop
+ insert into auth.users(instance_id,id,aud,role,email,encrypted_password,email_confirmed_at,raw_app_meta_data,raw_user_meta_data,is_super_admin,created_at,updated_at,confirmation_token,recovery_token,email_change_token_new,email_change)
+ values('00000000-0000-0000-0000-000000000000',item.id,'authenticated','authenticated',item.email,extensions.crypt('BirgeDemo!2026',extensions.gen_salt('bf')),now(),'{"provider":"email","providers":["email"],"is_demo":true}','{}',false,now(),now(),'','','','') on conflict(id) do nothing;
+ insert into auth.identities(provider_id,user_id,identity_data,provider,created_at,updated_at) values(item.id::text,item.id,jsonb_build_object('sub',item.id::text,'email',item.email,'email_verified',true,'phone_verified',false),'email',now(),now()) on conflict(provider_id,provider) do nothing;
+ insert into public.user_roles(user_id,role) values(item.id,item.role) on conflict(user_id) do nothing;
+ insert into public.profiles(id,contact) values(item.id,item.email) on conflict(id) do nothing;
+ end loop;
+end$$;
+update public.specialists set owner_id='20000000-0000-4000-8000-000000000002',district='Бостандыкский',price=15000,profile='{"education":"Профильное образование — вымышленный пример","languages":["Русский","Қазақша"],"cancellation":"За 24 часа","self_strengths":[],"contacts":"Внутри приложения"}' where id='00000000-0000-4000-8000-000000000001' and is_demo;
+insert into public.children(id,parent_id,label,age,city,district,concerns,experience,budget,format) values('10000000-0000-4000-8000-000000000001','20000000-0000-4000-8000-000000000001','Алихан · демо','2–3','Алматы','Бостандыкский',array['speech'],'first',20000,'any') on conflict(id) do nothing;
+insert into public.clinics(id,owner_id,name,district,address,description,services,contacts,status,is_demo) values('30000000-0000-4000-8000-000000000001','20000000-0000-4000-8000-000000000003','Центр «Birge» · демо','Бостандыкский','Алматы · учебный адрес','Вымышленная клиника для демонстрации','Консультации','clinic@birge.example','approved',true) on conflict(id) do nothing;
+insert into public.clinic_members(clinic_id,specialist_id) values('30000000-0000-4000-8000-000000000001','00000000-0000-4000-8000-000000000001') on conflict do nothing;
+insert into public.schedule_slots(specialist_id,starts_at,ends_at,service,price)
+ select s.id,((current_date+day)::text||' '||hour||'+05')::timestamptz,((current_date+day)::text||' '||hour||'+05')::timestamptz+interval '45 minutes','Консультация',s.price from public.specialists s cross join generate_series(1,14) day cross join unnest(array['09:00','11:00','14:30','16:00']) hour where s.is_demo and s.id in (select id from public.specialists order by id limit 6) on conflict do nothing;
+insert into public.task_materials(id,author_id,title,goal,duration,items,steps,signs,stop,video_url,memo_url,captions_ru,captions_kk,status,rights_confirmed,is_demo)
+ select id::uuid,'20000000-0000-4000-8000-000000000002',title,'Технический пример назначения. Не лечебное упражнение.',3,array['Памятка для знакомства с платформой'],array['Откройте демонстрационную памятку.','Посмотрите, где находятся материалы специалиста.','Отметьте, удалось ли открыть материал.'],'Памятка открылась и её текст читается.','При технических трудностях задайте вопрос специалисту. Профессиональные материалы предоставляет специалист.','/video/first-visit.webm','/materials/demo-memo.svg','/video/first-visit.vtt','/video/first-visit-kk.vtt','approved',true,true from (values('40000000-0000-4000-8000-000000000001','Знакомство с памяткой · демо'),('40000000-0000-4000-8000-000000000002','Подготовить вопрос к встрече · демо')) v(id,title) on conflict(id) do nothing;
+insert into public.recommendation_rules(version,title,conditions,explanation,approved,enabled) values('2026.11.demo.3','Маршрут для ребёнка 3 лет без речи','{"age":"2–3","concern":"speech","demo_only":true,"steps":["development","hearing","pediatrician","neurology_if_indicated","age_appropriate_screening","communication","pmpk"]}','Информационный демомаршрут: оценка развития, проверка слуха, педиатр; невролог/психиатр по показаниям; возрастной скрининг, коммуникация и ПМПК. Отсутствие речи не означает РАС.',false,false);

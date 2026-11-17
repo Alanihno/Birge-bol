@@ -1,0 +1,1 @@
+do $$declare item text;begin foreach item in array array['specialist_qr_codes','visit_confirmations','checkin_attempts','calendar_links','review_case_features','booking_payments','provider_reliability_events'] loop execute format('create policy deny_direct_client_access on private.%I for all to authenticated using(false) with check(false)',item);end loop;end$$;

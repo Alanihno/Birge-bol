@@ -1,0 +1,4 @@
+const fs=require('fs');const file='src/polish.css';let css=fs.readFileSync(file,'utf8');let count=0;
+const luminance=rgb=>rgb.map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;}).reduce((v,x,i)=>v+x*[.2126,.7152,.0722][i],0);
+css=css.replace(/([^{}]+)\{([^{}]*)\}/g,(rule,selector,body)=>{if(/garden|spark|orbit|video-decoration|article-card-top|article-icon|event-date|quick-icon|empty-art/.test(selector))return rule;const improved=body.replace(/(?<![-\w])color:(#[0-9a-f]{6})(?![0-9a-f])/gi,(_match,hex)=>{let rgb=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16));if(rgb.every(v=>v>240))return 'color:'+hex;let changed=false;while(luminance(rgb)>.155){rgb=rgb.map((v,i)=>Math.round(v*.9+[65,51,79][i]*.1));changed=true;}if(changed)count++;return 'color:#'+rgb.map(v=>v.toString(16).padStart(2,'0')).join('');});return selector+'{'+improved+'}';});
+fs.writeFileSync(file,css);console.log('Readable text contrast applied to '+count+' rules');

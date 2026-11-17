@@ -1,0 +1,1 @@
+﻿const fs=require('fs');const file='tests/i18n.spec.ts';fs.writeFileSync(file,fs.readFileSync(file,'utf8').replace("['/explain','СДТ']","['/explain','Күрделі сөздің артындағы мағына']"));const vite='vite.config.ts';fs.writeFileSync(vite,fs.readFileSync(vite,'utf8').replace("manualChunks:{'react-vendor'","manualChunks:{'localization':['./src/lib/i18n.ts'],'react-vendor'"));

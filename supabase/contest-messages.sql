@@ -1,0 +1,3 @@
+
+insert into public.care_messages(id,appointment_id,sender_id,body) select md5('bb-contest-parent-message')::uuid,id,parent_id,'Здравствуйте! Подскажите, пожалуйста, что взять на первый приём?' from public.appointments where parent_id='20000000-0000-4000-8000-000000000001' and specialist_id='00000000-0000-4000-8000-000000000001' and status='confirmed' order by starts_at limit 1 on conflict(id) do nothing;
+insert into public.care_messages(id,appointment_id,sender_id,body) select md5('bb-contest-specialist-message')::uuid,appointment_id,'20000000-0000-4000-8000-000000000002','Сәлеметсіз бе! Алғашқы қабылдауға өз сұрақтарыңызды және бар қорытындыларыңызды ала келіңіз.' from public.care_messages where id=md5('bb-contest-parent-message')::uuid on conflict(id) do nothing;

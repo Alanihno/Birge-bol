@@ -1,0 +1,8 @@
+/* localized-copy */
+import { tr, useLocale } from '../lib/i18n';
+import { Link } from 'react-router-dom';
+import { useApp } from '../lib/app-context';
+import { useCare } from '../lib/care-api';
+import { recommendations } from '../domain/logic';
+import { informationDisclaimer } from '../domain/care';
+export function RoutePlan() { useLocale(); const { activeChild } = useApp(), care = useCare(), demo = care.data?.is_demo; const approved = care.data?.rules.filter(r => r.approved && r.enabled && r.conditions.age === activeChild.age && r.conditions.concern && activeChild.concerns.includes(r.conditions.concern as typeof activeChild.concerns[number])) || []; const steps = demo ? recommendations(activeChild) : approved.map(r => ({ title: r.title, reason: r.explanation, specialty: '', action: 'Обсудить со специалистом' })); return <details className="panel route-plan"><summary><strong>{tr("Ваш персональный маршрут")}</strong><span className="subtle-badge">{tr(demo ? "не утверждён экспертами" : 'Информационные шаги')}</span></summary>{tr(steps.length ? <div className="route-steps">{tr(steps.map((s, i) => <article key={s.title}><small>0{tr(i + 1)}</small><h3>{tr(s.title)}</h3><p>{tr(s.reason)}</p><Link className="text-link" to={s.specialty === 'explain' ? '/explain' : s.specialty ? '/find?specialty=' + encodeURIComponent(s.specialty) : '/explain'}>{tr(s.action)} →</Link></article>))}</div> : <p>{tr("Новые правила ещё не утверждены экспертами. Обсудите наблюдения с педиатром. Для знакомства с информационным маршрутом можно открыть тестовый аккаунт.")}</p>)}<p className="tiny muted">{tr(informationDisclaimer)}</p></details>; }

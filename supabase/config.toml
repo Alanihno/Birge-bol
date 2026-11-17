@@ -1,0 +1,14 @@
+project_id = "sychksvkgwrgyhxpaabt"
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql", "./care-demo-media.sql"]
+[functions.explain]
+verify_jwt = true
+[functions.account-delete]
+verify_jwt = true
+[functions.telegram]
+verify_jwt = true
+[functions.telegram-webhook]
+verify_jwt = false
+[functions.care-media]
+verify_jwt = false

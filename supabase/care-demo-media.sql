@@ -1,0 +1,1 @@
+update public.task_materials set video_url='/video/task-demo.webm',captions_ru='/video/task-demo.vtt',captions_kk='/video/task-demo-kk.vtt' where is_demo and id in ('40000000-0000-4000-8000-000000000001','40000000-0000-4000-8000-000000000002');

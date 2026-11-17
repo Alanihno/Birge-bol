@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Birge Bol — экраны кабинета специалиста</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,wght@1,400&display=swap">
+<style>
+:root{--bg:#F7F6FA;--card:#fff;--ink:#2D2A3E;--mute:#6B6680;--line:#E7E3F0;--pur:#6F5B9A;--pt:#5C4A86;--lil:#EEE9F7;--peach:#F6EDE6;--sage:#EEF1E8;--dot:#9DB08F;--grn:#3F7A58;--grnbg:#E6F1EA;--red:#A8473D;--redbg:#F8E8E5;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17141F;--card:#211D2C;--ink:#F0EDF8;--mute:#A9A3BF;--line:#383250;--pur:#7E68BA;--pt:#B7A8F0;--lil:#2A2540;--peach:#33272A;--sage:#25302A;--grn:#7BD1A6;--grnbg:#1F3A2C;--red:#FF9B8F;--redbg:#43211F;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17141F;--card:#211D2C;--ink:#F0EDF8;--mute:#A9A3BF;--line:#383250;--pur:#7E68BA;--pt:#B7A8F0;--lil:#2A2540;--peach:#33272A;--sage:#25302A;--grn:#7BD1A6;--grnbg:#1F3A2C;--red:#FF9B8F;--redbg:#43211F;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+.w{max-width:1120px;margin:0 auto;padding:20px 14px 40px}
+.cap{margin:26px 4px 8px;font-size:14px;color:var(--mute)}.cap b{color:var(--ink)}
+.scr{background:var(--bg);border:1px solid var(--line);border-radius:26px;overflow:hidden}
+.tb{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:14px 24px;background:var(--card);border-bottom:1px solid var(--line);font-size:15px}
+.tb span{display:flex;gap:14px;align-items:center;color:var(--mute)}
+.dm{background:var(--lil);padding:8px 24px;font-size:13px;color:var(--mute);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.in{padding:clamp(16px,3vw,28px)}
+.eb{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--pt);font-weight:600;margin:0}
+h1{font-size:clamp(28px,5vw,46px);line-height:1.08;letter-spacing:-.02em;margin:8px 0 10px;font-weight:700}
+h2{font-size:20px;margin:0 0 10px;font-weight:700}
+em{font-family:Fraunces,Georgia,serif;font-style:italic;font-weight:400;color:var(--pt)}
+p{margin:6px 0}.m{color:var(--mute);font-size:14px}
+.hero{background:linear-gradient(120deg,var(--lil),var(--peach));border:1px solid var(--line);border-radius:32px;padding:clamp(20px,4vw,48px);display:grid;grid-template-columns:1.5fr 1fr;gap:16px;align-items:center}
+.hero svg{width:100%;max-width:260px;justify-self:center}
+@media(max-width:640px){.hero{grid-template-columns:1fr}.hero svg{display:none}}
+.btn{display:inline-flex;gap:8px;align-items:center;background:var(--pur);color:#fff;border-radius:18px;padding:13px 22px;font-weight:600;font-size:15px;box-shadow:0 8px 20px rgba(111,91,154,.22);border:0}
+.out{background:var(--card);color:var(--pt);border:1px solid var(--line);box-shadow:none}
+.ln{color:var(--pt);font-weight:600;font-size:15px}
+.row{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:16px}
+.tiles,.g2{display:grid;gap:16px;margin-top:16px}
+.tiles{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.t{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:16px;display:flex;gap:12px;align-items:center}
+.ic{width:44px;height:44px;border-radius:14px;background:var(--lil);display:grid;place-items:center;color:var(--pt);font-size:20px;flex:none}
+.t:nth-child(2) .ic{background:var(--peach)}.t:nth-child(3) .ic{background:var(--sage)}
+.t b{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:22px}
+.hd{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.bd{display:inline-block;padding:4px 12px;border-radius:99px;font-size:13px;font-weight:500;background:var(--lil);color:var(--pt)}
+.bd.g{background:var(--grnbg);color:var(--grn)}.bd.r{background:var(--redbg);color:var(--red)}
+.ch{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.ch span{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:9px 16px;font-size:14px}
+.ch .on{background:var(--lil);color:var(--pt);border-color:var(--lil);font-weight:600}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-size:14px;color:var(--mute);margin-top:12px}
+.cal b{font-weight:500;padding:8px 0;border-radius:12px;position:relative;border:1px solid transparent}
+.cal .td{background:var(--lil);color:var(--pt);font-weight:700;border-color:var(--line)}
+.cal u{position:absolute;left:50%;bottom:2px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--dot)}
+.big{font-size:32px;font-weight:700;letter-spacing:-.02em}
+.seg{display:flex;gap:6px;margin:12px 0}.seg i{flex:1;height:9px;border-radius:9px;background:var(--line)}.seg i.f{background:var(--pur)}
+.av{width:68px;height:68px;border-radius:20px;flex:none}
+.pr{display:flex;gap:14px;align-items:center}
+.fl{margin:10px 0}.fl small{display:block;color:var(--mute);font-size:13px;margin-bottom:4px}
+.fl div{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:var(--bg)}
+.li{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:15px}
+.li:first-of-type{border-top:0}
+.sl{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
+.sl div{border:1px solid var(--line);border-radius:14px;padding:8px;text-align:center;font-size:13px}.sl b{display:block;font-size:16px}
+.sl .fr{background:var(--grnbg);color:var(--grn);border-color:transparent}
+</style></head>
+<body><div class="w">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="av" viewBox="0 0 100 100"><rect width="100" height="100" fill="#EADFD3"/><circle cx="50" cy="42" r="18" fill="#E9C9AE"/><path d="M32 40a18 18 0 0 1 36 0c-4-8-30-8-36 0z" fill="#3B2A2A"/><path d="M14 100c2-24 20-30 36-30s34 6 36 30z" fill="#A56B58"/><text x="50" y="92" font-size="8" text-anchor="middle" fill="#fff">DEMO</text></symbol>
+<symbol id="fw" viewBox="0 0 200 220"><path d="M100 110v100" stroke="#9DB08F" stroke-width="5"/><ellipse cx="72" cy="170" rx="30" ry="12" fill="#9DB08F" transform="rotate(-25 72 170)"/><circle cx="100" cy="46" r="34" fill="#BDAED8"/><circle cx="64" cy="82" r="34" fill="#D9CDEB"/><circle cx="138" cy="78" r="34" fill="#C7B9E0"/><circle cx="104" cy="96" r="30" fill="#AE9CCF"/><circle cx="100" cy="72" r="20" fill="#F2E7B8"/></symbol>
+</defs></svg>
+
+<p class="cap"><b>1. Главная кабинета.</b> Заменяет главную мамы «Ваше пространство»: тот же hero, три плитки и календарь, но вместо поиска заявки, дети и задания.</p>
+<div class="scr">
+<div class="tb"><b>● Кабинет специалиста</b><span>Астана ▾ <b style="color:var(--ink)">РУС</b> ҚАЗ <span class="bd r">Уведомления 2</span><svg class="av" style="width:38px;height:38px;border-radius:50%"><use href="#av"/></svg></span></div>
+<div class="dm"><span>● Демонстрационный режим</span><span>Только вымышленные данные</span></div>
+<div class="in">
+<div class="hero"><div><p class="eb">● Ваш кабинет</p><h1>Всё по записям — <em>в одном месте</em></h1><p class="m" style="font-size:17px">Принять заявку. Поставить цель. Назначить задание на дом.</p>
+<div class="row"><span class="btn">Заявки · 2 →</span><span class="ln">Открыть календарь ↗</span></div><p class="m" style="margin-top:16px">♡ Мамы видят только то, что вы им открыли</p></div><svg viewBox="0 0 200 220" aria-hidden="true"><use href="#fw"/></svg></div>
+<div class="tiles"><div class="t"><div class="ic">✉</div><div><b>Заявки</b><span class="m">Новые обращения мам</span></div></div><div class="t"><div class="ic">♡</div><div><b>Дети</b><span class="m">Цели и динамика</span></div></div><div class="t"><div class="ic">✎</div><div><b>Задания</b><span class="m">Практика дома</span></div></div></div>
+<div class="g2"><div class="card"><div class="hd"><h2>Календарь приёмов</h2><span class="bd">Ближайших: 2</span></div><div class="ch"><span class="on">Месяц</span><span>Ближайшие 2</span></div><p class="m" style="text-align:center"><b style="color:var(--pt)">Ноябрь 2026 г.</b></p><div class="cal" id="cal"></div>
+<div class="li" style="margin-top:14px"><span class="bd g">Приём состоялся · демо</span><b>20 ноября в 09:00</b></div><p>Алихан · демо ›</p></div>
+<div style="display:grid;gap:16px;align-content:start"><div class="card"><div class="hd"><h2>Ваш следующий шаг</h2><span class="ic">✦</span></div><p class="eb">Ближайший приём</p><p class="big">21 ноября <span class="m" style="font-size:20px">14:30</span></p><p class="m">Амина · демо</p><p class="ln">Открыть карточку →</p></div>
+<div class="card"><h2>Что произошло</h2><div class="li"><span>Мама Динара отправила заявку</span><span class="m">сейчас</span></div><div class="li"><span>У Алихана этап цели 3 из 4 виден маме</span><span class="m">вчера</span></div><div class="li"><span>Мама отметила задание: 2 из 3</span><span class="m">вчера</span></div></div></div></div>
+</div></div>
+
+<p class="cap"><b>2. Заявки и запись.</b> Мама нажимает «Записаться» на карточке в «Поиск специалистов», заявка приходит сюда. Кнопки «Подтвердить запись» и «Отменить запись» те же, что у мамы.</p>
+<div class="scr"><div class="in">
+<p class="eb">Заявки</p><h1>Новые обращения</h1><p class="m" style="font-size:17px">Имя ребёнка и заключение откроются после принятия заявки и согласия мамы.</p>
+<div class="ch"><span class="on">Новые 2</span><span>Ждут ответа</span><span>Перенесённые</span><span>Отменённые</span></div>
+<div class="g2"><div class="card"><div class="hd"><b style="font-size:20px">Мама Динара · демо</b><span class="bd">Новая</span></div><p class="m">Ребёнку 3 года · почти не говорит · Бостандык, 2.1 км</p><p>Спрашивает, есть ли окно на этой неделе. Профиль совпадает с отзывами у детей 3–4 лет.</p><div class="row"><span class="btn">✓ Принять заявку</span><span class="btn out">Предложить время</span><span class="ln">Отклонить</span></div></div>
+<div class="card"><div class="hd"><b style="font-size:20px">Мама Айжан · демо</b><span class="bd">Новая</span></div><p class="m">Ребёнку 5 лет · ошибки в звуке Р · Медеу, 3.4 км</p><p>Хочет онлайн-формат, два раза в неделю.</p><div class="row"><span class="btn">✓ Принять заявку</span><span class="btn out">Предложить время</span><span class="ln">Отклонить</span></div></div></div>
+<div class="g2"><div class="card"><div class="hd"><h2>Приём 21 ноября в 14:30</h2><span class="bd">Ждёт подтверждения</span></div><p>Амина · демо · звук С в словах</p><p class="m">15 000 ₸ · очно · правило отмены: за 24 часа</p><div class="row"><span class="btn">✓ Подтвердить запись</span><span class="ln">Отменить запись</span></div></div>
+<div class="card"><div class="hd"><h2>Приём 16:00</h2><span class="bd r">Отменён мамой</span></div><p class="m">Причина: ребёнок заболел. Окно свободно, в листе ожидания 2 мамы, первой ушло уведомление на 30 минут.</p><div class="row"><span class="btn out">Предложить окно другим</span></div></div></div>
+</div></div>
+
+<p class="cap"><b>3. Карточка ребёнка.</b> Заменяет «Мой профиль» мамы. Цель, документы и записи мамы видны специалисту только с её согласия.</p>
+<div class="scr"><div class="in">
+<p class="eb">Карточка ребёнка</p><h1>Алихан · демо</h1><p class="m" style="font-size:17px">3 года 4 мес · занимаетесь 2 месяца · мама Аружан · демо</p>
+<div class="g2"><div class="card"><div class="hd"><h2>Цель на месяц</h2><span class="bd g">Этап 3 из 4</span></div><p style="font-size:20px;font-weight:600">Просит словами, а не жестом</p><div class="seg"><i class="f"></i><i class="f"></i><i class="f"></i><i></i></div><div class="row"><span class="btn">Следующий этап</span><span class="ln">Изменить цель</span></div><p class="m">Мама увидит новый этап в своём профиле.</p></div>
+<div class="card"><div class="hd"><h2>Домашняя практика</h2><span class="bd">2 из 3 на неделе</span></div><div class="li"><span>Просим игрушку словами</span><span class="m">10 мин · сделано 2</span></div><div class="li"><span>Звуки животных</span><span class="m">назначено</span></div><div class="row"><span class="btn out">+ Назначить задание</span></div></div>
+<div class="card"><h2>Папка документов</h2><p class="m">Мама открыла вам карточки. Настоящие файлы не загружаются.</p><div class="li"><span>Заключение ПМПК · демо</span><span class="bd g">Открыто до 21.11</span></div><div class="li"><span>Короткое видео из дома · демо</span><span class="bd">Только просмотр</span></div></div>
+<div class="card"><h2>Что отметила мама</h2><p>Сказал слово «дай» дважды за неделю.</p><p class="m">Это наблюдения родителя, не диагноз.</p><h2 style="margin-top:14px">История приёмов</h2><div class="li"><span>Айгерим С. · 20.11.2026</span><span class="bd g">чек-лист заполнен</span></div><div class="li"><span>Айгерим С. · 13.11.2026</span><span class="bd">приём состоялся</span></div></div></div>
+</div></div>
+
+<p class="cap"><b>4. Профиль специалиста.</b> Редактирует карточку из «Поиск специалистов»: слева форма, справа то, как видит мама. Рейтинг и отзывы только для чтения.</p>
+<div class="scr"><div class="in">
+<p class="eb">Личное пространство</p><h1>Мой профиль</h1><p class="m" style="font-size:17px">Изменяйте то, что видят мамы: направление, цену, сильные стороны и правила отмены.</p>
+<div class="g2"><div class="card"><div class="hd"><h2>Данные специалиста</h2><span class="btn out">Заполнить демоданными</span></div>
+<div class="fl"><small>Имя · учебное</small><div>Айгерим С. · демо</div></div><div class="fl"><small>Направление</small><div>Логопед</div></div><div class="fl"><small>Стаж</small><div>3 года</div></div><div class="fl"><small>Формат</small><div>Очно и онлайн</div></div><div class="fl"><small>Цена за занятие</small><div>15 000 ₸</div></div>
+<div class="fl"><small>Правило отмены</small><div>За 24 часа</div></div><div class="row"><span class="btn">Сохранить профиль</span></div></div>
+<div style="display:grid;gap:16px;align-content:start"><div class="card"><p class="eb">Так вас видит мама</p><div class="pr" style="margin-top:12px"><svg class="av"><use href="#av"/></svg><div><p class="eb" style="color:var(--mute)">Логопед</p><b style="font-size:24px">Айгерим С.</b><p class="m">Стаж: 3 года</p></div></div>
+<p>Помогает разобраться в запросе семьи, обсудить понятные цели и подобрать посильные задания.</p><p class="m">Есиль · 2.4 км · Очно и онлайн</p><p><b>★ 4.5</b> <span class="m">8 учебных отзывов</span></p>
+<div class="ch" style="margin:8px 0"><span class="on">Контакт с ребёнком</span><span class="on">Игровой подход</span><span class="on">Объясняет план</span></div><span class="bd g">Диплом проверен фондом · демо</span></div>
+<div class="card"><h2>Расписание на 21 ноября</h2><div class="sl"><div class="fr"><b>11:00</b>свободно</div><div><b>14:30</b>занято</div><div class="fr"><b>16:00</b>свободно</div><div><b>17:30</b>занято</div></div><p class="m">Рейтинг и место в выдаче купить нельзя.</p></div></div></div>
+</div></div>
+</div>
+<script>
+const c=document.getElementById('cal');let h='Пн Вт Ср Чт Пт Сб Вс'.split(' ').map(d=>`<span>${d}</span>`).join('');
+for(let i=0;i<6;i++)h+='<i></i>';
+for(let d=1;d<=30;d++)h+=`<b class="${d==14||d==21?'td':''}">${d}${d==20||d==21?'<u></u>':''}</b>`;
+c.innerHTML=h;
+</script></body></html>

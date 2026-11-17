@@ -1,0 +1,3 @@
+const fs=require('fs'),path=require('path');let count=0;
+for(const root of ['src','supabase','dist','dist-demo','деплой версель']){if(!fs.existsSync(root))continue;const walk=dir=>{for(const item of fs.readdirSync(dir,{withFileTypes:true})){const file=path.join(dir,item.name);if(item.isDirectory())walk(file);else if(/\.(?:[cm]?js|tsx?|html|sql|json|md|css)$/.test(file)){count++;if(/AQ\.[A-Za-z0-9_-]{20,}|AIza[A-Za-z0-9_-]{20,}/.test(fs.readFileSync(file,'utf8')))throw Error('Potential Gemini key in '+file);}}};walk(root);}
+console.log('PASS: no Gemini credential in '+count+' source/distribution files');

@@ -1,0 +1,14 @@
+begin;
+set local role anon;
+do $$ begin begin perform public.gemini_runtime_config();raise exception 'FAIL: anonymous key access';exception when insufficient_privilege then null;end;end $$;
+set local role authenticated;
+set local request.jwt.claims='{"role":"authenticated","sub":"f0000000-0000-4000-8000-000000000099"}';
+do $$ begin begin perform public.gemini_runtime_config();raise exception 'FAIL: authenticated key access';exception when insufficient_privilege then null;end;begin perform * from vault.decrypted_secrets;raise exception 'FAIL: vault access';exception when insufficient_privilege then null;end;end $$;
+reset role;
+update private.ai_settings set daily_limit=1 where singleton;
+delete from private.ai_daily_usage where day=(now() at time zone 'UTC')::date;
+set local role service_role;
+set local request.jwt.claims='{"role":"service_role"}';
+do $$ begin if public.gemini_runtime_config() is null then raise exception 'FAIL: backend key unavailable';end if;if not public.reserve_gemini_budget() then raise exception 'FAIL: first budget';end if;if public.reserve_gemini_budget() then raise exception 'FAIL: global budget';end if;end $$;
+select 'PASS: client key access denied; backend key available; global budget enforced' result;
+rollback;

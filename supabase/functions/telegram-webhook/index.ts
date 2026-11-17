@@ -1,0 +1,3 @@
+// Fail closed: no delivery or identity linking is enabled in this MVP.
+// Enabling real Telegram requires reviewed linking, opted-in mentors and delivery mappings.
+Deno.serve(async req=>{const token=Deno.env.get('TELEGRAM_BOT_TOKEN');const secret=Deno.env.get('TELEGRAM_WEBHOOK_SECRET');if(!token||!secret)return new Response(JSON.stringify({error:'integration_disabled'}),{status:503,headers:{'Content-Type':'application/json','Cache-Control':'no-store'}});if(req.method!=='POST'||req.headers.get('X-Telegram-Bot-Api-Secret-Token')!==secret)return new Response('Forbidden',{status:403});return new Response(JSON.stringify({error:'secure_linking_not_configured',delivery:false}),{status:501,headers:{'Content-Type':'application/json','Cache-Control':'no-store'}});});

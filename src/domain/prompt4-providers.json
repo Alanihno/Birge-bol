@@ -1,0 +1,464 @@
+[
+  {
+    "id": "0fd1ef98-0732-d912-be71-a07fdf257fad",
+    "owner_id": "23a1441c-0976-ff58-bdca-157a419a8dc0",
+    "name": "Дамир Н.",
+    "specialty": "Детский невролог",
+    "description": "Принимает детей с особенностями развития. Обсуждает вопросы неврологического наблюдения; помогает заранее согласовать спокойный формат осмотра. Невропатолог.",
+    "city": "Алматы",
+    "district": "Бостандыкский",
+    "address": "Алматы, Бостандыкский район · адрес согласуется при записи",
+    "price": 15000,
+    "experience": 4,
+    "online": false,
+    "concerns": [
+      "communication",
+      "speech",
+      "other"
+    ],
+    "ages": [
+      "2–3",
+      "4–5",
+      "6–8",
+      "9–12"
+    ],
+    "color": "lilac",
+    "published": true,
+    "is_demo": true,
+    "contact_url": null,
+    "latitude": null,
+    "longitude": null,
+    "verified_count": 0,
+    "contact_rating": null,
+    "verification_status": "approved",
+    "profile": {
+      "education": "Профильная подготовка по направлению",
+      "languages": [
+        "Русский",
+        "Қазақша"
+      ],
+      "cancellation": "Перенос и отмена по договорённости",
+      "self_strengths": []
+    }
+  },
+  {
+    "id": "bb162d9f-d30a-e180-1213-de2826ddc7ac",
+    "owner_id": "1b45c38a-183d-022b-5dbd-980007c096d9",
+    "name": "Сания О.",
+    "specialty": "Детский ЛОР",
+    "description": "Принимает детей с особенностями развития. Можно заранее рассказать о чувствительности к осмотру уха, горла и носа и обсудить присутствие родителя.",
+    "city": "Алматы",
+    "district": "Бостандыкский",
+    "address": "Алматы, Бостандыкский район · адрес согласуется при записи",
+    "price": 15000,
+    "experience": 5,
+    "online": false,
+    "concerns": [
+      "communication",
+      "speech",
+      "other"
+    ],
+    "ages": [
+      "2–3",
+      "4–5",
+      "6–8",
+      "9–12"
+    ],
+    "color": "peach",
+    "published": true,
+    "is_demo": true,
+    "contact_url": null,
+    "latitude": null,
+    "longitude": null,
+    "verified_count": 0,
+    "contact_rating": null,
+    "verification_status": "approved",
+    "profile": {
+      "education": "Профильная подготовка по направлению",
+      "languages": [
+        "Русский",
+        "Қазақша"
+      ],
+      "cancellation": "Перенос и отмена по договорённости",
+      "self_strengths": []
+    }
+  },
+  {
+    "id": "80dcb0dc-81d5-03cc-2320-81efad30e39c",
+    "owner_id": "720bcf38-8e4b-8292-28e6-7b2b1b03726e",
+    "name": "Ерасыл Д.",
+    "specialty": "Детский стоматолог",
+    "description": "Принимает детей с особенностями развития. На знакомстве обсуждаются чувствительность к звукам, перерывы и организация стоматологического осмотра. Дентист.",
+    "city": "Алматы",
+    "district": "Бостандыкский",
+    "address": "Алматы, Бостандыкский район · адрес согласуется при записи",
+    "price": 15000,
+    "experience": 6,
+    "online": false,
+    "concerns": [
+      "communication",
+      "speech",
+      "other"
+    ],
+    "ages": [
+      "2–3",
+      "4–5",
+      "6–8",
+      "9–12"
+    ],
+    "color": "sage",
+    "published": true,
+    "is_demo": true,
+    "contact_url": null,
+    "latitude": null,
+    "longitude": null,
+    "verified_count": 0,
+    "contact_rating": null,
+    "verification_status": "approved",
+    "profile": {
+      "education": "Профильная подготовка по направлению",
+      "languages": [
+        "Русский",
+        "Қазақша"
+      ],
+      "cancellation": "Перенос и отмена по договорённости",
+      "self_strengths": []
+    }
+  },
+  {
+    "id": "d52a6d3c-1f99-b35d-dfab-1f09be5ade9f",
+    "owner_id": "b14e7509-3542-e2c9-5901-4c5b7f401a7f",
+    "name": "Лаура А.",
+    "specialty": "Педиатр",
+    "description": "Педиатр принимает детей с особенностями развития. Помогает обсудить вопросы общего здоровья и подготовить информацию для других врачей.",
+    "city": "Алматы",
+    "district": "Бостандыкский",
+    "address": "Алматы, Бостандыкский район · адрес согласуется при записи",
+    "price": 15000,
+    "experience": 7,
+    "online": true,
+    "concerns": [
+      "communication",
+      "speech",
+      "other"
+    ],
+    "ages": [
+      "2–3",
+      "4–5",
+      "6–8",
+      "9–12"
+    ],
+    "color": "lilac",
+    "published": true,
+    "is_demo": true,
+    "contact_url": null,
+    "latitude": null,
+    "longitude": null,
+    "verified_count": 0,
+    "contact_rating": null,
+    "verification_status": "approved",
+    "profile": {
+      "education": "Профильная подготовка по направлению",
+      "languages": [
+        "Русский",
+        "Қазақша"
+      ],
+      "cancellation": "Перенос и отмена по договорённости",
+      "self_strengths": []
+    }
+  },
+  {
+    "id": "8f5c065e-4b39-de15-10da-e5fe6b721677",
+    "owner_id": "7e79c253-1dcb-318e-e363-23edf01d18ad",
+    "name": "Марат Е.",
+    "specialty": "Детский психиатр",
+    "description": "Можно обсудить с родителем особенности коммуникации и поведения, порядок консультации и доступные условия спокойного знакомства. План помощи определяется индивидуально.",
+    "city": "Алматы",
+    "district": "Бостандыкский",
+    "address": "Алматы, Бостандыкский район · адрес согласуется при записи",
+    "price": 15000,
+    "experience": 8,
+    "online": true,
+    "concerns": [
+      "communication",
+      "speech",
+      "other"
+    ],
+    "ages": [
+      "2–3",
+      "4–5",
+      "6–8",
+      "9–12"
+    ],
+    "color": "peach",
+    "published": true,
+    "is_demo": true,
+    "contact_url": null,
+    "latitude": null,
+    "longitude": null,
+    "verified_count": 0,
+    "contact_rating": null,
+    "verification_status": "approved",
+    "profile": {
+      "education": "Профильная подготовка по направлению",
+      "languages": [
+        "Русский",
+        "Қазақша"
+      ],
+      "cancellation": "Перенос и отмена по договорённости",
+      "self_strengths": []
+    }
+  },
+  {
+    "id": "da09951a-5da5-f23f-2927-fc0f57e59fda",
+    "owner_id": "4ca4c85f-3743-bf90-247f-2eb320a847fb",
+    "name": "Алия Н.",
+    "specialty": "Детский ортопед",
+    "description": "Принимает детей с особенностями развития. Условия осмотра и вопросы о движении и повседневной активности обсуждаются с семьёй заранее.",
+    "city": "Алматы",
+    "district": "Бостандыкский",
+    "address": "Алматы, Бостандыкский район · адрес согласуется при записи",
+    "price": 15000,
+    "experience": 9,
+    "online": false,
+    "concerns": [
+      "communication",
+      "speech",
+      "other"
+    ],
+    "ages": [
+      "2–3",
+      "4–5",
+      "6–8",
+      "9–12"
+    ],
+    "color": "sage",
+    "published": true,
+    "is_demo": true,
+    "contact_url": null,
+    "latitude": null,
+    "longitude": null,
+    "verified_count": 0,
+    "contact_rating": null,
+    "verification_status": "approved",
+    "profile": {
+      "education": "Профильная подготовка по направлению",
+      "languages": [
+        "Русский",
+        "Қазақша"
+      ],
+      "cancellation": "Перенос и отмена по договорённости",
+      "self_strengths": []
+    }
+  },
+  {
+    "id": "af4cba51-1d0e-9731-9231-ed0ef97a845e",
+    "owner_id": "ec3a19a7-24c4-3ca9-2c79-9c3490a9a7ff",
+    "name": "Дана Ж.",
+    "specialty": "Детский офтальмолог",
+    "description": "Принимает детей с особенностями развития. Помогает подготовиться к осмотру зрения; возможность перерывов и сопровождения уточняется при записи.",
+    "city": "Алматы",
+    "district": "Бостандыкский",
+    "address": "Алматы, Бостандыкский район · адрес согласуется при записи",
+    "price": 15000,
+    "experience": 10,
+    "online": false,
+    "concerns": [
+      "communication",
+      "speech",
+      "other"
+    ],
+    "ages": [
+      "2–3",
+      "4–5",
+      "6–8",
+      "9–12"
+    ],
+    "color": "lilac",
+    "published": true,
+    "is_demo": true,
+    "contact_url": null,
+    "latitude": null,
+    "longitude": null,
+    "verified_count": 0,
+    "contact_rating": null,
+    "verification_status": "approved",
+    "profile": {
+      "education": "Профильная подготовка по направлению",
+      "languages": [
+        "Русский",
+        "Қазақша"
+      ],
+      "cancellation": "Перенос и отмена по договорённости",
+      "self_strengths": []
+    }
+  },
+  {
+    "id": "8951c78c-8c30-7c54-01e3-e37ba687a7c7",
+    "owner_id": "73d55ba3-5f0e-eed9-dbfa-7d9bb95086fe",
+    "name": "Меруерт А.",
+    "specialty": "Сурдолог",
+    "description": "Принимает детей с особенностями развития. Обсуждает подготовку к оценке слуха и способы объяснить ребёнку ход встречи.",
+    "city": "Алматы",
+    "district": "Бостандыкский",
+    "address": "Алматы, Бостандыкский район · адрес согласуется при записи",
+    "price": 15000,
+    "experience": 11,
+    "online": false,
+    "concerns": [
+      "communication",
+      "speech",
+      "other"
+    ],
+    "ages": [
+      "2–3",
+      "4–5",
+      "6–8",
+      "9–12"
+    ],
+    "color": "peach",
+    "published": true,
+    "is_demo": true,
+    "contact_url": null,
+    "latitude": null,
+    "longitude": null,
+    "verified_count": 0,
+    "contact_rating": null,
+    "verification_status": "approved",
+    "profile": {
+      "education": "Профильная подготовка по направлению",
+      "languages": [
+        "Русский",
+        "Қазақша"
+      ],
+      "cancellation": "Перенос и отмена по договорённости",
+      "self_strengths": []
+    }
+  },
+  {
+    "id": "7a26ec40-5825-4184-977f-1e8b38994e6c",
+    "owner_id": "d8c74b8e-a644-e70b-1141-6ae03c22a93a",
+    "name": "Айсулу Т.",
+    "specialty": "Няня с опытом сопровождения",
+    "description": "Опыт сопровождения детей с особенностями развития. Режим, способы общения, границы ответственности и инструкции родителей обсуждаются до знакомства. Не оказывает медицинские услуги.",
+    "city": "Алматы",
+    "district": "Бостандыкский",
+    "address": "Алматы, Бостандыкский район · адрес согласуется при записи",
+    "price": 6000,
+    "experience": 4,
+    "online": false,
+    "concerns": [
+      "communication",
+      "speech",
+      "other"
+    ],
+    "ages": [
+      "2–3",
+      "4–5",
+      "6–8",
+      "9–12"
+    ],
+    "color": "sage",
+    "published": true,
+    "is_demo": true,
+    "contact_url": null,
+    "latitude": null,
+    "longitude": null,
+    "verified_count": 0,
+    "contact_rating": null,
+    "verification_status": "approved",
+    "profile": {
+      "education": "Подготовка и опыт сопровождения семьи",
+      "languages": [
+        "Русский",
+        "Қазақша"
+      ],
+      "cancellation": "Перенос и отмена по договорённости",
+      "self_strengths": []
+    }
+  },
+  {
+    "id": "8b02a265-425a-398d-a1b9-8a40592e4e55",
+    "owner_id": "3590dbab-c540-3d3c-b803-bcdbb27848a2",
+    "name": "Бекзат И.",
+    "specialty": "Тьютор",
+    "description": "Поддерживает участие ребёнка в учебной и повседневной среде. Вместе с семьёй обсуждает удобный темп, коммуникацию и организационные задачи.",
+    "city": "Алматы",
+    "district": "Бостандыкский",
+    "address": "Алматы, Бостандыкский район · адрес согласуется при записи",
+    "price": 6000,
+    "experience": 5,
+    "online": false,
+    "concerns": [
+      "communication",
+      "speech",
+      "other"
+    ],
+    "ages": [
+      "2–3",
+      "4–5",
+      "6–8",
+      "9–12"
+    ],
+    "color": "lilac",
+    "published": true,
+    "is_demo": true,
+    "contact_url": null,
+    "latitude": null,
+    "longitude": null,
+    "verified_count": 0,
+    "contact_rating": null,
+    "verification_status": "approved",
+    "profile": {
+      "education": "Подготовка и опыт сопровождения семьи",
+      "languages": [
+        "Русский",
+        "Қазақша"
+      ],
+      "cancellation": "Перенос и отмена по договорённости",
+      "self_strengths": []
+    }
+  },
+  {
+    "id": "3251c608-a272-76c1-434f-fbe2a78c556c",
+    "owner_id": "d38694c3-2c58-422e-da90-3ba3f0122761",
+    "name": "Жанель М.",
+    "specialty": "Помощник семьи",
+    "description": "Помощь с сопровождением, подготовкой к встречам и организацией бытовых дел. Объём помощи и присутствие родителя согласуются заранее. Не оказывает медицинские услуги.",
+    "city": "Алматы",
+    "district": "Бостандыкский",
+    "address": "Алматы, Бостандыкский район · адрес согласуется при записи",
+    "price": 6000,
+    "experience": 6,
+    "online": false,
+    "concerns": [
+      "communication",
+      "speech",
+      "other"
+    ],
+    "ages": [
+      "2–3",
+      "4–5",
+      "6–8",
+      "9–12"
+    ],
+    "color": "peach",
+    "published": true,
+    "is_demo": true,
+    "contact_url": null,
+    "latitude": null,
+    "longitude": null,
+    "verified_count": 0,
+    "contact_rating": null,
+    "verification_status": "approved",
+    "profile": {
+      "education": "Подготовка и опыт сопровождения семьи",
+      "languages": [
+        "Русский",
+        "Қазақша"
+      ],
+      "cancellation": "Перенос и отмена по договорённости",
+      "self_strengths": []
+    }
+  }
+]

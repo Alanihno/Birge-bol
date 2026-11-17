@@ -1,0 +1,3 @@
+﻿import { defineConfig } from '@playwright/test';
+export default defineConfig({testDir:'./tests',fullyParallel:false,workers:1,timeout:45000,use:{baseURL:process.env.BASE_URL||'http://127.0.0.1:4173',browserName:'chromium',launchOptions:{executablePath:process.env.CHROME_PATH||(process.platform==='win32'?'C:/Program Files/Google/Chrome/Application/chrome.exe':undefined)},trace:'retain-on-failure'},webServer:process.env.BASE_URL?undefined:{command:(process.platform==='win32'?'npm.cmd':'npm')+' run preview -- --port 4173 --outDir dist-demo',url:'http://127.0.0.1:4173',reuseExistingServer:true},reporter:[['list'],['html',{open:'never'}]]});
+

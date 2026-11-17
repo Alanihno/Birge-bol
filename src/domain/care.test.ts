@@ -1,0 +1,12 @@
+import { describe,it,expect } from 'vitest';
+import { compareSpecialists,strengthsFor,directions } from './care';
+import type { CareReview } from './care';
+import { demoChild,demoSpecialists,districts } from './data';
+describe('care comparison and factual aggregation',()=>{
+ it('uses all eight administrative districts of Almaty',()=>{expect(districts).toHaveLength(8);expect(new Set(districts).size).toBe(8);expect(districts).toContain('Бостандыкский');expect(demoSpecialists.every(s=>districts.includes(s.district)&&s.city==='Алматы')).toBe(true);});
+ it('does not infer strengths from repeated reviews by one parent',()=>{const rows=Array.from({length:12},(_,i)=>({id:String(i),parent_id:'one-parent',specialist_id:'s',status:'verified',visit_verified:true,strengths:['Хороший контакт с ребёнком']} as CareReview));expect(strengthsFor(rows,'s')).toEqual([]);expect(strengthsFor(rows.map((r,i)=>({...r,parent_id:'parent'+i})),'s')[0].count).toBe(12);expect(strengthsFor(rows.map((r,i)=>({...r,parent_id:'parent'+i,visit_verified:false})),'s')).toEqual([]);});
+ it('uses pseudonymous reviewer keys without exposing parent IDs',()=>{const rows=Array.from({length:3},(_,i)=>({id:String(i),reviewer_key:'key'+i,specialist_id:'s',status:'verified',visit_verified:true,strengths:['Понятные объяснения родителям']} as CareReview));expect(strengthsFor(rows,'s')[0].count).toBe(3);});
+ it('ties and missing distance never yield invented winners',()=>{const list=[{...demoSpecialists[0],price:15000},{...demoSpecialists[0],id:'other',price:15000}];expect(compareSpecialists(list,demoChild,['price'],[],[]).winner).toBeNull();expect(compareSpecialists(list,demoChild,['distance'],[],[]).winner).toBeNull();});
+ it('compares two and three specialists according to chosen criteria',()=>{const list=demoSpecialists.slice(0,3).map((s,i)=>({...s,price:10000+i*1000,experience:i+3}));expect(compareSpecialists(list.slice(0,2),demoChild,['price'],[],[]).winner).toBe(list[0].id);expect(compareSpecialists(list,demoChild,['experience'],[],[]).winner).toBe(list[2].id);});
+ it('adapts information to early speech, school writing and older pronunciation queries',()=>{expect(directions(demoChild)).toContain('Развитие коммуникации');expect(directions(demoChild).join(' ')).not.toMatch(/гимнастика|постановка звуков/i);expect(directions({...demoChild,age:'9–12',concerns:['writing']})).toContain('Оценка письменной речи');});
+});

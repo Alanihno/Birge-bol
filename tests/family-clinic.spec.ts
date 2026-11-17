@@ -1,0 +1,36 @@
+import { test, expect } from '@playwright/test';
+import { parentLogin } from './auth-helper';
+test('adds several children together and keeps profiles separate after reload', async ({ page }) => {
+    await parentLogin(page, '/child');
+    await page.getByRole('button', { name: 'Добавить детей', exact: true }).click();
+    await page.getByLabel('Имя или псевдоним', { exact: true }).fill('Тест Амина');
+    await page.getByRole('button', { name: 'Ещё ребёнок', exact: true }).click();
+    await page.getByLabel('Имя или псевдоним', { exact: true }).nth(1).fill('Тест Данияр');
+    await page.getByRole('dialog').getByRole('combobox', { name: 'Возраст', exact: true }).nth(1).selectOption('6–8');
+    await page.getByRole('checkbox', { name: /Согласен сохранить вымышленные/ }).check();
+    await page.getByRole('button', { name: /Сохранить детей/ }).click();
+    await expect(page.getByRole('dialog')).not.toBeVisible();
+    await page.reload();
+    await expect(page.getByRole('heading', { name: 'Тест Амина · демо', exact: true })).toBeVisible();
+    await page.getByRole('combobox', { name: 'Активный профиль', exact: true }).selectOption({ label: 'Тест Данияр · демо' });
+    await expect(page.getByRole('heading', { name: 'Тест Данияр · демо', exact: true })).toBeVisible();
+    await expect(page.locator('.child-profile')).toContainText('6–8');
+});
+test('clinic saves messenger contacts and a parent opens an editable message to that clinic', async ({ page, context }) => {
+    await page.goto('/auth');
+    await page.getByRole('button', { name: /Клиника.*clinic@/ }).click();
+    await page.waitForURL('**/clinic');
+    await page.getByRole('button', { name: 'Профиль и филиалы', exact: true }).click();
+    await page.getByLabel('WhatsApp клиники', { exact: true }).fill('+1 202 555 0123');
+    await page.getByLabel('Telegram клиники', { exact: true }).fill('@clinic_test_example');
+    await page.getByRole('button', { name: 'Сохранить профиль клиники', exact: true }).click();
+    const parent = await context.newPage(); await parentLogin(parent, '/clinics');
+    await parent.getByRole('button', { name: 'Написать в клинику', exact: true }).click();
+    await parent.getByRole('textbox', { name: 'Сообщение для клиники', exact: true }).fill('Здравствуйте! Запрос & время?');
+    await expect(parent.getByRole('link', { name: 'Открыть WhatsApp', exact: true })).toHaveAttribute('href', 'https://wa.me/12025550123?text=' + encodeURIComponent('Здравствуйте! Запрос & время?'));
+    await expect(parent.getByRole('link', { name: 'Открыть Telegram', exact: true })).toHaveAttribute('href', 'https://t.me/clinic_test_example?text=' + encodeURIComponent('Здравствуйте! Запрос & время?'));
+    await parent.getByRole('button', { name: 'Сотрудничество', exact: true }).click();
+    await expect(parent.getByRole('textbox', { name: 'Сообщение для клиники', exact: true })).toHaveValue(/обсудить сотрудничество/);
+    await parent.setViewportSize({ width: 320, height: 760 });
+    expect(await parent.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});

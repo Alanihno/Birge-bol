@@ -1,0 +1,11 @@
+const fs=require('node:fs');
+let p='tsconfig.app.json',config=JSON.parse(fs.readFileSync(p));config.exclude=['src/sw.ts'];fs.writeFileSync(p,JSON.stringify(config)+'\n');
+p='tsconfig.json';config=JSON.parse(fs.readFileSync(p));if(!config.references.some(r=>r.path==='./tsconfig.sw.json'))config.references.push({path:'./tsconfig.sw.json'});fs.writeFileSync(p,JSON.stringify(config)+'\n');
+p='vercel.json';config=JSON.parse(fs.readFileSync(p));config.rewrites[0].source=config.rewrites[0].source.replace('assets/','version\\.json|boot-recovery\\.js|assets/');
+config.headers=config.headers.filter(h=>!['/sw.js','/index.html','/version.json','/boot-recovery.js','/assets/(.*)','/manifest.webmanifest','/'].includes(h.source));
+for(const source of ['/','/index.html','/version.json','/sw.js','/boot-recovery.js','/manifest.webmanifest'])config.headers.push({source,headers:[{key:'Cache-Control',value:'no-store, no-cache, must-revalidate'},{key:'CDN-Cache-Control',value:'no-store'},{key:'Vercel-CDN-Cache-Control',value:'no-store'}]});
+config.headers.push({source:'/assets/(.*)',headers:[{key:'Cache-Control',value:'public, max-age=31536000, immutable'}]});fs.writeFileSync(p,JSON.stringify(config,null,2)+'\n');
+p='src/main.tsx';let s=fs.readFileSync(p,'utf8');s="import {installModuleRecovery,setPendingMutations} from './lib/update-safety';\n"+s;s=s.replace("ReactDOM.createRoot",'installModuleRecovery();\nsetPendingMutations(()=>queryClient.isMutating()>0);\nReactDOM.createRoot');fs.writeFileSync(p,s);
+p='src/lib/app-context.tsx';s=fs.readFileSync(p,'utf8');s="import {setDraftScope} from './update-safety';\n"+s;s=s.replace('const state=useAppState();return','const state=useAppState();useEffect(()=>{setDraftScope(state.userId,state.activeChild.id);},[state.userId,state.activeChild.id]);return');fs.writeFileSync(p,s);
+p='src/App.tsx';s=fs.readFileSync(p,'utf8');s="import {isModuleLoadError,recoverModuleLoad} from './lib/update-safety';\n"+s;s=s.replace('componentDidCatch(_error: Error, _info: ErrorInfo) { }','componentDidCatch(error: Error, _info: ErrorInfo) { if(isModuleLoadError(error))recoverModuleLoad(); }');fs.writeFileSync(p,s);
+console.log('Version manifest, native SW registration and cache headers configured');
