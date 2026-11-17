@@ -1,0 +1,1911 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\Администратор\\Desktop\\Birge bol\\playwright.config.ts",
+    "rootDir": "C:/Users/Администратор/Desktop/Birge bol/tests",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Администратор/Desktop/Birge bol/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/Администратор/Desktop/Birge bol/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 45000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.2",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "compact-lists.spec.ts",
+      "file": "compact-lists.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "calendar previews three nearest visits and a payment link reveals a later visit",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7788,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:40:27.361Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f4b8c6c1bde934b4c4aa-d1ec6bd1411cb5d14e21",
+          "file": "compact-lists.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "reviews expand without changing totals and Kazakh controls fit a phone",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4711,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:40:35.955Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f4b8c6c1bde934b4c4aa-56d7b86d31c35418a38f",
+          "file": "compact-lists.spec.ts",
+          "line": 25,
+          "column": 1
+        },
+        {
+          "title": "collapsing an appointment keeps an entered visit code",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3081,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:40:40.695Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f4b8c6c1bde934b4c4aa-a63998503a351cbae420",
+          "file": "compact-lists.spec.ts",
+          "line": 36,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "connected-auth.spec.ts",
+      "file": "connected-auth.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "landing leads to registration and login without a dashboard or a legacy demo session",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "Run against the connected production build.",
+                  "location": {
+                    "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts",
+                    "line": 3,
+                    "column": 6
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": -1,
+                  "parallelIndex": -1,
+                  "status": "skipped",
+                  "duration": 0,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:40:43.829Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "Run against the connected production build.",
+                      "location": {
+                        "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts",
+                        "line": 3,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "1828d0ba811f2382303d-5c369d54b7718b58e639",
+          "file": "connected-auth.spec.ts",
+          "line": 6,
+          "column": 1
+        },
+        {
+          "title": "registration requires consent, submits signup and shows email confirmation before a cabinet",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "Run against the connected production build.",
+                  "location": {
+                    "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts",
+                    "line": 3,
+                    "column": 6
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": -1,
+                  "parallelIndex": -1,
+                  "status": "skipped",
+                  "duration": 0,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:40:43.830Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "Run against the connected production build.",
+                      "location": {
+                        "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts",
+                        "line": 3,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "1828d0ba811f2382303d-2a7892d175b5f6ebdab8",
+          "file": "connected-auth.spec.ts",
+          "line": 29,
+          "column": 1
+        },
+        {
+          "title": "specialist registration and protected deep links stay in the public entry flow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "Run against the connected production build.",
+                  "location": {
+                    "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts",
+                    "line": 3,
+                    "column": 6
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": -1,
+                  "parallelIndex": -1,
+                  "status": "skipped",
+                  "duration": 0,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:40:43.830Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "Run against the connected production build.",
+                      "location": {
+                        "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts",
+                        "line": 3,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "1828d0ba811f2382303d-9ca060cba51f2ae22d65",
+          "file": "connected-auth.spec.ts",
+          "line": 49,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "contest-release.spec.ts",
+      "file": "contest-release.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "support saves a request and Kazakh tabs are translated",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4190,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:40:43.857Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9957d7c9e3ebaee6d8ea-fdc69d84b917cfa5d885",
+          "file": "contest-release.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "PINGO replaces generated articles in both languages",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4119,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:40:48.075Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9957d7c9e3ebaee6d8ea-36e9228bff4fe23682a7",
+          "file": "contest-release.spec.ts",
+          "line": 8,
+          "column": 1
+        },
+        {
+          "title": "synthetic specialist profiles remain explicitly marked",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1170,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:40:52.228Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9957d7c9e3ebaee6d8ea-e1ea2847f03f5153c6a5",
+          "file": "contest-release.spec.ts",
+          "line": 12,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "family-clinic.spec.ts",
+      "file": "family-clinic.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "adds several children together and keeps profiles separate after reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2916,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:40:53.459Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "620ec91b8dac8331f473-f3ee54e9ffc38813a41d",
+          "file": "family-clinic.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "clinic saves messenger contacts and a parent opens an editable message to that clinic",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 12399,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:40:56.402Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "620ec91b8dac8331f473-deffe82f22f3d4f62772",
+          "file": "family-clinic.spec.ts",
+          "line": 20,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "i18n.spec.ts",
+      "file": "i18n.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Kazakh language persists on existing parent pages and uses the Kazakh video",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5408,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:41:08.924Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1c708d8d2348e8ed7c9f-76e525bd2cddda39c759",
+          "file": "i18n.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "language changes preserve unsaved parent profile edits",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1312,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:41:14.358Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1c708d8d2348e8ed7c9f-7525e246a28a13c30bfb",
+          "file": "i18n.spec.ts",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "install.spec.ts",
+      "file": "install.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "keeps the browser install invitation across navigation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1556,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:41:15.739Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ad152c4ad18ebad5feb4-27a47bf2419610ee8bb0",
+          "file": "install.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "password-security.spec.ts",
+      "file": "password-security.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "signup blocks a compromised password before Supabase and sends only a hash prefix to the range service",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "Requires a connected build, with mocked Auth requests.",
+                  "location": {
+                    "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\password-security.spec.ts",
+                    "line": 2,
+                    "column": 6
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": -1,
+                  "parallelIndex": -1,
+                  "status": "skipped",
+                  "duration": 0,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:41:17.320Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "Requires a connected build, with mocked Auth requests.",
+                      "location": {
+                        "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\password-security.spec.ts",
+                        "line": 2,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "1ecd4000373ffb6c78b7-ffecbd965d6de8b5c8d9",
+          "file": "password-security.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "unavailable password checking fails closed, while login and recovery requests remain available",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "Requires a connected build, with mocked Auth requests.",
+                  "location": {
+                    "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\password-security.spec.ts",
+                    "line": 2,
+                    "column": 6
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": -1,
+                  "parallelIndex": -1,
+                  "status": "skipped",
+                  "duration": 0,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:41:17.320Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "Requires a connected build, with mocked Auth requests.",
+                      "location": {
+                        "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\password-security.spec.ts",
+                        "line": 2,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "1ecd4000373ffb6c78b7-c704ef2de64c92b16cda",
+          "file": "password-security.spec.ts",
+          "line": 10,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "prepared-data.spec.ts",
+      "file": "prepared-data.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "diary sorts nearest visits first and preserves reported payments",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1734,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:41:17.344Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3d59fabd7981dbde10dd-c71b1173df9c9431eb5a",
+          "file": "prepared-data.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "product news and community branches have readable discussions",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3222,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:41:19.104Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3d59fabd7981dbde10dd-f693148bf986d34ccdc6",
+          "file": "prepared-data.spec.ts",
+          "line": 25,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "prompt4-display.spec.ts",
+      "file": "prompt4-display.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "new pediatric and family care roles are searchable and explicitly marked",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1221,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:41:22.374Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d6bfbf74cb8eced5e141-e65d09cc99292a9ab13e",
+          "file": "prompt4-display.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "review totals use the current rating result and case context is visible",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2122,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:41:23.619Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d6bfbf74cb8eced5e141-b60d73695a9994521964",
+          "file": "prompt4-display.spec.ts",
+          "line": 7,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "prompt4-pwa.spec.ts",
+      "file": "prompt4-pwa.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "an update defers selected files and never serializes the password",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3738,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:41:25.789Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2452f583d54493cde99a-c85bacf54d78e452d6d0",
+          "file": "prompt4-pwa.spec.ts",
+          "line": 14,
+          "column": 1
+        },
+        {
+          "title": "an installed PWA updates once, preserves a controlled draft and works offline",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 100000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 42924,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('meta[name=app-version]')\nExpected: \u001b[32m\"pwa-test-\u001b[7mb\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"pwa-test-\u001b[7ma\u001b[27m\"\u001b[39m\nTimeout:  30000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for locator('meta[name=app-version]')\u001b[22m\n\u001b[2m    33 × locator resolved to <meta name=\"app-version\" content=\"pwa-test-a\"/>\u001b[22m\n\u001b[2m       - unexpected value \"pwa-test-a\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('meta[name=app-version]')\nExpected: \u001b[32m\"pwa-test-\u001b[7mb\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"pwa-test-\u001b[7ma\u001b[27m\"\u001b[39m\nTimeout:  30000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for locator('meta[name=app-version]')\u001b[22m\n\u001b[2m    33 × locator resolved to <meta name=\"app-version\" content=\"pwa-test-a\"/>\u001b[22m\n\u001b[2m       - unexpected value \"pwa-test-a\"\u001b[22m\n\n    at C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\prompt4-pwa.spec.ts:26:55",
+                    "location": {
+                      "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\prompt4-pwa.spec.ts",
+                      "column": 55,
+                      "line": 26
+                    },
+                    "snippet": "  24 |  current='b';await page.evaluate(async()=>{await(await navigator.serviceWorker.getRegistration())?.update();window.dispatchEvent(new Event('focus'));});await expect(page.getByText('Доступна новая версия',{exact:true})).toBeVisible({timeout:30000});\n  25 |  await page.waitForTimeout(9000);await expect(page.locator('meta[name=app-version]')).toHaveAttribute('content','pwa-test-a');await page.locator('.pwa-update').getByRole('button',{name:'Обновить',exact:true}).click();\n> 26 |  await expect(page.locator('meta[name=app-version]')).toHaveAttribute('content','pwa-test-b',{timeout:30000});await expect(page.locator('.account-form input').first()).toHaveValue('Черновик родителя');\n     |                                                       ^\n  27 |  await page.getByRole('button',{name:'ҚАЗ',exact:true}).click();await expect(page.locator('.account-form input').first()).toHaveValue('Черновик родителя');\n  28 |  expect(await page.evaluate(()=>localStorage.getItem('keep-user-data'))).toBe('preserved');const keys=await page.evaluate(()=>caches.keys());expect(keys).not.toContain('birge-bol-precache-obsolete');expect(keys).toContain('unrelated-user-data');\n  29 |  await context.setOffline(true);await page.reload();await expect(page.locator('.account-form input').first()).toHaveValue('Черновик родителя');await page.goto(base+'/app');await expect(page.locator('.dashboard-hero')).toBeVisible();await context.setOffline(false);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\prompt4-pwa.spec.ts",
+                        "column": 55,
+                        "line": 26
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('meta[name=app-version]')\nExpected: \u001b[32m\"pwa-test-\u001b[7mb\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"pwa-test-\u001b[7ma\u001b[27m\"\u001b[39m\nTimeout:  30000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for locator('meta[name=app-version]')\u001b[22m\n\u001b[2m    33 × locator resolved to <meta name=\"app-version\" content=\"pwa-test-a\"/>\u001b[22m\n\u001b[2m       - unexpected value \"pwa-test-a\"\u001b[22m\n\n\n  24 |  current='b';await page.evaluate(async()=>{await(await navigator.serviceWorker.getRegistration())?.update();window.dispatchEvent(new Event('focus'));});await expect(page.getByText('Доступна новая версия',{exact:true})).toBeVisible({timeout:30000});\n  25 |  await page.waitForTimeout(9000);await expect(page.locator('meta[name=app-version]')).toHaveAttribute('content','pwa-test-a');await page.locator('.pwa-update').getByRole('button',{name:'Обновить',exact:true}).click();\n> 26 |  await expect(page.locator('meta[name=app-version]')).toHaveAttribute('content','pwa-test-b',{timeout:30000});await expect(page.locator('.account-form input').first()).toHaveValue('Черновик родителя');\n     |                                                       ^\n  27 |  await page.getByRole('button',{name:'ҚАЗ',exact:true}).click();await expect(page.locator('.account-form input').first()).toHaveValue('Черновик родителя');\n  28 |  expect(await page.evaluate(()=>localStorage.getItem('keep-user-data'))).toBe('preserved');const keys=await page.evaluate(()=>caches.keys());expect(keys).not.toContain('birge-bol-precache-obsolete');expect(keys).toContain('unrelated-user-data');\n  29 |  await context.setOffline(true);await page.reload();await expect(page.locator('.account-form input').first()).toHaveValue('Черновик родителя');await page.goto(base+'/app');await expect(page.locator('.dashboard-hero')).toBeVisible();await context.setOffline(false);\n    at C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\prompt4-pwa.spec.ts:26:55"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:41:29.598Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\Администратор\\Desktop\\Birge bol\\test-results\\prompt4-pwa-an-installed-P-88df0-led-draft-and-works-offline\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\Администратор\\Desktop\\Birge bol\\test-results\\prompt4-pwa-an-installed-P-88df0-led-draft-and-works-offline\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\prompt4-pwa.spec.ts",
+                    "column": 55,
+                    "line": 26
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "2452f583d54493cde99a-2a5c8687c0058f71a45c",
+          "file": "prompt4-pwa.spec.ts",
+          "line": 21,
+          "column": 1
+        },
+        {
+          "title": "a removed lazy chunk reloads once and does not erase the previous form draft",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7207,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:42:36.545Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2452f583d54493cde99a-fa0d6db1fad0f7ffc306",
+          "file": "prompt4-pwa.spec.ts",
+          "line": 31,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "prompt5.spec.ts",
+      "file": "prompt5.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "one mascot is present in landing, assistant, gallery, errors and cookie preferences",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8078,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:42:47.297Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6e8355183abe8d2f7446-280cfa8cf382b29b1354",
+          "file": "prompt5.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "search suggestions use keyboard and apply a district filter",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2513,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:42:55.431Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6e8355183abe8d2f7446-40513bde4fc1ca0f99bd",
+          "file": "prompt5.spec.ts",
+          "line": 10,
+          "column": 1
+        },
+        {
+          "title": "clinic journal uses its snapshot and opens the existing appointment actions",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2013,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:42:58.042Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6e8355183abe8d2f7446-6cfc2024891f6362fca3",
+          "file": "prompt5.spec.ts",
+          "line": 11,
+          "column": 1
+        },
+        {
+          "title": "landing, catalog, settings and errors fit all requested widths",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 17891,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:43:00.134Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6e8355183abe8d2f7446-51f7f34848669dd28827",
+          "file": "prompt5.spec.ts",
+          "line": 12,
+          "column": 1
+        },
+        {
+          "title": "reduced motion stops mascot animation and unsupported push is honest",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2380,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:43:18.068Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6e8355183abe8d2f7446-7d3bef50fc523fdb005a",
+          "file": "prompt5.spec.ts",
+          "line": 13,
+          "column": 1
+        },
+        {
+          "title": "payment cart uses the same booking and moves a confirmed payment into history",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5710,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:43:20.495Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6e8355183abe8d2f7446-58d855d657b68d4ec110",
+          "file": "prompt5.spec.ts",
+          "line": 14,
+          "column": 1
+        },
+        {
+          "title": "first visit offers cookie choices and optional media refusal does not affect login",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3012,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:43:26.257Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6e8355183abe8d2f7446-6682122ab00507548614",
+          "file": "prompt5.spec.ts",
+          "line": 20,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "promt2.spec.ts",
+      "file": "promt2.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "parent profile, synthetic document cards and saved changes survive reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2204,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:43:29.329Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "19386ce5450d639ab0bc-7b095bc6b12e98040b2f",
+          "file": "promt2.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "community filters and synthetic replies persist",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4693,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:43:31.557Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "19386ce5450d639ab0bc-a153c81ddb511060cca0",
+          "file": "promt2.spec.ts",
+          "line": 5,
+          "column": 1
+        },
+        {
+          "title": "parent home video and mobile navigation remain available",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3492,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:43:36.280Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "19386ce5450d639ab0bc-290de736def627d13beb",
+          "file": "promt2.spec.ts",
+          "line": 6,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "promt3.spec.ts",
+      "file": "promt3.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "public landing, protected routes, comparison and existing parent features",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 16899,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:43:39.856Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "fd5e3daa6bc828a253b0-15523c3622b2c515827a",
+          "file": "promt3.spec.ts",
+          "line": 5,
+          "column": 1
+        },
+        {
+          "title": "parent → provider → visit code → review → homework → diary → clinic",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 29960,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:43:56.813Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "fd5e3daa6bc828a253b0-01cb0784a4d7a9fe5102",
+          "file": "promt3.spec.ts",
+          "line": 8,
+          "column": 1
+        },
+        {
+          "title": "specialist design, navigation, profile, schedule and mobile layout",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6923,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:44:26.853Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "fd5e3daa6bc828a253b0-0480d2c869702f879f33",
+          "file": "promt3.spec.ts",
+          "line": 13,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "slot-sync.spec.ts",
+      "file": "slot-sync.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "provider availability updates in the parent tab and removed selections cannot be booked",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6296,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:44:33.842Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8ac4d4223eb04a012835-9b3e902a2e66fabe9146",
+          "file": "slot-sync.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "smoke.spec.ts",
+      "file": "smoke.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "public landing/legal pages and protected app routes load",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2477,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:44:40.280Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4219922fea2e2bd3c691-d453d50a4a4b543f56e2",
+          "file": "smoke.spec.ts",
+          "line": 2,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "team-community.spec.ts",
+      "file": "team-community.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "a parent grants and revokes access to the common plan",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2883,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:44:42.818Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6efae25a55cf94c7501d-e71524f716a7518941b2",
+          "file": "team-community.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "community interests persist and nested replies survive reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3918,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:44:45.727Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6efae25a55cf94c7501d-be10e814d10933578dc7",
+          "file": "team-community.spec.ts",
+          "line": 7,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "ui.spec.ts",
+      "file": "ui.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "catalog pagination and individual filters remain functional",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3998,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:44:49.705Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d425444c687fa36b5882-266b14eaa18eb794f59e",
+          "file": "ui.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "mobile booking shortcut reaches the booking form and dialog focus is restored",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4286,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:44:53.727Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d425444c687fa36b5882-9b1af37a5c7ec9de1d99",
+          "file": "ui.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "small screens fit and reduced motion is respected",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3868,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:44:58.039Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d425444c687fa36b5882-e58b1cd3c65d4577d71d",
+          "file": "ui.spec.ts",
+          "line": 5,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "visit-upgrade.spec.ts",
+      "file": "visit-upgrade.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "near slots lead the catalogue; later and unavailable specialists remain distinguishable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2741,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:45:01.996Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "eecaf71aa3bd6e284cf1-0fc99e3c38efe292b3e5",
+          "file": "visit-upgrade.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "the keyword guide and database-style web map lead to role-appropriate tabs; payment demo shows both paths",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4493,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:45:04.763Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "eecaf71aa3bd6e284cf1-c76891ae1e0385e51ee3",
+          "file": "visit-upgrade.spec.ts",
+          "line": 14,
+          "column": 1
+        },
+        {
+          "title": "printed provider QR stays stable; paid visit is verified only within its time window and only once",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7771,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:45:09.285Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "eecaf71aa3bd6e284cf1-79d5c512bfcd0ddfa9bc",
+          "file": "visit-upgrade.spec.ts",
+          "line": 21,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-17T09:40:22.473Z",
+    "duration": 298615.592,
+    "expected": 40,
+    "skipped": 5,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

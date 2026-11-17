@@ -1,0 +1,8 @@
+const fs=require('node:fs');const edit=(p,f)=>fs.writeFileSync(p,f(fs.readFileSync(p,'utf8')));
+edit('src/pages/auth.tsx',s=>"import { assertPasswordSafe } from '../lib/password-security';\n"+s.replace("if (!consent) throw Error('Подтвердите условия');","if (!consent) throw Error('Подтвердите условия');await assertPasswordSafe(password);").replace('minLength={8} autoComplete={signup','minLength={signup?12:8} maxLength={128} disabled={busy} autoComplete={signup'));
+edit('src/pages/auth-recovery.tsx',s=>"import { assertPasswordSafe } from '../lib/password-security';\n"+s.replace("const result=await supabase.auth.updateUser({password});","await assertPasswordSafe(password);const result=await supabase.auth.updateUser({password});"));
+edit('src/lib/safe-error.ts',s=>s.replace('Нет доступа|Нет подтверждённой записи','Этот пароль встречается|Выберите более надёжный пароль|Проверка безопасности пароля|Нет доступа|Нет подтверждённой записи'));
+for(const p of ['scripts/vercel-release.cjs','scripts/package-vercel-demo.cjs'])edit(p,s=>s.replace("connect-src 'self' https://tile.openstreetmap.org", "connect-src 'self' https://api.pwnedpasswords.com https://tile.openstreetmap.org"));
+edit('src/pages/legal-documents.tsx',s=>s.replace('Внешней модели нельзя передавать личные сообщения и данные детей.','Внешней модели нельзя передавать личные сообщения и данные детей. Для проверки новых паролей сервис Pwned Passwords получает только первые 5 символов SHA-1-хеша и сетевые метаданные; пароль, полный хеш и email не передаются.'));
+edit('scripts/finish-promt2.cjs',s=>s.replace('replace(/.$/','replace(/[.]$/'));
+console.log('Free form-level compromised-password protection added; Supabase native switch remains unavailable on Free.');

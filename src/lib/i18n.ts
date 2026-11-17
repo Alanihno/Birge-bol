@@ -1,3 +1,4 @@
+import prompt5Kk from '../locales/kk-prompt5.json';
 import { presentationCopy } from './presentation-copy';
 import { useSyncExternalStore } from 'react';
 import kk from '../locales/kk.json';
@@ -14,7 +15,7 @@ const subscribe=(listener:()=>void)=>{listeners.add(listener);return()=>{listene
 export function useLocale(){return useSyncExternalStore(subscribe,()=>current);}
 export function locale(){return current==='kk'?'kk-KZ':'ru-RU';}
 export function setLocale(value:Locale){current=value;localStorage.setItem('bb-lang',value);document.documentElement.lang=value;document.title=value==='kk'?'Birge Bol — бірге бол':'Birge Bol — быть рядом';listeners.forEach(fn=>fn());}
-const translations:Record<string,string>={...kk,...contestKk,...contentKk,...communityKk,...prompt4Kk,'Оплата записей':'Қабылдауларды төлеу','Безопасность и поддержка':'Қауіпсіздік және қолдау','Центры и клиники':'Орталықтар мен клиникалар','Адреса, направления, специалисты и доступное время.':'Мекенжайлар, бағыттар, мамандар және бос уақыт.','Адреса и филиалы':'Мекенжайлар мен филиалдар','Специалисты центра':'Орталық мамандары','Все города':'Барлық қалалар','Ближайшее время':'Ең жақын уақыт','Время уточняется':'Уақыты нақтыланады','Центры пока не добавлены':'Орталықтар әлі қосылмаған','Оплаченные записи':'Төленген қабылдаулар','Оплата подтверждена':'Төлем расталды','Ближайшие приёмы':'Алдағы қабылдаулар'};
+const translations:Record<string,string>={...kk,...contestKk,...contentKk,...communityKk,...prompt4Kk,...prompt5Kk,'Оплата записей':'Қабылдауларды төлеу','Безопасность и поддержка':'Қауіпсіздік және қолдау','Центры и клиники':'Орталықтар мен клиникалар','Адреса, направления, специалисты и доступное время.':'Мекенжайлар, бағыттар, мамандар және бос уақыт.','Адреса и филиалы':'Мекенжайлар мен филиалдар','Специалисты центра':'Орталық мамандары','Все города':'Барлық қалалар','Ближайшее время':'Ең жақын уақыт','Время уточняется':'Уақыты нақтыланады','Центры пока не добавлены':'Орталықтар әлі қосылмаған','Оплаченные записи':'Төленген қабылдаулар','Оплата подтверждена':'Төлем расталды','Ближайшие приёмы':'Алдағы қабылдаулар'};
 const revisions=ru as Record<string,string>;
 const fragments=Object.keys(translations).filter(k=>k.length>2).sort((a,b)=>b.length-a.length);
 const escaped=fragments.map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));

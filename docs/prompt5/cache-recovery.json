@@ -1,0 +1,247 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\Администратор\\Desktop\\Birge bol\\playwright.config.ts",
+    "rootDir": "C:/Users/Администратор/Desktop/Birge bol/tests",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Администратор/Desktop/Birge bol/.preview/cache-recovery",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/Администратор/Desktop/Birge bol/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 45000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.2",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "cache-recovery.spec.ts",
+      "file": "cache-recovery.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "an existing browser with a stale worker and missing entry recovers without losing account storage",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1032,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T10:26:35.227Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3124840fbbbc51ac8c47-f26fb817723899f8f195",
+          "file": "cache-recovery.spec.ts",
+          "line": 24,
+          "column": 1
+        },
+        {
+          "title": "a still broken release stops after one recovery instead of looping",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5390,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m2\u001b[39m\nReceived: \u001b[31m4\u001b[39m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m2\u001b[39m\nReceived: \u001b[31m4\u001b[39m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n    at C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\cache-recovery.spec.ts:33:168",
+                    "location": {
+                      "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\cache-recovery.spec.ts",
+                      "column": 168,
+                      "line": 33
+                    },
+                    "snippet": "  31 | });\n  32 | test('a still broken release stops after one recovery instead of looping',async({page})=>{\n> 33 |  broken=true;navigations=0;await page.goto(base+'/auth');await expect(page.getByRole('button',{name:'Восстановить загрузку',exact:true})).toBeVisible({timeout:15000});await expect.poll(()=>navigations).toBe(2);await page.waitForTimeout(1000);expect(navigations).toBe(2);broken=false;\n     |                                                                                                                                                                        ^\n  34 | });\n  35 | test('an unavailable release keeps offline files and the existing worker',async({page})=>{\n  36 |  failVersion=true;try{await page.goto(base+'/legacy-install.html');await page.evaluate(async()=>{await (window as Window&{installed?:Promise<unknown>}).installed;});await page.goto(base+'/auth');await expect(page.getByRole('button',{name:'Восстановить загрузку',exact:true})).toBeVisible();expect(await page.evaluate(()=>caches.keys())).toContain('birge-bol-precache-legacy');expect(await page.evaluate(async()=>!!await navigator.serviceWorker.getRegistration())).toBe(true);}finally{failVersion=false;}"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\cache-recovery.spec.ts",
+                        "column": 168,
+                        "line": 33
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m2\u001b[39m\nReceived: \u001b[31m4\u001b[39m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n\n  31 | });\n  32 | test('a still broken release stops after one recovery instead of looping',async({page})=>{\n> 33 |  broken=true;navigations=0;await page.goto(base+'/auth');await expect(page.getByRole('button',{name:'Восстановить загрузку',exact:true})).toBeVisible({timeout:15000});await expect.poll(()=>navigations).toBe(2);await page.waitForTimeout(1000);expect(navigations).toBe(2);broken=false;\n     |                                                                                                                                                                        ^\n  34 | });\n  35 | test('an unavailable release keeps offline files and the existing worker',async({page})=>{\n  36 |  failVersion=true;try{await page.goto(base+'/legacy-install.html');await page.evaluate(async()=>{await (window as Window&{installed?:Promise<unknown>}).installed;});await page.goto(base+'/auth');await expect(page.getByRole('button',{name:'Восстановить загрузку',exact:true})).toBeVisible();expect(await page.evaluate(()=>caches.keys())).toContain('birge-bol-precache-legacy');expect(await page.evaluate(async()=>!!await navigator.serviceWorker.getRegistration())).toBe(true);}finally{failVersion=false;}\n    at C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\cache-recovery.spec.ts:33:168"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T10:26:36.895Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\Администратор\\Desktop\\Birge bol\\.preview\\cache-recovery\\cache-recovery-a-still-bro-a70cc-recovery-instead-of-looping\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\Администратор\\Desktop\\Birge bol\\.preview\\cache-recovery\\cache-recovery-a-still-bro-a70cc-recovery-instead-of-looping\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\cache-recovery.spec.ts",
+                    "column": 168,
+                    "line": 33
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "3124840fbbbc51ac8c47-8474e84a16d20c1b0445",
+          "file": "cache-recovery.spec.ts",
+          "line": 32,
+          "column": 1
+        },
+        {
+          "title": "an unavailable release keeps offline files and the existing worker",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 698,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T10:26:44.469Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3124840fbbbc51ac8c47-c91b262073933dabbf60",
+          "file": "cache-recovery.spec.ts",
+          "line": 35,
+          "column": 1
+        },
+        {
+          "title": "the recovery URL also escapes an old worker that intercepts that URL",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 781,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T10:26:46.529Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3124840fbbbc51ac8c47-b023eea0fd0159b72e2b",
+          "file": "cache-recovery.spec.ts",
+          "line": 38,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-17T10:26:32.897Z",
+    "duration": 14666.372,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

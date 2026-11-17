@@ -1,0 +1,5244 @@
+{
+  "tables": [
+    {
+      "name": "consent_events",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "kind",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "document_version",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "granted",
+          "type": "boolean",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "recipient_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "clock_timestamp()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX consent_events_pkey ON public.consent_events USING btree (id)",
+        "CREATE INDEX consent_user_time ON public.consent_events USING btree (user_id, created_at DESC)"
+      ],
+      "policies": [
+        {
+          "name": "consent_insert",
+          "check": "((user_id = ( SELECT auth.uid() AS uid)) AND (document_version = '2026-11-17.draft.1'::text))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": null,
+          "command": "INSERT"
+        },
+        {
+          "name": "consent_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(user_id = ( SELECT auth.uid() AS uid))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "CHECK (((length(document_version) >= 1) AND (length(document_version) <= 80)))",
+        "CHECK ((kind = ANY (ARRAY['platform'::text, 'child_authority'::text, 'data_share'::text])))",
+        "PRIMARY KEY (id)",
+        "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "push_subscriptions",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "endpoint",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "p256dh",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "auth",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX push_subscriptions_pkey ON public.push_subscriptions USING btree (id)",
+        "CREATE UNIQUE INDEX push_subscriptions_endpoint_key ON public.push_subscriptions USING btree (endpoint)",
+        "CREATE INDEX push_owner ON public.push_subscriptions USING btree (user_id)"
+      ],
+      "policies": [
+        {
+          "name": "push_own_delete",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(user_id = ( SELECT auth.uid() AS uid))",
+          "command": "DELETE"
+        },
+        {
+          "name": "push_own_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(user_id = ( SELECT auth.uid() AS uid))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "CHECK (((length(auth) >= 20) AND (length(auth) <= 30)))",
+        "CHECK ((length(endpoint) < 2048))",
+        "UNIQUE (endpoint)",
+        "CHECK (((length(p256dh) >= 80) AND (length(p256dh) <= 100)))",
+        "PRIMARY KEY (id)",
+        "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "user_roles",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "role",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX user_roles_pkey ON public.user_roles USING btree (user_id)"
+      ],
+      "policies": [
+        {
+          "name": "own_role",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(user_id = ( SELECT auth.uid() AS uid))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "PRIMARY KEY (user_id)",
+        "CHECK ((role = ANY (ARRAY['parent'::text, 'specialist'::text, 'clinic'::text, 'mentor'::text, 'moderator'::text, 'admin'::text])))",
+        "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "notification_preferences",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "appointments",
+          "type": "boolean",
+          "default": "true",
+          "nullable": "NO"
+        },
+        {
+          "name": "assignments",
+          "type": "boolean",
+          "default": "true",
+          "nullable": "NO"
+        },
+        {
+          "name": "messages",
+          "type": "boolean",
+          "default": "true",
+          "nullable": "NO"
+        },
+        {
+          "name": "payments",
+          "type": "boolean",
+          "default": "true",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX notification_preferences_pkey ON public.notification_preferences USING btree (user_id)"
+      ],
+      "policies": [
+        {
+          "name": "preferences_own",
+          "check": "(user_id = ( SELECT auth.uid() AS uid))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(user_id = ( SELECT auth.uid() AS uid))",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "PRIMARY KEY (user_id)",
+        "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "children",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "label",
+          "type": "text",
+          "default": "'Профиль · демо'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "age",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "city",
+          "type": "text",
+          "default": "'Алматы'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "district",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "concerns",
+          "type": "ARRAY",
+          "default": "'{}'::text[]",
+          "nullable": "NO"
+        },
+        {
+          "name": "experience",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "budget",
+          "type": "integer",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "format",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "name": "diagnosis",
+          "type": "text",
+          "default": "''::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "case_group",
+          "type": "text",
+          "default": "'unknown'::text",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX children_pkey ON public.children USING btree (id)",
+        "CREATE UNIQUE INDEX children_id_parent_id_key ON public.children USING btree (id, parent_id)",
+        "CREATE INDEX children_parent_id_idx ON public.children USING btree (parent_id)"
+      ],
+      "policies": [
+        {
+          "name": "owner_delete",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "DELETE"
+        },
+        {
+          "name": "owner_insert",
+          "check": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": null,
+          "command": "INSERT"
+        },
+        {
+          "name": "owner_select",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "SELECT"
+        },
+        {
+          "name": "owner_update",
+          "check": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "UPDATE"
+        }
+      ],
+      "constraints": [
+        "CHECK ((age = ANY (ARRAY['2–3'::text, '4–5'::text, '6–8'::text, '9–12'::text])))",
+        "CHECK (((budget >= 0) AND (budget <= 1000000)))",
+        "CHECK ((case_group = ANY (ARRAY['unknown'::text, 'speech'::text, 'autism'::text, 'learning'::text, 'attention'::text, 'other'::text])))",
+        "CHECK ((length(city) <= 60))",
+        "CHECK ((concerns <@ ARRAY['speech'::text, 'communication'::text, 'behavior'::text, 'learning'::text, 'attention'::text, 'writing'::text, 'other'::text]))",
+        "CHECK ((length(district) <= 60))",
+        "CHECK ((experience = ANY (ARRAY['first'::text, 'visited'::text, 'conclusion'::text])))",
+        "CHECK ((format = ANY (ARRAY['any'::text, 'online'::text, 'offline'::text])))",
+        "UNIQUE (id, parent_id)",
+        "CHECK ((length(label) <= 80))",
+        "FOREIGN KEY (parent_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "PRIMARY KEY (id)"
+      ]
+    },
+    {
+      "name": "consent_records",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "purpose",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "version",
+          "type": "text",
+          "default": "'mvp-1'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "granted",
+          "type": "boolean",
+          "default": "true",
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX consent_records_pkey ON public.consent_records USING btree (id)",
+        "CREATE INDEX consent_records_parent_id_idx ON public.consent_records USING btree (parent_id)"
+      ],
+      "policies": [
+        {
+          "name": "owner_delete",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "DELETE"
+        },
+        {
+          "name": "owner_insert",
+          "check": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": null,
+          "command": "INSERT"
+        },
+        {
+          "name": "owner_select",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (parent_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "PRIMARY KEY (id)",
+        "CHECK ((purpose = ANY (ARRAY['synthetic_profile'::text, 'question'::text, 'review'::text, 'telegram'::text])))"
+      ]
+    },
+    {
+      "name": "child_goals",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "child_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "metric",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "target",
+          "type": "integer",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "due_at",
+          "type": "date",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'active'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "name": "specialist_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "stage",
+          "type": "integer",
+          "default": "1",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX child_goals_pkey ON public.child_goals USING btree (id)",
+        "CREATE UNIQUE INDEX child_goals_id_parent_id_key ON public.child_goals USING btree (id, parent_id)",
+        "CREATE INDEX child_goals_parent_id_idx ON public.child_goals USING btree (parent_id)",
+        "CREATE INDEX goals_child ON public.child_goals USING btree (child_id)"
+      ],
+      "policies": [
+        {
+          "name": "goal_update",
+          "check": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "UPDATE"
+        },
+        {
+          "name": "owner_delete",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "DELETE"
+        },
+        {
+          "name": "owner_insert",
+          "check": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": null,
+          "command": "INSERT"
+        },
+        {
+          "name": "owner_select",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "SELECT"
+        },
+        {
+          "name": "specialist_goals",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "private.has_patient(child_id)",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (child_id, parent_id) REFERENCES children(id, parent_id) ON DELETE CASCADE",
+        "UNIQUE (id, parent_id)",
+        "CHECK ((length(metric) <= 100))",
+        "FOREIGN KEY (parent_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "PRIMARY KEY (id)",
+        "FOREIGN KEY (specialist_id) REFERENCES specialists(id)",
+        "CHECK (((stage >= 1) AND (stage <= 4)))",
+        "CHECK ((status = ANY (ARRAY['active'::text, 'completed'::text, 'paused'::text])))",
+        "CHECK (((target >= 1) AND (target <= 1000)))",
+        "CHECK (((length(title) >= 5) AND (length(title) <= 180)))"
+      ]
+    },
+    {
+      "name": "support_tickets",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "category",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "subject",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "body",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'open'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "reply",
+          "type": "text",
+          "default": "''::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX support_tickets_pkey ON public.support_tickets USING btree (id)",
+        "CREATE INDEX support_owner_recent ON public.support_tickets USING btree (user_id, created_at DESC)"
+      ],
+      "policies": [
+        {
+          "name": "support_create",
+          "check": "((user_id = ( SELECT auth.uid() AS uid)) AND (status = 'open'::text) AND (reply = ''::text))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": null,
+          "command": "INSERT"
+        },
+        {
+          "name": "support_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "((user_id = ( SELECT auth.uid() AS uid)) OR ( SELECT private.is_staff() AS is_staff))",
+          "command": "SELECT"
+        },
+        {
+          "name": "support_staff_reply",
+          "check": "( SELECT private.is_staff() AS is_staff)",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "( SELECT private.is_staff() AS is_staff)",
+          "command": "UPDATE"
+        }
+      ],
+      "constraints": [
+        "CHECK (((length(btrim(body)) >= 10) AND (length(btrim(body)) <= 2000)))",
+        "CHECK ((category = ANY (ARRAY['booking'::text, 'payment'::text, 'privacy'::text, 'account'::text, 'other'::text])))",
+        "PRIMARY KEY (id)",
+        "CHECK ((length(reply) <= 4000))",
+        "CHECK ((status = ANY (ARRAY['open'::text, 'in_progress'::text, 'answered'::text, 'closed'::text])))",
+        "CHECK (((length(btrim(subject)) >= 5) AND (length(btrim(subject)) <= 120)))",
+        "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "profiles",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "language",
+          "type": "text",
+          "default": "'ru'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "name": "contact",
+          "type": "text",
+          "default": "''::text",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX profiles_pkey ON public.profiles USING btree (id)"
+      ],
+      "policies": [
+        {
+          "name": "own_profile",
+          "check": "(id = ( SELECT auth.uid() AS uid))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(id = ( SELECT auth.uid() AS uid))",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "CHECK ((language = ANY (ARRAY['ru'::text, 'kk'::text])))",
+        "PRIMARY KEY (id)"
+      ]
+    },
+    {
+      "name": "cities",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX cities_pkey ON public.cities USING btree (id)",
+        "CREATE UNIQUE INDEX cities_name_key ON public.cities USING btree (name)"
+      ],
+      "policies": [
+        {
+          "name": "public_read",
+          "check": null,
+          "roles": [
+            "anon",
+            "authenticated"
+          ],
+          "using": "true",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "UNIQUE (name)",
+        "PRIMARY KEY (id)"
+      ]
+    },
+    {
+      "name": "districts",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "city_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX districts_pkey ON public.districts USING btree (id)",
+        "CREATE UNIQUE INDEX districts_city_id_name_key ON public.districts USING btree (city_id, name)"
+      ],
+      "policies": [
+        {
+          "name": "public_read",
+          "check": null,
+          "roles": [
+            "anon",
+            "authenticated"
+          ],
+          "using": "true",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (city_id) REFERENCES cities(id)",
+        "UNIQUE (city_id, name)",
+        "PRIMARY KEY (id)"
+      ]
+    },
+    {
+      "name": "specializations",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX specializations_pkey ON public.specializations USING btree (id)",
+        "CREATE UNIQUE INDEX specializations_name_key ON public.specializations USING btree (name)"
+      ],
+      "policies": [
+        {
+          "name": "public_read",
+          "check": null,
+          "roles": [
+            "anon",
+            "authenticated"
+          ],
+          "using": "true",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "UNIQUE (name)",
+        "PRIMARY KEY (id)"
+      ]
+    },
+    {
+      "name": "mentors",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "alias",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "opted_in",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "name": "approved",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX mentors_pkey ON public.mentors USING btree (id)"
+      ],
+      "policies": [
+        {
+          "name": "staff_mentors",
+          "check": "( SELECT private.is_staff() AS is_staff)",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "( SELECT private.is_staff() AS is_staff)",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "PRIMARY KEY (id)"
+      ]
+    },
+    {
+      "name": "audit_logs",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "actor_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "entity",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "entity_id",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "action",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX audit_logs_pkey ON public.audit_logs USING btree (id)"
+      ],
+      "policies": [
+        {
+          "name": "own_care_history",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "((actor_id = ( SELECT auth.uid() AS uid)) AND (entity = 'care'::text))",
+          "command": "SELECT"
+        },
+        {
+          "name": "staff_audit",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "( SELECT private.is_staff() AS is_staff)",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (actor_id) REFERENCES auth.users(id) ON DELETE SET NULL",
+        "PRIMARY KEY (id)"
+      ]
+    },
+    {
+      "name": "waitlist",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "specialist_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "consent",
+          "type": "boolean",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX waitlist_pkey ON public.waitlist USING btree (id)",
+        "CREATE UNIQUE INDEX waitlist_parent_id_specialist_id_key ON public.waitlist USING btree (parent_id, specialist_id)",
+        "CREATE INDEX waitlist_parent_id_idx ON public.waitlist USING btree (parent_id)"
+      ],
+      "policies": [
+        {
+          "name": "owner_delete",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "DELETE"
+        },
+        {
+          "name": "owner_insert",
+          "check": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": null,
+          "command": "INSERT"
+        },
+        {
+          "name": "owner_select",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "CHECK (consent)",
+        "FOREIGN KEY (parent_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "UNIQUE (parent_id, specialist_id)",
+        "PRIMARY KEY (id)",
+        "FOREIGN KEY (specialist_id) REFERENCES specialists(id)"
+      ]
+    },
+    {
+      "name": "review_reports",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "review_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX review_reports_pkey ON public.review_reports USING btree (id)",
+        "CREATE UNIQUE INDEX review_reports_parent_id_review_id_key ON public.review_reports USING btree (parent_id, review_id)",
+        "CREATE INDEX review_reports_parent_id_idx ON public.review_reports USING btree (parent_id)"
+      ],
+      "policies": [
+        {
+          "name": "owner_delete",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "DELETE"
+        },
+        {
+          "name": "owner_insert",
+          "check": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": null,
+          "command": "INSERT"
+        },
+        {
+          "name": "owner_select",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "SELECT"
+        },
+        {
+          "name": "staff_reports",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "( SELECT private.is_staff() AS is_staff)",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (parent_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "UNIQUE (parent_id, review_id)",
+        "PRIMARY KEY (id)",
+        "CHECK (((length(reason) >= 5) AND (length(reason) <= 500)))",
+        "FOREIGN KEY (review_id) REFERENCES reviews(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "progress_entries",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "goal_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "value",
+          "type": "integer",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "note",
+          "type": "text",
+          "default": "''::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX progress_entries_pkey ON public.progress_entries USING btree (id)",
+        "CREATE INDEX progress_entries_parent_id_idx ON public.progress_entries USING btree (parent_id)",
+        "CREATE INDEX entries_goal ON public.progress_entries USING btree (goal_id, created_at)"
+      ],
+      "policies": [
+        {
+          "name": "owner_delete",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "DELETE"
+        },
+        {
+          "name": "owner_insert",
+          "check": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": null,
+          "command": "INSERT"
+        },
+        {
+          "name": "owner_select",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "SELECT"
+        },
+        {
+          "name": "specialist_progress",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(EXISTS ( SELECT 1\n   FROM child_goals g\n  WHERE ((g.id = progress_entries.goal_id) AND private.has_patient(g.child_id))))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (goal_id, parent_id) REFERENCES child_goals(id, parent_id) ON DELETE CASCADE",
+        "CHECK ((length(note) <= 500))",
+        "FOREIGN KEY (parent_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "PRIMARY KEY (id)",
+        "CHECK (((value >= 0) AND (value <= 1000)))"
+      ]
+    },
+    {
+      "name": "favorites",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "specialist_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX favorites_pkey ON public.favorites USING btree (parent_id, specialist_id)",
+        "CREATE INDEX favorites_parent_id_idx ON public.favorites USING btree (parent_id)"
+      ],
+      "policies": [
+        {
+          "name": "favorite_update",
+          "check": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "UPDATE"
+        },
+        {
+          "name": "owner_delete",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "DELETE"
+        },
+        {
+          "name": "owner_insert",
+          "check": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": null,
+          "command": "INSERT"
+        },
+        {
+          "name": "owner_select",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (parent_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "PRIMARY KEY (parent_id, specialist_id)",
+        "FOREIGN KEY (specialist_id) REFERENCES specialists(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "app_graph_nodes",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "label",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "kind",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "routes",
+          "type": "jsonb",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "roles",
+          "type": "ARRAY",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "tables",
+          "type": "ARRAY",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "x",
+          "type": "numeric",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "y",
+          "type": "numeric",
+          "default": null,
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX app_graph_nodes_pkey ON public.app_graph_nodes USING btree (id)"
+      ],
+      "policies": [
+        {
+          "name": "role_nodes",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "((private.care_role() = ANY (roles)) OR private.is_staff())",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "PRIMARY KEY (id)"
+      ]
+    },
+    {
+      "name": "app_graph_edges",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "source",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "target",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "relation",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "key",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX app_graph_edges_pkey ON public.app_graph_edges USING btree (source, target, relation)"
+      ],
+      "policies": [
+        {
+          "name": "role_edges",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "((EXISTS ( SELECT 1\n   FROM app_graph_nodes n\n  WHERE (n.id = app_graph_edges.source))) AND (EXISTS ( SELECT 1\n   FROM app_graph_nodes n\n  WHERE (n.id = app_graph_edges.target))))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "PRIMARY KEY (source, target, relation)",
+        "FOREIGN KEY (source) REFERENCES app_graph_nodes(id) ON DELETE CASCADE",
+        "FOREIGN KEY (target) REFERENCES app_graph_nodes(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "app_graph_keywords",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "node_id",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "keyword",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX app_graph_keywords_pkey ON public.app_graph_keywords USING btree (node_id, keyword)",
+        "CREATE INDEX app_graph_keyword_search ON public.app_graph_keywords USING btree (keyword)"
+      ],
+      "policies": [
+        {
+          "name": "role_keywords",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(EXISTS ( SELECT 1\n   FROM app_graph_nodes n\n  WHERE (n.id = app_graph_keywords.node_id)))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (node_id) REFERENCES app_graph_nodes(id) ON DELETE CASCADE",
+        "PRIMARY KEY (node_id, keyword)"
+      ]
+    },
+    {
+      "name": "clinics",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "owner_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "district",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "address",
+          "type": "text",
+          "default": "''::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "default": "''::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "services",
+          "type": "text",
+          "default": "''::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "contacts",
+          "type": "text",
+          "default": "''::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'pending'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "is_demo",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX clinics_pkey ON public.clinics USING btree (id)"
+      ],
+      "policies": [
+        {
+          "name": "clinic_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "((status = 'approved'::text) OR (owner_id = ( SELECT auth.uid() AS uid)) OR ( SELECT private.is_staff() AS is_staff))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (owner_id) REFERENCES auth.users(id) ON DELETE SET NULL",
+        "PRIMARY KEY (id)",
+        "CHECK ((status = ANY (ARRAY['pending'::text, 'approved'::text, 'rejected'::text])))"
+      ]
+    },
+    {
+      "name": "clinic_members",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "clinic_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "specialist_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'active'::text",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX clinic_members_pkey ON public.clinic_members USING btree (clinic_id, specialist_id)",
+        "CREATE INDEX members_specialist ON public.clinic_members USING btree (specialist_id)"
+      ],
+      "policies": [
+        {
+          "name": "member_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "((status = 'active'::text) OR private.clinic_owns(clinic_id) OR private.owns_specialist(specialist_id))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (clinic_id) REFERENCES clinics(id) ON DELETE CASCADE",
+        "PRIMARY KEY (clinic_id, specialist_id)",
+        "FOREIGN KEY (specialist_id) REFERENCES specialists(id) ON DELETE CASCADE",
+        "CHECK ((status = ANY (ARRAY['active'::text, 'removed'::text])))"
+      ]
+    },
+    {
+      "name": "clinic_branches",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "clinic_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "district",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "address",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX clinic_branches_pkey ON public.clinic_branches USING btree (id)"
+      ],
+      "policies": [
+        {
+          "name": "branch_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(EXISTS ( SELECT 1\n   FROM clinics c\n  WHERE (c.id = clinic_branches.clinic_id)))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (clinic_id) REFERENCES clinics(id) ON DELETE CASCADE",
+        "PRIMARY KEY (id)"
+      ]
+    },
+    {
+      "name": "clinic_invitations",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "clinic_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "email",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'pending'::text",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX clinic_invitations_pkey ON public.clinic_invitations USING btree (id)",
+        "CREATE UNIQUE INDEX clinic_invitations_clinic_id_email_key ON public.clinic_invitations USING btree (clinic_id, email)"
+      ],
+      "policies": [
+        {
+          "name": "invitation_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(private.clinic_owns(clinic_id) OR (lower(email) = lower(( SELECT (auth.jwt() ->> 'email'::text)))))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "UNIQUE (clinic_id, email)",
+        "FOREIGN KEY (clinic_id) REFERENCES clinics(id) ON DELETE CASCADE",
+        "PRIMARY KEY (id)",
+        "CHECK ((status = ANY (ARRAY['pending'::text, 'accepted'::text, 'declined'::text])))"
+      ]
+    },
+    {
+      "name": "schedule_slots",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "specialist_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "starts_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "ends_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "service",
+          "type": "text",
+          "default": "'Консультация'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "price",
+          "type": "integer",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "available",
+          "type": "boolean",
+          "default": "true",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX schedule_slots_pkey ON public.schedule_slots USING btree (id)",
+        "CREATE INDEX schedule_slots_specialist_id_tstzrange_excl ON public.schedule_slots USING gist (specialist_id, tstzrange(starts_at, ends_at, '[)'::text))",
+        "CREATE INDEX slots_specialist_start ON public.schedule_slots USING btree (specialist_id, starts_at)"
+      ],
+      "policies": [
+        {
+          "name": "slot_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "((EXISTS ( SELECT 1\n   FROM specialists s\n  WHERE ((s.id = schedule_slots.specialist_id) AND (s.published OR (s.owner_id = ( SELECT auth.uid() AS uid)))))) OR private.in_my_clinic(specialist_id))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "CHECK (((ends_at > starts_at) AND (ends_at <= (starts_at + '08:00:00'::interval))))",
+        "PRIMARY KEY (id)",
+        "CHECK ((price >= 0))",
+        "FOREIGN KEY (specialist_id) REFERENCES specialists(id)",
+        "EXCLUDE USING gist (specialist_id WITH =, tstzrange(starts_at, ends_at, '[)'::text) WITH &&)"
+      ]
+    },
+    {
+      "name": "task_materials",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "author_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "goal",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "duration",
+          "type": "integer",
+          "default": "5",
+          "nullable": "NO"
+        },
+        {
+          "name": "items",
+          "type": "ARRAY",
+          "default": "'{}'::text[]",
+          "nullable": "NO"
+        },
+        {
+          "name": "steps",
+          "type": "ARRAY",
+          "default": "'{}'::text[]",
+          "nullable": "NO"
+        },
+        {
+          "name": "signs",
+          "type": "text",
+          "default": "''::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "stop",
+          "type": "text",
+          "default": "''::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "video_url",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "memo_url",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "captions_ru",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "captions_kk",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'pending'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "rights_confirmed",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "name": "is_demo",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX task_materials_pkey ON public.task_materials USING btree (id)"
+      ],
+      "policies": [
+        {
+          "name": "task_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "((author_id = ( SELECT auth.uid() AS uid)) OR ( SELECT private.is_staff() AS is_staff) OR ((status = 'approved'::text) AND ((NOT is_demo) OR ( SELECT private.demo_actor() AS demo_actor)) AND ((private.care_role() = 'specialist'::text) OR (EXISTS ( SELECT 1\n   FROM task_assignments a\n  WHERE ((a.material_id = a.id) AND (a.parent_id = ( SELECT auth.uid() AS uid))))))))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "CHECK ((((video_url IS NULL) OR (video_url ~ '^(storage:[0-9a-f-]+/[^[:space:]]+|/video/[^[:space:]]+|https://www\\.youtube\\.com/watch\\?v=[A-Za-z0-9_-]{11})$'::text)) AND ((memo_url IS NULL) OR (memo_url ~ '^(storage:[0-9a-f-]+/[^[:space:]]+|/materials/[^[:space:]]+)$'::text)) AND ((captions_ru IS NULL) OR (captions_ru ~ '^(storage:[0-9a-f-]+/[^[:space:]]+|/video/[^[:space:]]+)$'::text)) AND ((captions_kk IS NULL) OR (captions_kk ~ '^(storage:[0-9a-f-]+/[^[:space:]]+|/video/[^[:space:]]+)$'::text))))",
+        "FOREIGN KEY (author_id) REFERENCES auth.users(id) ON DELETE SET NULL",
+        "CHECK (((duration >= 1) AND (duration <= 180)))",
+        "PRIMARY KEY (id)",
+        "CHECK ((status = ANY (ARRAY['pending'::text, 'approved'::text, 'rejected'::text])))",
+        "CHECK (((length(title) >= 3) AND (length(title) <= 160)))"
+      ]
+    },
+    {
+      "name": "message_translations",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "message_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "target_language",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "source_hash",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "translated_text",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX message_translations_pkey ON public.message_translations USING btree (message_id, target_language)"
+      ],
+      "policies": [
+        {
+          "name": "translation_message_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(EXISTS ( SELECT 1\n   FROM care_messages m\n  WHERE (m.id = message_translations.message_id)))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (message_id) REFERENCES care_messages(id) ON DELETE CASCADE",
+        "PRIMARY KEY (message_id, target_language)",
+        "CHECK ((target_language = ANY (ARRAY['ru'::text, 'kk'::text])))",
+        "CHECK (((length(translated_text) >= 1) AND (length(translated_text) <= 6000)))"
+      ]
+    },
+    {
+      "name": "task_assignments",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "child_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "specialist_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "material_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "goal_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "goal_title",
+          "type": "text",
+          "default": "''::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "duration",
+          "type": "integer",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "frequency",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "due_at",
+          "type": "date",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "comment",
+          "type": "text",
+          "default": "''::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'new'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX task_assignments_pkey ON public.task_assignments USING btree (id)",
+        "CREATE INDEX assignments_child ON public.task_assignments USING btree (child_id, specialist_id)",
+        "CREATE INDEX assignments_parent ON public.task_assignments USING btree (parent_id)"
+      ],
+      "policies": [
+        {
+          "name": "assignments_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "((parent_id = ( SELECT auth.uid() AS uid)) OR (private.owns_specialist(specialist_id) AND private.has_patient(child_id)))",
+          "command": "SELECT"
+        },
+        {
+          "name": "team_assignment_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "private.team_member(child_id)",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (child_id, parent_id) REFERENCES children(id, parent_id) ON DELETE CASCADE",
+        "CHECK (((duration >= 1) AND (duration <= 180)))",
+        "FOREIGN KEY (goal_id) REFERENCES child_goals(id) ON DELETE SET NULL",
+        "FOREIGN KEY (material_id) REFERENCES task_materials(id)",
+        "FOREIGN KEY (parent_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "PRIMARY KEY (id)",
+        "FOREIGN KEY (specialist_id) REFERENCES specialists(id)",
+        "CHECK ((status = ANY (ARRAY['new'::text, 'active'::text, 'done'::text, 'difficult'::text, 'cancelled'::text])))"
+      ]
+    },
+    {
+      "name": "task_completions",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "assignment_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "child_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "specialist_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "outcome",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "comment",
+          "type": "text",
+          "default": "''::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX task_completions_pkey ON public.task_completions USING btree (id)",
+        "CREATE UNIQUE INDEX task_once_daily ON public.task_completions USING btree (assignment_id, (((created_at AT TIME ZONE 'Asia/Almaty'::text))::date))",
+        "CREATE INDEX completions_parent ON public.task_completions USING btree (parent_id, created_at)",
+        "CREATE INDEX completions_assignment ON public.task_completions USING btree (assignment_id)"
+      ],
+      "policies": [
+        {
+          "name": "completions_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "((parent_id = ( SELECT auth.uid() AS uid)) OR (private.owns_specialist(specialist_id) AND private.has_patient(child_id)))",
+          "command": "SELECT"
+        },
+        {
+          "name": "team_completion_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "private.team_member(child_id)",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (assignment_id) REFERENCES task_assignments(id) ON DELETE CASCADE",
+        "FOREIGN KEY (child_id) REFERENCES children(id) ON DELETE CASCADE",
+        "CHECK ((length(comment) <= 1000))",
+        "CHECK ((outcome = ANY (ARRAY['good'::text, 'partial'::text, 'difficult'::text])))",
+        "FOREIGN KEY (parent_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "PRIMARY KEY (id)",
+        "FOREIGN KEY (specialist_id) REFERENCES specialists(id)"
+      ]
+    },
+    {
+      "name": "care_messages",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "appointment_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "sender_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "body",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX care_messages_pkey ON public.care_messages USING btree (id)",
+        "CREATE INDEX messages_appointment ON public.care_messages USING btree (appointment_id)"
+      ],
+      "policies": [
+        {
+          "name": "message_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(EXISTS ( SELECT 1\n   FROM appointments a\n  WHERE ((a.id = care_messages.appointment_id) AND ((a.parent_id = ( SELECT auth.uid() AS uid)) OR private.owns_specialist(a.specialist_id)))))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (appointment_id) REFERENCES appointments(id) ON DELETE CASCADE",
+        "CHECK (((length(body) >= 1) AND (length(body) <= 2000)))",
+        "PRIMARY KEY (id)",
+        "FOREIGN KEY (sender_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "family_task_links",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "assignment_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "token_hash",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "revoked",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX family_task_links_pkey ON public.family_task_links USING btree (id)",
+        "CREATE UNIQUE INDEX family_task_links_token_hash_key ON public.family_task_links USING btree (token_hash)"
+      ],
+      "policies": [
+        {
+          "name": "links_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (assignment_id) REFERENCES task_assignments(id) ON DELETE CASCADE",
+        "FOREIGN KEY (parent_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "PRIMARY KEY (id)",
+        "UNIQUE (token_hash)"
+      ]
+    },
+    {
+      "name": "care_reminders",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "to",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "due_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "delivered",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX care_reminders_pkey ON public.care_reminders USING btree (id)",
+        "CREATE INDEX reminders_due ON public.care_reminders USING btree (user_id, due_at) WHERE (NOT delivered)"
+      ],
+      "policies": [
+        {
+          "name": "reminders_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(user_id = ( SELECT auth.uid() AS uid))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "PRIMARY KEY (id)",
+        "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "qualification_documents",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "owner_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "document_url",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'pending'::text",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX qualification_documents_pkey ON public.qualification_documents USING btree (id)"
+      ],
+      "policies": [
+        {
+          "name": "documents_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "((owner_id = ( SELECT auth.uid() AS uid)) OR ( SELECT private.is_staff() AS is_staff))",
+          "command": "SELECT"
+        },
+        {
+          "name": "staff_materials",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "( SELECT private.is_staff() AS is_staff)",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (owner_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "PRIMARY KEY (id)",
+        "CHECK ((status = ANY (ARRAY['pending'::text, 'approved'::text, 'rejected'::text])))"
+      ]
+    },
+    {
+      "name": "appointments",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "child_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "specialist_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "starts_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'self_reported'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "name": "slot_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "ends_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "service",
+          "type": "text",
+          "default": "'Консультация'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "default": "''::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "contact",
+          "type": "text",
+          "default": "''::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "share_diary",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "name": "diagnosis",
+          "type": "text",
+          "default": "''::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "visit_verified",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "name": "is_demo",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "name": "clinic_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "proposed_slot_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "visited_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "name": "visit_format",
+          "type": "text",
+          "default": "'offline'::text",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX appointments_pkey ON public.appointments USING btree (id)",
+        "CREATE INDEX appointments_parent_id_idx ON public.appointments USING btree (parent_id)",
+        "CREATE INDEX appointment_no_overlap ON public.appointments USING gist (specialist_id, tstzrange(starts_at, ends_at, '[)'::text)) WHERE ((status = ANY (ARRAY['pending'::text, 'confirmed'::text, 'rescheduled'::text, 'attended'::text, 'completed'::text])) AND (slot_id IS NOT NULL))",
+        "CREATE INDEX child_no_overlap ON public.appointments USING gist (child_id, tstzrange(starts_at, ends_at, '[)'::text)) WHERE ((status = ANY (ARRAY['pending'::text, 'confirmed'::text, 'rescheduled'::text, 'attended'::text, 'completed'::text])) AND (slot_id IS NOT NULL))",
+        "CREATE INDEX appointments_provider ON public.appointments USING btree (specialist_id, status)",
+        "CREATE INDEX appointments_clinic ON public.appointments USING btree (clinic_id, starts_at)"
+      ],
+      "policies": [
+        {
+          "name": "owner_delete",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "DELETE"
+        },
+        {
+          "name": "owner_insert",
+          "check": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": null,
+          "command": "INSERT"
+        },
+        {
+          "name": "owner_select",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "EXCLUDE USING gist (specialist_id WITH =, tstzrange(starts_at, ends_at, '[)'::text) WITH &&) WHERE (((status = ANY (ARRAY['pending'::text, 'confirmed'::text, 'rescheduled'::text, 'attended'::text, 'completed'::text])) AND (slot_id IS NOT NULL)))",
+        "FOREIGN KEY (child_id, parent_id) REFERENCES children(id, parent_id) ON DELETE CASCADE",
+        "FOREIGN KEY (clinic_id) REFERENCES clinics(id)",
+        "CHECK ((length(contact) <= 250))",
+        "FOREIGN KEY (parent_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "PRIMARY KEY (id)",
+        "FOREIGN KEY (proposed_slot_id) REFERENCES schedule_slots(id)",
+        "CHECK ((length(reason) <= 1000))",
+        "FOREIGN KEY (slot_id) REFERENCES schedule_slots(id)",
+        "FOREIGN KEY (specialist_id) REFERENCES specialists(id)",
+        "CHECK ((status = ANY (ARRAY['self_reported'::text, 'pending'::text, 'confirmed'::text, 'rescheduled'::text, 'cancelled'::text, 'attended'::text, 'completed'::text, 'expired'::text])))",
+        "CHECK ((visit_format = ANY (ARRAY['offline'::text, 'online'::text])))",
+        "EXCLUDE USING gist (child_id WITH =, tstzrange(starts_at, ends_at, '[)'::text) WITH &&) WHERE (((status = ANY (ARRAY['pending'::text, 'confirmed'::text, 'rescheduled'::text, 'attended'::text, 'completed'::text])) AND (slot_id IS NOT NULL)))",
+        "CHECK (((slot_id IS NULL) OR ((length(reason) > 0) AND (length(contact) > 0))))"
+      ]
+    },
+    {
+      "name": "session_feedback",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "child_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "specialist_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "contact",
+          "type": "integer",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "adaptation",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "explained",
+          "type": "boolean",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "goal",
+          "type": "boolean",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "comfortable",
+          "type": "boolean",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX session_feedback_pkey ON public.session_feedback USING btree (id)",
+        "CREATE INDEX session_feedback_parent_id_idx ON public.session_feedback USING btree (parent_id)",
+        "CREATE INDEX feedback_specialist ON public.session_feedback USING btree (specialist_id)"
+      ],
+      "policies": [
+        {
+          "name": "owner_delete",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "DELETE"
+        },
+        {
+          "name": "owner_insert",
+          "check": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": null,
+          "command": "INSERT"
+        },
+        {
+          "name": "owner_select",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "CHECK ((adaptation = ANY (ARRAY['yes'::text, 'partial'::text, 'no'::text])))",
+        "FOREIGN KEY (child_id, parent_id) REFERENCES children(id, parent_id) ON DELETE CASCADE",
+        "CHECK (((contact >= 1) AND (contact <= 5)))",
+        "FOREIGN KEY (parent_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "PRIMARY KEY (id)",
+        "FOREIGN KEY (specialist_id) REFERENCES specialists(id)"
+      ]
+    },
+    {
+      "name": "reviews",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "specialist_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "feedback_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "body",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "contact",
+          "type": "integer",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'pending'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "evidence",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "is_demo",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "name": "appointment_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "strengths",
+          "type": "ARRAY",
+          "default": "'{}'::text[]",
+          "nullable": "NO"
+        },
+        {
+          "name": "visit_verified",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX reviews_pkey ON public.reviews USING btree (id)",
+        "CREATE INDEX reviews_specialist ON public.reviews USING btree (specialist_id, status)",
+        "CREATE INDEX reviews_owner ON public.reviews USING btree (parent_id)",
+        "CREATE UNIQUE INDEX reviews_appointment_id_key ON public.reviews USING btree (appointment_id)"
+      ],
+      "policies": [
+        {
+          "name": "delete_own_review",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "DELETE"
+        },
+        {
+          "name": "moderate_review",
+          "check": "( SELECT private.is_staff() AS is_staff)",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "( SELECT private.is_staff() AS is_staff)",
+          "command": "ALL"
+        },
+        {
+          "name": "own_reviews",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "SELECT"
+        },
+        {
+          "name": "submit_review",
+          "check": "((parent_id = ( SELECT auth.uid() AS uid)) AND (status = ANY (ARRAY['draft'::text, 'pending'::text])) AND (evidence IS NULL) AND ((feedback_id IS NULL) OR (EXISTS ( SELECT 1\n   FROM session_feedback f\n  WHERE ((f.id = reviews.feedback_id) AND (f.parent_id = ( SELECT auth.uid() AS uid)) AND (f.specialist_id = reviews.specialist_id))))))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": null,
+          "command": "INSERT"
+        }
+      ],
+      "constraints": [
+        "CHECK (((status <> 'verified'::text) OR (visit_verified AND (appointment_id IS NOT NULL) AND (evidence IS NOT NULL))))",
+        "FOREIGN KEY (appointment_id) REFERENCES appointments(id)",
+        "UNIQUE (appointment_id)",
+        "CHECK (((length(body) >= 10) AND (length(body) <= 2000)))",
+        "CHECK (((contact >= 1) AND (contact <= 5)))",
+        "FOREIGN KEY (feedback_id) REFERENCES session_feedback(id) ON DELETE SET NULL",
+        "FOREIGN KEY (parent_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "PRIMARY KEY (id)",
+        "FOREIGN KEY (specialist_id) REFERENCES specialists(id)",
+        "CHECK ((status = ANY (ARRAY['draft'::text, 'pending'::text, 'verified'::text, 'rejected'::text])))"
+      ]
+    },
+    {
+      "name": "specialists",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "specialty",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "city",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "district",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "price",
+          "type": "integer",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "experience",
+          "type": "integer",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "online",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "name": "concerns",
+          "type": "ARRAY",
+          "default": "'{}'::text[]",
+          "nullable": "NO"
+        },
+        {
+          "name": "ages",
+          "type": "ARRAY",
+          "default": "'{}'::text[]",
+          "nullable": "NO"
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "color",
+          "type": "text",
+          "default": "'lilac'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "published",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "name": "is_demo",
+          "type": "boolean",
+          "default": "true",
+          "nullable": "NO"
+        },
+        {
+          "name": "contact_url",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "contact_consent",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "name": "latitude",
+          "type": "double precision",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "longitude",
+          "type": "double precision",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "address",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "verified_count",
+          "type": "integer",
+          "default": "0",
+          "nullable": "NO"
+        },
+        {
+          "name": "contact_rating",
+          "type": "numeric",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "name": "owner_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "verification_status",
+          "type": "text",
+          "default": "'pending'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "profile",
+          "type": "jsonb",
+          "default": "'{}'::jsonb",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX specialists_pkey ON public.specialists USING btree (id)",
+        "CREATE INDEX specialists_filter ON public.specialists USING btree (city, district, specialty, price) WHERE published",
+        "CREATE INDEX specialists_concerns ON public.specialists USING gin (concerns)",
+        "CREATE UNIQUE INDEX specialists_owner_id_key ON public.specialists USING btree (owner_id)"
+      ],
+      "policies": [
+        {
+          "name": "own_specialist",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(owner_id = ( SELECT auth.uid() AS uid))",
+          "command": "SELECT"
+        },
+        {
+          "name": "published_specialists",
+          "check": null,
+          "roles": [
+            "anon",
+            "authenticated"
+          ],
+          "using": "published",
+          "command": "SELECT"
+        },
+        {
+          "name": "staff_specialists",
+          "check": "( SELECT private.is_staff() AS is_staff)",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "( SELECT private.is_staff() AS is_staff)",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "CHECK ((COALESCE(jsonb_array_length((profile -> 'self_strengths'::text)), 0) <= 3))",
+        "CHECK (((contact_url IS NULL) OR contact_consent))",
+        "CHECK (((latitude IS NULL) = (longitude IS NULL)))",
+        "CHECK ((color = ANY (ARRAY['lilac'::text, 'peach'::text, 'sage'::text, 'butter'::text])))",
+        "CHECK (((contact_rating >= (1)::numeric) AND (contact_rating <= (5)::numeric)))",
+        "CHECK (((contact_url IS NULL) OR (contact_url ~ '^https://[^/@[:space:]]+'::text)))",
+        "CHECK ((length(description) <= 3000))",
+        "CHECK (((experience >= 0) AND (experience <= 70)))",
+        "CHECK (((latitude >= ('-90'::integer)::double precision) AND (latitude <= (90)::double precision)))",
+        "CHECK (((longitude >= ('-180'::integer)::double precision) AND (longitude <= (180)::double precision)))",
+        "CHECK (((length(name) >= 2) AND (length(name) <= 100)))",
+        "FOREIGN KEY (owner_id) REFERENCES auth.users(id) ON DELETE SET NULL",
+        "UNIQUE (owner_id)",
+        "PRIMARY KEY (id)",
+        "CHECK ((price >= 0))",
+        "CHECK ((verification_status = ANY (ARRAY['pending'::text, 'approved'::text, 'rejected'::text])))",
+        "CHECK ((verified_count >= 0))"
+      ]
+    },
+    {
+      "name": "specialist_services",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "specialist_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "price",
+          "type": "integer",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "age_ranges",
+          "type": "ARRAY",
+          "default": "'{}'::text[]",
+          "nullable": "NO"
+        },
+        {
+          "name": "stages",
+          "type": "ARRAY",
+          "default": "'{}'::text[]",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX specialist_services_pkey ON public.specialist_services USING btree (id)",
+        "CREATE INDEX service_specialist ON public.specialist_services USING btree (specialist_id)"
+      ],
+      "policies": [
+        {
+          "name": "published_services",
+          "check": null,
+          "roles": [
+            "anon",
+            "authenticated"
+          ],
+          "using": "(EXISTS ( SELECT 1\n   FROM specialists s\n  WHERE ((s.id = specialist_services.specialist_id) AND s.published)))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "PRIMARY KEY (id)",
+        "CHECK ((price >= 0))",
+        "FOREIGN KEY (specialist_id) REFERENCES specialists(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "questions",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "body",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "topic",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "city",
+          "type": "text",
+          "default": "'Алматы'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'pending_moderation'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "is_demo",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX questions_pkey ON public.questions USING btree (id)",
+        "CREATE INDEX questions_status ON public.questions USING btree (status, created_at DESC)",
+        "CREATE INDEX questions_owner ON public.questions USING btree (parent_id)"
+      ],
+      "policies": [
+        {
+          "name": "own_questions",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "SELECT"
+        },
+        {
+          "name": "public_questions",
+          "check": null,
+          "roles": [
+            "anon",
+            "authenticated"
+          ],
+          "using": "(status = ANY (ARRAY['open'::text, 'answered'::text]))",
+          "command": "SELECT"
+        },
+        {
+          "name": "remove_own_question",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "DELETE"
+        },
+        {
+          "name": "staff_questions",
+          "check": "( SELECT private.is_staff() AS is_staff)",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "( SELECT private.is_staff() AS is_staff)",
+          "command": "ALL"
+        },
+        {
+          "name": "submit_questions",
+          "check": "((parent_id = ( SELECT auth.uid() AS uid)) AND (((status = ANY (ARRAY['draft'::text, 'pending_moderation'::text])) AND (NOT is_demo)) OR (private.demo_actor() AND is_demo AND (status = 'open'::text))))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": null,
+          "command": "INSERT"
+        }
+      ],
+      "constraints": [
+        "CHECK (((length(body) >= 20) AND (length(body) <= 1200)))",
+        "FOREIGN KEY (parent_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "PRIMARY KEY (id)",
+        "CHECK ((status = ANY (ARRAY['draft'::text, 'pending_moderation'::text, 'open'::text, 'answered'::text, 'closed'::text])))",
+        "CHECK (((length(title) >= 8) AND (length(title) <= 120)))",
+        "CHECK ((topic = ANY (ARRAY['Новости'::text, 'Мероприятия'::text, 'Поведение'::text, 'Обучение'::text, 'Сон и быт'::text, 'Семья'::text, 'Речь'::text, 'Занятия'::text, 'ПМПК'::text, 'Поддержка'::text, 'Волонтёры'::text])))"
+      ]
+    },
+    {
+      "name": "answers",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "question_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "mentor_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "body",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "approved",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "name": "is_demo",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX answers_pkey ON public.answers USING btree (id)",
+        "CREATE INDEX answers_question ON public.answers USING btree (question_id)"
+      ],
+      "policies": [
+        {
+          "name": "readable_answers",
+          "check": null,
+          "roles": [
+            "anon",
+            "authenticated"
+          ],
+          "using": "(approved AND (EXISTS ( SELECT 1\n   FROM questions q\n  WHERE ((q.id = answers.question_id) AND (q.status = ANY (ARRAY['open'::text, 'answered'::text]))))))",
+          "command": "SELECT"
+        },
+        {
+          "name": "staff_answers",
+          "check": "( SELECT private.is_staff() AS is_staff)",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "( SELECT private.is_staff() AS is_staff)",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "CHECK (((length(body) >= 10) AND (length(body) <= 2000)))",
+        "FOREIGN KEY (mentor_id) REFERENCES mentors(id)",
+        "PRIMARY KEY (id)",
+        "FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "medical_terms",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "term",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "meaning",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "questions",
+          "type": "ARRAY",
+          "default": "'{}'::text[]",
+          "nullable": "NO"
+        },
+        {
+          "name": "approved",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "name": "is_demo",
+          "type": "boolean",
+          "default": "true",
+          "nullable": "NO"
+        },
+        {
+          "name": "version",
+          "type": "integer",
+          "default": "1",
+          "nullable": "NO"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX medical_terms_pkey ON public.medical_terms USING btree (id)",
+        "CREATE UNIQUE INDEX medical_terms_term_key ON public.medical_terms USING btree (term)"
+      ],
+      "policies": [
+        {
+          "name": "readable_terms",
+          "check": null,
+          "roles": [
+            "anon",
+            "authenticated"
+          ],
+          "using": "(approved OR is_demo)",
+          "command": "SELECT"
+        },
+        {
+          "name": "staff_terms",
+          "check": "( SELECT private.is_staff() AS is_staff)",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "( SELECT private.is_staff() AS is_staff)",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "CHECK ((length(meaning) <= 3000))",
+        "PRIMARY KEY (id)",
+        "UNIQUE (term)"
+      ]
+    },
+    {
+      "name": "recommendation_rules",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "version",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "conditions",
+          "type": "jsonb",
+          "default": "'{}'::jsonb",
+          "nullable": "NO"
+        },
+        {
+          "name": "explanation",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "approved",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "name": "enabled",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX recommendation_rules_pkey ON public.recommendation_rules USING btree (id)"
+      ],
+      "policies": [
+        {
+          "name": "readable_rules",
+          "check": null,
+          "roles": [
+            "anon",
+            "authenticated"
+          ],
+          "using": "(approved AND enabled)",
+          "command": "SELECT"
+        },
+        {
+          "name": "staff_rules",
+          "check": "( SELECT private.is_staff() AS is_staff)",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "( SELECT private.is_staff() AS is_staff)",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "PRIMARY KEY (id)"
+      ]
+    },
+    {
+      "name": "notifications",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "read",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "name": "to",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "name": "source_key",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX notifications_pkey ON public.notifications USING btree (id)",
+        "CREATE INDEX notification_owner ON public.notifications USING btree (parent_id, read)",
+        "CREATE UNIQUE INDEX notification_dedup ON public.notifications USING btree (parent_id, source_key) WHERE (source_key IS NOT NULL)"
+      ],
+      "policies": [
+        {
+          "name": "own_notifications",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "SELECT"
+        },
+        {
+          "name": "read_notifications",
+          "check": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(parent_id = ( SELECT auth.uid() AS uid))",
+          "command": "UPDATE"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (parent_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "PRIMARY KEY (id)",
+        "CHECK ((length(title) <= 240))",
+        "CHECK ((\"to\" ~ '^/[^/]'::text))"
+      ]
+    },
+    {
+      "name": "care_team_access",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "child_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "specialist_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "active",
+          "type": "boolean",
+          "default": "true",
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX care_team_access_pkey ON public.care_team_access USING btree (child_id, specialist_id)"
+      ],
+      "policies": [
+        {
+          "name": "team_access_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "((parent_id = ( SELECT auth.uid() AS uid)) OR (active AND private.team_member(child_id)))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (child_id, parent_id) REFERENCES children(id, parent_id) ON DELETE CASCADE",
+        "PRIMARY KEY (child_id, specialist_id)",
+        "FOREIGN KEY (specialist_id) REFERENCES specialists(id)"
+      ]
+    },
+    {
+      "name": "team_recommendations",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "child_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "specialist_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "body",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX team_recommendations_pkey ON public.team_recommendations USING btree (id)",
+        "CREATE INDEX team_notes_child ON public.team_recommendations USING btree (child_id, created_at DESC)"
+      ],
+      "policies": [
+        {
+          "name": "team_notes_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "((parent_id = ( SELECT auth.uid() AS uid)) OR private.team_member(child_id))",
+          "command": "SELECT"
+        },
+        {
+          "name": "team_notes_write",
+          "check": "(private.owns_specialist(specialist_id) AND private.team_member(child_id))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": null,
+          "command": "INSERT"
+        }
+      ],
+      "constraints": [
+        "CHECK (((length(btrim(body)) >= 10) AND (length(btrim(body)) <= 2000)))",
+        "FOREIGN KEY (child_id, parent_id) REFERENCES children(id, parent_id) ON DELETE CASCADE",
+        "PRIMARY KEY (id)",
+        "FOREIGN KEY (specialist_id) REFERENCES specialists(id)"
+      ]
+    },
+    {
+      "name": "community_preferences",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "topics",
+          "type": "ARRAY",
+          "default": "'{}'::text[]",
+          "nullable": "NO"
+        },
+        {
+          "name": "notify_new",
+          "type": "boolean",
+          "default": "true",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX community_preferences_pkey ON public.community_preferences USING btree (user_id)"
+      ],
+      "policies": [
+        {
+          "name": "community_preferences_own",
+          "check": "(user_id = ( SELECT auth.uid() AS uid))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(user_id = ( SELECT auth.uid() AS uid))",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "PRIMARY KEY (user_id)",
+        "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "CHECK ((topics <@ ARRAY['Новости'::text, 'Мероприятия'::text, 'Поведение'::text, 'Обучение'::text, 'Сон и быт'::text, 'Семья'::text, 'Речь'::text, 'Занятия'::text, 'ПМПК'::text, 'Поддержка'::text, 'Волонтёры'::text]))"
+      ]
+    },
+    {
+      "name": "community_replies",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "question_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_reply_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "parent_answer_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "body",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'pending'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX community_replies_pkey ON public.community_replies USING btree (id)",
+        "CREATE UNIQUE INDEX community_replies_id_question_id_key ON public.community_replies USING btree (id, question_id)",
+        "CREATE INDEX community_replies_thread ON public.community_replies USING btree (question_id, created_at)"
+      ],
+      "policies": [
+        {
+          "name": "community_reply_create",
+          "check": "((parent_id = ( SELECT auth.uid() AS uid)) AND (EXISTS ( SELECT 1\n   FROM questions q\n  WHERE ((q.id = community_replies.question_id) AND (q.status = ANY (ARRAY['open'::text, 'answered'::text]))))))",
+          "roles": [
+            "authenticated"
+          ],
+          "using": null,
+          "command": "INSERT"
+        },
+        {
+          "name": "community_reply_moderate",
+          "check": "private.is_staff()",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "private.is_staff()",
+          "command": "UPDATE"
+        },
+        {
+          "name": "community_reply_read",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(((status = 'approved'::text) OR (parent_id = ( SELECT auth.uid() AS uid)) OR private.is_staff()) AND (EXISTS ( SELECT 1\n   FROM questions q\n  WHERE (q.id = community_replies.question_id))))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "CHECK (((length(btrim(body)) >= 3) AND (length(btrim(body)) <= 1200)))",
+        "CHECK (((parent_reply_id IS NULL) OR (parent_answer_id IS NULL)))",
+        "UNIQUE (id, question_id)",
+        "FOREIGN KEY (parent_answer_id) REFERENCES answers(id) ON DELETE CASCADE",
+        "FOREIGN KEY (parent_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "FOREIGN KEY (parent_reply_id, question_id) REFERENCES community_replies(id, question_id) ON DELETE CASCADE",
+        "PRIMARY KEY (id)",
+        "FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE",
+        "CHECK ((status = ANY (ARRAY['pending'::text, 'approved'::text, 'rejected'::text])))"
+      ]
+    },
+    {
+      "name": "content_translations",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "source_kind",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "source_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "target_language",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "source_hash",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "translated_text",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX content_translations_pkey ON public.content_translations USING btree (source_kind, source_id, target_language)"
+      ],
+      "policies": [
+        {
+          "name": "authorized_content_translation",
+          "check": null,
+          "roles": [
+            "authenticated"
+          ],
+          "using": "(((source_kind = 'reply'::text) AND (EXISTS ( SELECT 1\n   FROM community_replies r\n  WHERE (r.id = content_translations.source_id)))) OR ((source_kind = 'team'::text) AND (EXISTS ( SELECT 1\n   FROM team_recommendations r\n  WHERE (r.id = content_translations.source_id)))) OR ((source_kind = 'question'::text) AND (EXISTS ( SELECT 1\n   FROM questions q\n  WHERE (q.id = content_translations.source_id)))) OR ((source_kind = 'answer'::text) AND (EXISTS ( SELECT 1\n   FROM answers a\n  WHERE (a.id = content_translations.source_id)))) OR ((source_kind = 'review'::text) AND (EXISTS ( SELECT 1\n   FROM reviews r\n  WHERE (r.id = content_translations.source_id)))))",
+          "command": "SELECT"
+        }
+      ],
+      "constraints": [
+        "PRIMARY KEY (source_kind, source_id, target_language)",
+        "CHECK ((source_kind = ANY (ARRAY['message'::text, 'reply'::text, 'team'::text, 'question'::text, 'answer'::text, 'review'::text])))",
+        "CHECK ((target_language = ANY (ARRAY['ru'::text, 'kk'::text])))",
+        "CHECK (((length(translated_text) >= 1) AND (length(translated_text) <= 6000)))"
+      ]
+    },
+    {
+      "name": "checkin_attempts",
+      "schema": "private",
+      "columns": [
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "window_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "hits",
+          "type": "integer",
+          "default": null,
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX checkin_attempts_pkey ON private.checkin_attempts USING btree (user_id)"
+      ],
+      "policies": [
+        {
+          "name": "deny_direct_client_access",
+          "check": "false",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "false",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "PRIMARY KEY (user_id)",
+        "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "calendar_links",
+      "schema": "private",
+      "columns": [
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "token_hash",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX calendar_links_pkey ON private.calendar_links USING btree (user_id)",
+        "CREATE UNIQUE INDEX calendar_links_token_hash_key ON private.calendar_links USING btree (token_hash)"
+      ],
+      "policies": [
+        {
+          "name": "deny_direct_client_access",
+          "check": "false",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "false",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "PRIMARY KEY (user_id)",
+        "UNIQUE (token_hash)",
+        "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "specialist_qr_codes",
+      "schema": "private",
+      "columns": [
+        {
+          "name": "specialist_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "code",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX specialist_qr_codes_pkey ON private.specialist_qr_codes USING btree (specialist_id)",
+        "CREATE UNIQUE INDEX specialist_qr_codes_code_key ON private.specialist_qr_codes USING btree (code)"
+      ],
+      "policies": [
+        {
+          "name": "deny_direct_client_access",
+          "check": "false",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "false",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "UNIQUE (code)",
+        "PRIMARY KEY (specialist_id)",
+        "FOREIGN KEY (specialist_id) REFERENCES specialists(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "visit_confirmations",
+      "schema": "private",
+      "columns": [
+        {
+          "name": "appointment_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "specialist_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "confirmed_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "name": "method",
+          "type": "text",
+          "default": "'printed_qr'::text",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX visit_confirmations_pkey ON private.visit_confirmations USING btree (appointment_id)"
+      ],
+      "policies": [
+        {
+          "name": "deny_direct_client_access",
+          "check": "false",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "false",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (appointment_id) REFERENCES appointments(id) ON DELETE CASCADE",
+        "FOREIGN KEY (parent_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "PRIMARY KEY (appointment_id)",
+        "FOREIGN KEY (specialist_id) REFERENCES specialists(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "review_case_features",
+      "schema": "private",
+      "columns": [
+        {
+          "name": "review_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "age",
+          "type": "numeric",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "case_group",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "visit_format",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "consented_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "name": "public_summary",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX review_case_features_pkey ON private.review_case_features USING btree (review_id)"
+      ],
+      "policies": [
+        {
+          "name": "deny_direct_client_access",
+          "check": "false",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "false",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "PRIMARY KEY (review_id)",
+        "CHECK (((public_summary IS NULL) OR (length(public_summary) <= 220)))",
+        "FOREIGN KEY (review_id) REFERENCES reviews(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "rate_limits",
+      "schema": "private",
+      "columns": [
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "bucket",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "window_start",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "hits",
+          "type": "integer",
+          "default": "1",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX rate_limits_pkey ON private.rate_limits USING btree (user_id, bucket, window_start)"
+      ],
+      "policies": [
+        {
+          "name": "deny_direct_quota",
+          "check": "false",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "false",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "PRIMARY KEY (user_id, bucket, window_start)",
+        "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "telegram_events",
+      "schema": "private",
+      "columns": [
+        {
+          "name": "update_id",
+          "type": "bigint",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX telegram_events_pkey ON private.telegram_events USING btree (update_id)"
+      ],
+      "policies": [
+        {
+          "name": "deny_direct_events",
+          "check": "false",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "false",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "PRIMARY KEY (update_id)"
+      ]
+    },
+    {
+      "name": "push_deliveries",
+      "schema": "private",
+      "columns": [
+        {
+          "name": "notification_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "subscription_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "attempts",
+          "type": "integer",
+          "default": "0",
+          "nullable": "NO"
+        },
+        {
+          "name": "lease_until",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "sent_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "last_code",
+          "type": "integer",
+          "default": null,
+          "nullable": "YES"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX push_deliveries_pkey ON private.push_deliveries USING btree (notification_id, subscription_id)"
+      ],
+      "policies": [
+        {
+          "name": "deny_client_push_delivery",
+          "check": "false",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "false",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (notification_id) REFERENCES notifications(id) ON DELETE CASCADE",
+        "PRIMARY KEY (notification_id, subscription_id)",
+        "FOREIGN KEY (subscription_id) REFERENCES push_subscriptions(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "ai_metrics",
+      "schema": "private",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "name": "feature",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "outcome",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "input_tokens",
+          "type": "integer",
+          "default": "0",
+          "nullable": "NO"
+        },
+        {
+          "name": "output_tokens",
+          "type": "integer",
+          "default": "0",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX ai_metrics_pkey ON private.ai_metrics USING btree (id)"
+      ],
+      "policies": [
+        {
+          "name": "deny_client_ai_metrics",
+          "check": "false",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "false",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "CHECK ((feature = ANY (ARRAY['explain'::text, 'translation'::text])))",
+        "CHECK ((input_tokens >= 0))",
+        "CHECK ((outcome = ANY (ARRAY['dictionary'::text, 'cache'::text, 'blocked'::text, 'error'::text, 'model'::text])))",
+        "CHECK ((output_tokens >= 0))",
+        "PRIMARY KEY (id)"
+      ]
+    },
+    {
+      "name": "ai_settings",
+      "schema": "private",
+      "columns": [
+        {
+          "name": "singleton",
+          "type": "boolean",
+          "default": "true",
+          "nullable": "NO"
+        },
+        {
+          "name": "enabled",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "name": "model",
+          "type": "text",
+          "default": "'gemini-2.5-flash'::text",
+          "nullable": "NO"
+        },
+        {
+          "name": "daily_limit",
+          "type": "integer",
+          "default": "20",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX ai_settings_pkey ON private.ai_settings USING btree (singleton)"
+      ],
+      "policies": [
+        {
+          "name": "no_client_settings",
+          "check": "false",
+          "roles": [
+            "anon",
+            "authenticated"
+          ],
+          "using": "false",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "CHECK (((daily_limit >= 1) AND (daily_limit <= 100)))",
+        "CHECK ((model ~ '^[a-zA-Z0-9.-]+$'::text))",
+        "PRIMARY KEY (singleton)",
+        "CHECK (singleton)"
+      ]
+    },
+    {
+      "name": "ai_daily_usage",
+      "schema": "private",
+      "columns": [
+        {
+          "name": "day",
+          "type": "date",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "hits",
+          "type": "integer",
+          "default": "0",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX ai_daily_usage_pkey ON private.ai_daily_usage USING btree (day)"
+      ],
+      "policies": [
+        {
+          "name": "no_client_usage",
+          "check": "false",
+          "roles": [
+            "anon",
+            "authenticated"
+          ],
+          "using": "false",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "CHECK ((hits >= 0))",
+        "PRIMARY KEY (day)"
+      ]
+    },
+    {
+      "name": "booking_payments",
+      "schema": "private",
+      "columns": [
+        {
+          "name": "appointment_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "specialist_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "state",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "amount",
+          "type": "integer",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "deadline",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "receipt_path",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "name": "claimed_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "confirmed_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "reminded_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "provider_reminded_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "overdue_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "extended_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX booking_payments_pkey ON private.booking_payments USING btree (appointment_id)",
+        "CREATE UNIQUE INDEX one_receipt_one_appointment ON private.booking_payments USING btree (receipt_path) WHERE (receipt_path IS NOT NULL)",
+        "CREATE INDEX payment_deadline_queue ON private.booking_payments USING btree (deadline) WHERE (state = 'awaiting_payment'::text)",
+        "CREATE INDEX payment_parent_holds ON private.booking_payments USING btree (parent_id, state)"
+      ],
+      "policies": [
+        {
+          "name": "deny_direct_client_access",
+          "check": "false",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "false",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "CHECK ((amount >= 0))",
+        "FOREIGN KEY (appointment_id) REFERENCES appointments(id) ON DELETE CASCADE",
+        "FOREIGN KEY (parent_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+        "PRIMARY KEY (appointment_id)",
+        "FOREIGN KEY (specialist_id) REFERENCES specialists(id) ON DELETE CASCADE",
+        "CHECK ((state = ANY (ARRAY['awaiting_payment'::text, 'payment_reported'::text, 'confirmed'::text, 'expired'::text, 'cancelled'::text])))"
+      ]
+    },
+    {
+      "name": "attendance_tokens",
+      "schema": "private",
+      "columns": [
+        {
+          "name": "appointment_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "code_hash",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "used_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "name": "attempts",
+          "type": "integer",
+          "default": "0",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX attendance_tokens_pkey ON private.attendance_tokens USING btree (appointment_id)"
+      ],
+      "policies": [
+        {
+          "name": "deny_direct_attendance_tokens",
+          "check": "false",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "false",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (appointment_id) REFERENCES appointments(id) ON DELETE CASCADE",
+        "PRIMARY KEY (appointment_id)"
+      ]
+    },
+    {
+      "name": "provider_reliability_events",
+      "schema": "private",
+      "columns": [
+        {
+          "name": "appointment_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "specialist_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX provider_reliability_events_pkey ON private.provider_reliability_events USING btree (appointment_id)"
+      ],
+      "policies": [
+        {
+          "name": "deny_direct_client_access",
+          "check": "false",
+          "roles": [
+            "authenticated"
+          ],
+          "using": "false",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "FOREIGN KEY (appointment_id) REFERENCES appointments(id) ON DELETE CASCADE",
+        "PRIMARY KEY (appointment_id)",
+        "FOREIGN KEY (specialist_id) REFERENCES specialists(id) ON DELETE CASCADE"
+      ]
+    },
+    {
+      "name": "translation_quotas",
+      "schema": "private",
+      "columns": [
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "hour_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "name": "hits",
+          "type": "integer",
+          "default": null,
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX translation_quotas_pkey ON private.translation_quotas USING btree (user_id, hour_at)"
+      ],
+      "policies": [
+        {
+          "name": "no_translation_quota_client",
+          "check": "false",
+          "roles": [
+            "anon",
+            "authenticated"
+          ],
+          "using": "false",
+          "command": "ALL"
+        }
+      ],
+      "constraints": [
+        "PRIMARY KEY (user_id, hour_at)",
+        "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "name": "offboard_provider",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "team_member",
+      "schema": "private",
+      "arguments": "cid uuid",
+      "security_definer": true
+    },
+    {
+      "name": "set_team_access",
+      "schema": "private",
+      "arguments": "p_child_id uuid, p_specialist_id uuid, p_granted boolean",
+      "security_definer": true
+    },
+    {
+      "name": "care_set_team_access",
+      "schema": "public",
+      "arguments": "p_child_id uuid, p_specialist_id uuid, p_granted boolean",
+      "security_definer": false
+    },
+    {
+      "name": "care_snapshot_core",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": false
+    },
+    {
+      "name": "appointment_modified",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": false
+    },
+    {
+      "name": "specialist_qr",
+      "schema": "private",
+      "arguments": "p_rotate boolean",
+      "security_definer": true
+    },
+    {
+      "name": "care_specialist_qr",
+      "schema": "public",
+      "arguments": "p_rotate boolean",
+      "security_definer": false
+    },
+    {
+      "name": "care_confirm_qr",
+      "schema": "public",
+      "arguments": "p_code text, p_appointment_id uuid",
+      "security_definer": false
+    },
+    {
+      "name": "confirm_qr",
+      "schema": "private",
+      "arguments": "p_code text, p_appointment_id uuid",
+      "security_definer": true
+    },
+    {
+      "name": "calendar_link",
+      "schema": "private",
+      "arguments": "p_revoke boolean",
+      "security_definer": true
+    },
+    {
+      "name": "care_calendar_link",
+      "schema": "public",
+      "arguments": "p_revoke boolean",
+      "security_definer": false
+    },
+    {
+      "name": "care_calendar_feed",
+      "schema": "public",
+      "arguments": "p_token text",
+      "security_definer": false
+    },
+    {
+      "name": "care_snapshot",
+      "schema": "public",
+      "arguments": "",
+      "security_definer": false
+    },
+    {
+      "name": "rating_age",
+      "schema": "private",
+      "arguments": "p_age text",
+      "security_definer": false
+    },
+    {
+      "name": "calendar_feed",
+      "schema": "private",
+      "arguments": "p_token text",
+      "security_definer": true
+    },
+    {
+      "name": "app_navigation_graph",
+      "schema": "public",
+      "arguments": "",
+      "security_definer": false
+    },
+    {
+      "name": "ratings",
+      "schema": "private",
+      "arguments": "p_child_id uuid, p_format text",
+      "security_definer": true
+    },
+    {
+      "name": "care_ratings",
+      "schema": "public",
+      "arguments": "p_child_id uuid, p_format text",
+      "security_definer": false
+    },
+    {
+      "name": "book_slot",
+      "schema": "private",
+      "arguments": "p jsonb",
+      "security_definer": true
+    },
+    {
+      "name": "submit_care_review",
+      "schema": "private",
+      "arguments": "p jsonb",
+      "security_definer": true
+    },
+    {
+      "name": "care_book_slot",
+      "schema": "public",
+      "arguments": "p jsonb",
+      "security_definer": false
+    },
+    {
+      "name": "care_submit_review",
+      "schema": "public",
+      "arguments": "p jsonb",
+      "security_definer": false
+    },
+    {
+      "name": "guard_verified_visit_time",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": false
+    },
+    {
+      "name": "guard_team_note",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "community_publish",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "claim_telegram_event",
+      "schema": "public",
+      "arguments": "p_update_id bigint",
+      "security_definer": false
+    },
+    {
+      "name": "community_reply_guard",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "notify_new_thread",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "guard_support_ticket",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "notify_support_reply",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "translation_quota",
+      "schema": "private",
+      "arguments": "p_user_id uuid",
+      "security_definer": true
+    },
+    {
+      "name": "is_staff",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "touch_and_protect_owner",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": false
+    },
+    {
+      "name": "limit_submissions",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": false
+    },
+    {
+      "name": "audit_change",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "consume_function_quota",
+      "schema": "private",
+      "arguments": "p_bucket text",
+      "security_definer": true
+    },
+    {
+      "name": "consume_function_quota",
+      "schema": "public",
+      "arguments": "p_bucket text",
+      "security_definer": false
+    },
+    {
+      "name": "notify_on_answer",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "care_translation_quota",
+      "schema": "public",
+      "arguments": "p_user_id uuid",
+      "security_definer": false
+    },
+    {
+      "name": "audit_appointment_consent",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "save_synthetic_child",
+      "schema": "public",
+      "arguments": "p_child jsonb",
+      "security_definer": false
+    },
+    {
+      "name": "valid_payment_receipt",
+      "schema": "private",
+      "arguments": "p_path text, p_user uuid",
+      "security_definer": true
+    },
+    {
+      "name": "can_read_payment_receipt",
+      "schema": "private",
+      "arguments": "p_path text",
+      "security_definer": true
+    },
+    {
+      "name": "gemini_runtime_config",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "reserve_gemini_budget",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "gemini_runtime_config",
+      "schema": "public",
+      "arguments": "",
+      "security_definer": false
+    },
+    {
+      "name": "reserve_gemini_budget",
+      "schema": "public",
+      "arguments": "",
+      "security_definer": false
+    },
+    {
+      "name": "submit_feedback",
+      "schema": "public",
+      "arguments": "p_child_id uuid, p_specialist_id uuid, p_answers jsonb, p_review text",
+      "security_definer": false
+    },
+    {
+      "name": "process_booking_deadlines",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "care_role",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "demo_actor",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "owns_specialist",
+      "schema": "private",
+      "arguments": "sid uuid",
+      "security_definer": true
+    },
+    {
+      "name": "clinic_owns",
+      "schema": "private",
+      "arguments": "cid uuid",
+      "security_definer": true
+    },
+    {
+      "name": "in_my_clinic",
+      "schema": "private",
+      "arguments": "sid uuid",
+      "security_definer": true
+    },
+    {
+      "name": "has_patient",
+      "schema": "private",
+      "arguments": "cid uuid",
+      "security_definer": true
+    },
+    {
+      "name": "payment_policy",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "register_care_role",
+      "schema": "private",
+      "arguments": "p_role text",
+      "security_definer": true
+    },
+    {
+      "name": "register_care_role",
+      "schema": "public",
+      "arguments": "p_role text",
+      "security_definer": false
+    },
+    {
+      "name": "care_notice",
+      "schema": "private",
+      "arguments": "uid uuid, title text, path text",
+      "security_definer": false
+    },
+    {
+      "name": "care_command_core",
+      "schema": "private",
+      "arguments": "p_action text, p jsonb",
+      "security_definer": true
+    },
+    {
+      "name": "care_command",
+      "schema": "private",
+      "arguments": "p_action text, p jsonb",
+      "security_definer": true
+    },
+    {
+      "name": "clinic_schedule",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "provider_schedule",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "shared_patients",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "care_command",
+      "schema": "public",
+      "arguments": "p_action text, p jsonb",
+      "security_definer": false
+    },
+    {
+      "name": "review_summaries",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "deliver_care_reminders",
+      "schema": "public",
+      "arguments": "",
+      "security_definer": false
+    },
+    {
+      "name": "payment_snapshot",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "reliability_snapshot",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "protect_professional_goal",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": false
+    },
+    {
+      "name": "deliver_care_reminders",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "family_task",
+      "schema": "private",
+      "arguments": "p_token text",
+      "security_definer": true
+    },
+    {
+      "name": "family_task",
+      "schema": "public",
+      "arguments": "p_token text",
+      "security_definer": false
+    },
+    {
+      "name": "refresh_contact_rating",
+      "schema": "private",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "register_push_device",
+      "schema": "private",
+      "arguments": "p_endpoint text, p_p256dh text, p_auth text",
+      "security_definer": true
+    },
+    {
+      "name": "remove_push_device",
+      "schema": "public",
+      "arguments": "p_endpoint text",
+      "security_definer": false
+    },
+    {
+      "name": "claim_push_batch",
+      "schema": "public",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "finish_push_delivery",
+      "schema": "public",
+      "arguments": "p_notification uuid, p_subscription uuid, p_code integer",
+      "security_definer": true
+    },
+    {
+      "name": "register_push_device",
+      "schema": "public",
+      "arguments": "p_endpoint text, p_p256dh text, p_auth text",
+      "security_definer": false
+    },
+    {
+      "name": "schedule_notification_reminders",
+      "schema": "public",
+      "arguments": "",
+      "security_definer": true
+    },
+    {
+      "name": "record_ai_metric",
+      "schema": "public",
+      "arguments": "p_feature text, p_outcome text, p_input integer, p_output integer",
+      "security_definer": true
+    },
+    {
+      "name": "rating_values",
+      "schema": "private",
+      "arguments": "p_age numeric, p_group text, p_format text",
+      "security_definer": true
+    }
+  ]
+}

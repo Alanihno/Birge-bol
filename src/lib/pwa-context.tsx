@@ -1,5 +1,5 @@
 import {tr,useLocale} from './i18n';
-import {createContext,useContext,useEffect,useRef,useState} from 'react';
+import {createContext,useContext,useEffect,useEffectEvent,useRef,useState} from 'react';
 import type {ReactNode} from 'react';
 import {hasEditedForms,installDraftProtection,saveDrafts,updateBlockReason} from './update-safety';
 type InstallEvent=Event&{prompt:()=>Promise<void>;userChoice:Promise<{outcome:string}>};
@@ -14,24 +14,25 @@ function usePwaState(){
  async function updateServiceWorker(_reload=true){void _reload;const reason=updateBlockReason();if(reason){setWarning(reason);return;}if(!navigator.onLine){setWarning('Для обновления подключитесь к интернету.');return;}saveDrafts();setWarning('');setUpdating(true);
   if(changedController.current){reloadSafely();return;}
   try{await registration.current?.update();let next=registration.current?.waiting;const installing=registration.current?.installing;
-   if(!next&&installing){await new Promise<void>((resolve,reject)=>{const done=()=>{if(installing.state==='installed'||installing.state==='redundant'){clearTimeout(timer);installing.removeEventListener('statechange',done);installing.state==='installed'?resolve():reject(new Error('install'));}};const timer=setTimeout(()=>{installing.removeEventListener('statechange',done);reject(new Error('timeout'));},20000);installing.addEventListener('statechange',done);done();});next=registration.current?.waiting||(installing.state==='installed'?installing:null);}
+   if(!next&&installing){await new Promise<void>((resolve,reject)=>{const done=()=>{if(installing.state==='installed'||installing.state==='redundant'){clearTimeout(timer);installing.removeEventListener('statechange',done);if(installing.state==='installed')resolve();else reject(new Error('install'));}};const timer=setTimeout(()=>{installing.removeEventListener('statechange',done);reject(new Error('timeout'));},20000);installing.addEventListener('statechange',done);done();});next=registration.current?.waiting||(installing.state==='installed'?installing:null);}
    const blocked=updateBlockReason();if(blocked){setWarning(blocked);setUpdating(false);return;}saveDrafts();
    if(next)next.postMessage({type:'SKIP_WAITING'});else{setUpdating(false);if(refresh.current)setWarning('Новая версия загружается. Повторите обновление через несколько секунд.');}}
   catch{setUpdating(false);setWarning('Не удалось проверить обновление. Повторите позже.');}
  }
+ const reloadFromEffect=useEffectEvent(reloadSafely),updateFromEffect=useEffectEvent(updateServiceWorker);
  useEffect(()=>installDraftProtection(),[]);
  useEffect(()=>{
   if(!secure||!('serviceWorker'in navigator)||import.meta.env.DEV)return;
   let disposed=false,auto:ReturnType<typeof setTimeout>|undefined,hadController=!!navigator.serviceWorker.controller;
-  const found=()=>{const reg=registration.current;if(!reg?.installing)return;const worker=reg.installing;worker.addEventListener('statechange',()=>{if(disposed||worker.state!=='installed')return;if(navigator.serviceWorker.controller){setAvailable();auto=setTimeout(()=>{if(!hasEditedForms()&&!updateBlockReason())void updateServiceWorker();},8000);}else setOfflineReady(true);});};
+  const found=()=>{const reg=registration.current;if(!reg?.installing)return;const worker=reg.installing;worker.addEventListener('statechange',()=>{if(disposed||worker.state!=='installed')return;if(navigator.serviceWorker.controller){setAvailable();auto=setTimeout(()=>{if(!hasEditedForms()&&!updateBlockReason())void updateFromEffect();},8000);}else setOfflineReady(true);});};
   const check=async()=>{if(disposed||!navigator.onLine||document.visibilityState!=='visible')return;try{
     await registration.current?.update();if(registration.current?.waiting)setAvailable();
     const response=await fetch('/version.json',{cache:'no-store'});if(response.ok){const info=await response.json();if(info.buildId&&info.buildId!==__BB_BUILD_ID__){setAvailable();await registration.current?.update();}}
    }catch{/* An offline check must not break the running app. */}};
-  const controlling=()=>{if(!hadController){hadController=true;setOfflineReady(true);return;}changedController.current=true;setAvailable();reloadSafely();};
+  const controlling=()=>{if(!hadController){hadController=true;setOfflineReady(true);return;}changedController.current=true;setAvailable();reloadFromEffect();};
   navigator.serviceWorker.addEventListener('controllerchange',controlling);
   navigator.serviceWorker.register('/sw.js',{scope:'/',updateViaCache:'none'}).then(reg=>{if(disposed)return;registration.current=reg;reg.addEventListener('updatefound',found);if(reg.installing)found();if(reg.waiting)setAvailable();void check();}).catch(()=>{if(!disposed)setRegistrationError(true);});
-  const tick=setInterval(()=>{void check();if(changedController.current&&!updateBlockReason())reloadSafely();},60000);
+  const tick=setInterval(()=>{void check();if(changedController.current&&!updateBlockReason())reloadFromEffect();},60000);
   const visible=()=>{void check();};window.addEventListener('online',visible);window.addEventListener('focus',visible);document.addEventListener('visibilitychange',visible);
   return()=>{disposed=true;if(auto)clearTimeout(auto);clearInterval(tick);registration.current?.removeEventListener('updatefound',found);navigator.serviceWorker.removeEventListener('controllerchange',controlling);window.removeEventListener('online',visible);window.removeEventListener('focus',visible);document.removeEventListener('visibilitychange',visible);};
  },[secure]);

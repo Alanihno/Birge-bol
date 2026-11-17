@@ -7,7 +7,7 @@
     "dev": "vite --host 127.0.0.1 --configLoader native",
     "build": "tsc -b && vite build --configLoader native",
     "build:demo": "tsc -b && vite build --configLoader native --mode demo --outDir dist-demo",
-    "package:demo": "npm run build:demo && node scripts/package-vercel-demo.cjs && node scripts/package-promt3.cjs",
+    "package:demo": "npm run build:demo && node scripts/package-vercel-demo.cjs && node scripts/package-prompt5.cjs",
     "preview": "vite preview --host 127.0.0.1 --configLoader native",
     "lint": "eslint .",
     "typecheck": "tsc -b --pretty false",

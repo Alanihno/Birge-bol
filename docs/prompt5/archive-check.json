@@ -1,0 +1,16 @@
+[
+  {
+    "file": "Birge-Bol-demo.zip",
+    "bytes": 2084406,
+    "files": 203,
+    "corruptEntry": null,
+    "forbiddenFiles": []
+  },
+  {
+    "file": "Birge-Bol-source.zip",
+    "bytes": 1662512,
+    "files": 435,
+    "corruptEntry": null,
+    "forbiddenFiles": []
+  }
+]

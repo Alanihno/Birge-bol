@@ -1,0 +1,13 @@
+import { test, expect } from '@playwright/test';
+test.skip(process.env.CONNECTED_AUTH_TESTS!=='1','Requires a connected build, with mocked Auth requests.');
+test.beforeEach(async({page})=>{await page.addInitScript(()=>localStorage.setItem('bb-cookie-consent-v1',JSON.stringify({version:1,necessary:true,media:false,analytics:false,updatedAt:new Date().toISOString()})));});
+test('signup blocks a compromised password before Supabase and sends only a hash prefix to the range service',async({page})=>{
+ const password='A synthetic long phrase 487!';let signup=0,lookup='';
+ await page.route('https://api.pwnedpasswords.com/range/*',async route=>{lookup=route.request().url();const suffix=await page.evaluate(async value=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-1',new TextEncoder().encode(value))),b=>b.toString(16).padStart(2,'0')).join('').toUpperCase().slice(5),password);await route.fulfill({contentType:'text/plain',body:suffix+':42\r\n'});});
+ await page.route('https://*.supabase.co/auth/v1/signup**',async route=>{signup++;await route.fulfill({json:{user:null,session:null}});});
+ await page.goto('/register?role=parent');await page.getByLabel('Email',{exact:true}).fill('synthetic@example.invalid');await page.getByLabel('Пароль',{exact:true}).fill(password);await page.getByRole('checkbox').check();await page.getByRole('button',{name:'Создать аккаунт',exact:true}).click();await expect(page.getByRole('alert')).toContainText('встречается в известных утечках');expect(signup).toBe(0);expect(lookup).toMatch(/^https:\/\/api\.pwnedpasswords\.com\/range\/[A-F0-9]{5}$/);expect(lookup).not.toContain(password);
+});
+test('unavailable password checking fails closed, while login and recovery requests remain available',async({page})=>{
+ await page.route('https://api.pwnedpasswords.com/range/*',route=>route.fulfill({status:503,body:'unavailable'}));await page.goto('/register?role=parent');await page.getByLabel('Email',{exact:true}).fill('synthetic@example.invalid');await page.getByLabel('Пароль',{exact:true}).fill('A synthetic long phrase 487!');await page.getByRole('checkbox').check();await page.getByRole('button',{name:'Создать аккаунт',exact:true}).click();await expect(page.getByRole('alert')).toContainText('Проверка безопасности пароля временно недоступна');
+ await page.route('https://*.supabase.co/auth/v1/recover**',route=>route.fulfill({json:{}}));await page.goto('/auth/recovery');await page.getByLabel('Email',{exact:true}).fill('synthetic@example.invalid');await page.getByRole('button',{name:'Отправить письмо',exact:true}).click();await expect(page.getByText('Если для этого адреса доступна отправка, вы получите письмо с инструкцией.',{exact:true})).toBeVisible();
+});

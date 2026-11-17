@@ -1,0 +1,479 @@
+{
+  "project": "Birge Bol",
+  "version": "2026-11-17",
+  "stack": [
+    "React 19",
+    "TypeScript",
+    "Vite",
+    "Supabase",
+    "PostgreSQL",
+    "PWA"
+  ],
+  "entrypoints": [
+    "index.html",
+    "src/main.tsx",
+    "src/App.tsx",
+    "src/sw.ts"
+  ],
+  "modules": [
+    {
+      "name": "identity",
+      "purpose": "Email, roles, account lifecycle",
+      "paths": [
+        "src/lib/app-context.tsx",
+        "src/pages/auth.tsx",
+        "src/pages/auth-recovery.tsx",
+        "supabase/functions/account-delete/index.ts"
+      ],
+      "entrypoints": [
+        "src/lib/app-context.tsx"
+      ],
+      "dependencies": [
+        "delivery"
+      ],
+      "tables": [
+        "profiles",
+        "user_roles",
+        "consent_events"
+      ],
+      "api": [
+        "register_care_role"
+      ],
+      "roles": [
+        "parent",
+        "specialist",
+        "clinic",
+        "admin",
+        "moderator"
+      ],
+      "ai": false,
+      "sensitivity": "private",
+      "tests": [
+        "tests/connected-auth.spec.ts",
+        "supabase/tests/rls.sql"
+      ]
+    },
+    {
+      "name": "catalog",
+      "purpose": "Catalog, local search, map",
+      "paths": [
+        "src/pages/find.tsx",
+        "src/domain/search.ts",
+        "src/components/catalog-map.tsx",
+        "src/lib/map-links.ts"
+      ],
+      "entrypoints": [
+        "src/pages/find.tsx"
+      ],
+      "dependencies": [
+        "identity",
+        "delivery"
+      ],
+      "tables": [
+        "specialists",
+        "schedule_slots"
+      ],
+      "api": [],
+      "roles": [
+        "parent",
+        "specialist"
+      ],
+      "ai": false,
+      "sensitivity": "public",
+      "tests": [
+        "tests/prompt5.spec.ts",
+        "tests/prompt4-display.spec.ts"
+      ]
+    },
+    {
+      "name": "booking",
+      "purpose": "Single appointment, holds, receipts, payment cart",
+      "paths": [
+        "src/pages/specialist.tsx",
+        "src/pages/payments.tsx",
+        "src/components/payment-actions.tsx",
+        "src/lib/care-api.ts"
+      ],
+      "entrypoints": [
+        "src/pages/specialist.tsx"
+      ],
+      "dependencies": [
+        "identity",
+        "delivery"
+      ],
+      "tables": [
+        "appointments",
+        "schedule_slots",
+        "private.booking_payments"
+      ],
+      "api": [
+        "care_book_slot",
+        "care_command",
+        "care_snapshot"
+      ],
+      "roles": [
+        "parent",
+        "specialist",
+        "clinic"
+      ],
+      "ai": false,
+      "sensitivity": "private",
+      "tests": [
+        "tests/visit-upgrade.spec.ts",
+        "supabase/tests/payment-holds.sql"
+      ]
+    },
+    {
+      "name": "attendance",
+      "purpose": "One-use visit codes and printed entry QR",
+      "paths": [
+        "src/pages/check-in.tsx",
+        "src/components/visit-code-dialog.tsx",
+        "src/components/printed-qr.tsx"
+      ],
+      "entrypoints": [
+        "src/pages/check-in.tsx"
+      ],
+      "dependencies": [
+        "identity",
+        "delivery"
+      ],
+      "tables": [
+        "appointments",
+        "private.attendance_tokens",
+        "private.specialist_qr_codes"
+      ],
+      "api": [
+        "care_confirm_qr",
+        "care_specialist_qr",
+        "care_command"
+      ],
+      "roles": [
+        "parent",
+        "specialist"
+      ],
+      "ai": false,
+      "sensitivity": "private",
+      "tests": [
+        "tests/visit-upgrade.spec.ts",
+        "supabase/tests/printed-qr-ratings-calendar.sql"
+      ]
+    },
+    {
+      "name": "reviews",
+      "purpose": "Moderated reviews, versioned Bayesian rating",
+      "paths": [
+        "src/pages/feedback.tsx",
+        "src/domain/logic.ts",
+        "src/domain/ratings.ts",
+        "src/lib/ratings.ts"
+      ],
+      "entrypoints": [
+        "src/pages/feedback.tsx"
+      ],
+      "dependencies": [
+        "identity",
+        "delivery"
+      ],
+      "tables": [
+        "reviews",
+        "private.review_case_features"
+      ],
+      "api": [
+        "care_submit_review",
+        "care_ratings"
+      ],
+      "roles": [
+        "parent",
+        "moderator"
+      ],
+      "ai": false,
+      "sensitivity": "public-after-moderation",
+      "tests": [
+        "src/domain/ratings.test.ts",
+        "supabase/tests/printed-qr-ratings-calendar.sql"
+      ]
+    },
+    {
+      "name": "care",
+      "purpose": "Assignments, completions, diary, private material storage",
+      "paths": [
+        "src/pages/diary.tsx",
+        "src/pages/pro.tsx",
+        "src/components/care-ui.tsx",
+        "src/components/safe-video.tsx",
+        "src/lib/youtube.ts"
+      ],
+      "entrypoints": [
+        "src/pages/diary.tsx"
+      ],
+      "dependencies": [
+        "identity",
+        "delivery"
+      ],
+      "tables": [
+        "task_materials",
+        "task_assignments",
+        "task_completions",
+        "child_goals",
+        "progress_entries"
+      ],
+      "api": [
+        "care_command",
+        "family_task"
+      ],
+      "roles": [
+        "parent",
+        "specialist"
+      ],
+      "ai": false,
+      "sensitivity": "medical-private",
+      "tests": [
+        "tests/family-clinic.spec.ts",
+        "supabase/tests/care.sql"
+      ]
+    },
+    {
+      "name": "clinic",
+      "purpose": "Clinic-scoped dashboard and journal",
+      "paths": [
+        "src/pages/clinic.tsx",
+        "src/components/clinic-dashboard.tsx",
+        "src/domain/clinic-analytics.ts"
+      ],
+      "entrypoints": [
+        "src/pages/clinic.tsx"
+      ],
+      "dependencies": [
+        "identity",
+        "delivery"
+      ],
+      "tables": [
+        "clinics",
+        "clinic_members",
+        "appointments",
+        "schedule_slots"
+      ],
+      "api": [
+        "care_snapshot",
+        "care_command"
+      ],
+      "roles": [
+        "clinic"
+      ],
+      "ai": false,
+      "sensitivity": "private",
+      "tests": [
+        "tests/prompt5.spec.ts",
+        "tests/family-clinic.spec.ts"
+      ]
+    },
+    {
+      "name": "notifications",
+      "purpose": "Inbox, per-device Web Push, server queue",
+      "paths": [
+        "src/components/push-settings.tsx",
+        "src/lib/push.ts",
+        "src/sw.ts",
+        "supabase/functions/push-dispatch/index.ts"
+      ],
+      "entrypoints": [
+        "src/components/push-settings.tsx"
+      ],
+      "dependencies": [
+        "identity",
+        "delivery"
+      ],
+      "tables": [
+        "notifications",
+        "push_subscriptions",
+        "notification_preferences",
+        "private.push_deliveries"
+      ],
+      "api": [
+        "register_push_device",
+        "remove_push_device",
+        "claim_push_batch",
+        "finish_push_delivery",
+        "schedule_notification_reminders"
+      ],
+      "roles": [
+        "parent",
+        "specialist",
+        "clinic"
+      ],
+      "ai": false,
+      "sensitivity": "private",
+      "tests": [
+        "supabase/tests/prompt5.sql",
+        "tests/prompt5.spec.ts"
+      ]
+    },
+    {
+      "name": "knowledge",
+      "purpose": "Approved dictionary, allowlist, cache-only translation",
+      "paths": [
+        "src/pages/explain.tsx",
+        "supabase/functions/explain/index.ts",
+        "supabase/functions/translate-message/index.ts",
+        "supabase/functions/_shared/ai-gateway.ts"
+      ],
+      "entrypoints": [
+        "src/pages/explain.tsx"
+      ],
+      "dependencies": [
+        "identity",
+        "delivery"
+      ],
+      "tables": [
+        "message_translations",
+        "content_translations",
+        "private.ai_metrics"
+      ],
+      "api": [
+        "record_ai_metric",
+        "consume_function_quota"
+      ],
+      "roles": [
+        "parent",
+        "specialist",
+        "clinic"
+      ],
+      "ai": "dictionary/cache only; no external text transmission",
+      "sensitivity": "public-dictionary-or-authorized-cache",
+      "tests": [
+        "src/domain/prompt5.test.ts",
+        "supabase/tests/gemini-access.sql"
+      ]
+    },
+    {
+      "name": "experience",
+      "purpose": "Brand, mascot, existing navigation assistant, cookies",
+      "paths": [
+        "src/design-tokens.css",
+        "src/brand.css",
+        "src/components/mascot/Mascot.tsx",
+        "src/components/section-guide.tsx",
+        "src/components/cookie-banner.tsx",
+        "src/pages/mascot-gallery.tsx"
+      ],
+      "entrypoints": [
+        "src/design-tokens.css"
+      ],
+      "dependencies": [
+        "identity",
+        "delivery"
+      ],
+      "tables": [
+        "app_graph_nodes",
+        "app_graph_edges",
+        "app_graph_keywords"
+      ],
+      "api": [
+        "app_navigation_graph"
+      ],
+      "roles": [
+        "parent",
+        "specialist",
+        "clinic"
+      ],
+      "ai": false,
+      "sensitivity": "public",
+      "tests": [
+        "tests/prompt5.spec.ts"
+      ]
+    },
+    {
+      "name": "privacy",
+      "purpose": "Legal drafts and consent event log",
+      "paths": [
+        "src/pages/legal-documents.tsx",
+        "src/lib/consents.ts",
+        "src/lib/privacy-preferences.ts"
+      ],
+      "entrypoints": [
+        "src/pages/legal-documents.tsx"
+      ],
+      "dependencies": [
+        "identity",
+        "delivery"
+      ],
+      "tables": [
+        "consent_events"
+      ],
+      "api": [],
+      "roles": [
+        "parent",
+        "specialist",
+        "clinic"
+      ],
+      "ai": false,
+      "sensitivity": "private",
+      "tests": [
+        "supabase/tests/prompt5.sql"
+      ]
+    },
+    {
+      "name": "delivery",
+      "purpose": "Vite build, PWA update and hosting",
+      "paths": [
+        "vite.config.ts",
+        "vercel.json",
+        "src/sw.ts",
+        "src/lib/update-safety.ts",
+        "src/lib/pwa-context.tsx",
+        "public/boot-recovery.js",
+        "public/auth/update.html",
+        "public/auth/update.js"
+      ],
+      "entrypoints": [
+        "vite.config.ts"
+      ],
+      "dependencies": [
+        "identity"
+      ],
+      "tables": [],
+      "api": [],
+      "roles": [
+        "all"
+      ],
+      "ai": false,
+      "sensitivity": "static-shell-only",
+      "tests": [
+        "tests/prompt4-pwa.spec.ts",
+        "tests/install.spec.ts",
+        "tests/cache-recovery.spec.ts"
+      ]
+    }
+  ],
+  "relations": [
+    [
+      "identity",
+      "booking"
+    ],
+    [
+      "catalog",
+      "booking"
+    ],
+    [
+      "booking",
+      "attendance"
+    ],
+    [
+      "attendance",
+      "reviews"
+    ],
+    [
+      "booking",
+      "notifications"
+    ],
+    [
+      "care",
+      "notifications"
+    ],
+    [
+      "experience",
+      "privacy"
+    ]
+  ]
+}

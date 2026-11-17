@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.skip(process.env.CONNECTED_AUTH_TESTS !== '1', 'Run against the connected production build.');
+test.beforeEach(async({page})=>{await page.route('https://api.pwnedpasswords.com/range/*',route=>route.fulfill({contentType:'text/plain',body:'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:0\r\n'}));});
 
 test('landing leads to registration and login without a dashboard or a legacy demo session', async ({ page }) => {
     await page.addInitScript(() => {
@@ -38,10 +39,10 @@ test('registration requires consent, submits signup and shows email confirmation
     await expect(submit).toBeDisabled();
     await page.getByRole('checkbox').check();
     await submit.click();
-    await expect(page.getByText('Проверьте почту для подтверждения регистрации. Затем войдите в свой аккаунт.')).toBeVisible();
+    await expect(page.getByRole('heading',{name:'Подтвердите электронную почту',exact:true})).toBeVisible();
     expect(submitted).toMatchObject({ email: 'signup-test@example.com', password: 'TestPassword!2026' });
     expect(await page.evaluate(() => sessionStorage.getItem('bb-auth-next'))).toBe('/onboarding');
-    await expect(page).toHaveURL(/\/register\?role=parent$/);
+    await expect(page).toHaveURL(/\/auth\/confirm$/);
     await expect(page.locator('.app-shell')).toHaveCount(0);
 });
 

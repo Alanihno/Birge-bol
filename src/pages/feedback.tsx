@@ -1,3 +1,4 @@
+import { Mascot } from '../components/mascot/Mascot';
 import { RatingInfo } from '../components/rating-info';
 /* localized-copy */
 import { tr, useLocale } from '../lib/i18n';
@@ -18,7 +19,7 @@ export default function FeedbackPage() {
         return <ErrorState retry={() => void care.refetch()}/>;
     const a = care.data.appointments.find(a => a.id === sessionId), review = care.data.reviews.find(r => r.appointment_id === sessionId);
     if (done)
-        return <div className="narrow"><Notice tone="sage">{tr("Отзыв отправлен на модерацию. Посещение подтверждено")}{tr(a?.is_demo ? ' в тестовом сценарии' : '')}.</Notice><Link className="btn primary" to="/diary">{tr("Вернуться в дневник")}</Link></div>;
+        return <div className="narrow"><Mascot state="success" size="large"/><Notice tone="sage">{tr("Отзыв отправлен на модерацию. Посещение подтверждено")}{tr(a?.is_demo ? ' в тестовом сценарии' : '')}.</Notice><Link className="btn primary" to="/diary">{tr("Вернуться в дневник")}</Link></div>;
     if (!a?.visit_verified || a.status !== 'completed')
         return <Empty title={tr("Сначала подтвердите посещение")} description={tr("Отсканируйте QR специалиста в центре и подтвердите посещение.")} to="/diary" label={tr("Мои приёмы")}/>;
     if (review)

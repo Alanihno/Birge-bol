@@ -1,3 +1,4 @@
+import { saveConsent } from '../lib/consents';
 import { useState } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import { useApp } from '../lib/app-context';
@@ -18,6 +19,7 @@ export function AddChildren() {
         setBusy(true); setError('');
         const completed = [...saved];
         try {
+            await saveConsent(app.userId,'child_authority');
             for (const child of rows) {
                 if (completed.includes(child.id)) continue;
                 await repository.saveChild(app.userId, { ...app.activeChild, ...child, case_group:'unknown', label: child.label.trim() + (child.label.toLowerCase().includes("") ? '' : ""), city: 'Алматы', district, concerns: [...app.activeChild.concerns] });
@@ -38,7 +40,7 @@ export function AddChildren() {
                 </fieldset>))}
                 <Button type="button" variant="ghost" disabled={busy || rows.length >= 10 || saved.length > 0} onClick={() => setRows([...rows, row()])}><Plus size={16}/>{tr('Ещё ребёнок')}</Button>
                 <label>{tr('Район семьи')}<select value={district} disabled={busy || saved.length > 0} onChange={event => setDistrict(event.target.value)}>{tr(districts.map(item => <option key={item} value={item}>{tr(item)}</option>))}</select></label>
-                <label className="checkbox"><input type="checkbox" checked={consent} onChange={event => setConsent(event.target.checked)} required/>{tr("Согласен сохранить профили детей в аккаунте")}</label>
+                <label className="checkbox"><input type="checkbox" checked={consent} onChange={event => setConsent(event.target.checked)} required/>{tr("Согласен сохранить профили детей в аккаунте и подтверждаю полномочия законного представителя")}</label>
                 {tr(error && <p role="alert" className="error">{tr(error)}</p>)}
                 <Button busy={busy} disabled={!consent || rows.some(child => !child.label.trim())} type="submit">{tr('Сохранить детей')} · {tr(rows.length)}</Button>
             </form>

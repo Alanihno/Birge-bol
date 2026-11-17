@@ -1,0 +1,7 @@
+:root{
+ --torch-red:#EB0032;--indigo:#4B0073;--mauve:#C8AAFF;--magnolia:#E6E1FF;
+ --brand-primary:var(--indigo);--brand-accent:var(--torch-red);--surface-warm:#FDFCFF;--surface-card:#FFFFFF;--ink-primary:var(--indigo);--ink-secondary:var(--indigo);--border-soft:var(--magnolia);--state-error:var(--indigo);--state-success:var(--indigo);
+ --font-body:'Inter',system-ui,sans-serif;--text-small:.875rem;--text-body:1rem;--text-title:clamp(1.6rem,3vw,2.6rem);--weight-body:400;--weight-strong:600;--line-body:1.55;
+ --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;--radius-control:12px;--radius-card:20px;--shadow-soft:0 8px 30px color-mix(in srgb,var(--indigo) 5%,transparent);--motion-fast:160ms;--motion-normal:280ms;--content-width:1200px;
+ --mascot-main:var(--mauve);--mascot-light:var(--magnolia);--mascot-mid:var(--mauve);--mascot-shadow:var(--indigo);--mascot-shine:#FFFFFF;--mascot-eye:var(--indigo);--mascot-blush:var(--mauve);
+}

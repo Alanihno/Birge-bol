@@ -9,6 +9,7 @@ const label=(e:Control)=>e.getAttribute('aria-label')||Array.from(e.labels?.[0]?
 const route=()=>location.pathname+location.search;
 const key=()=>`bb-update-draft:${owner}:${child}:${route()}`;
 export function setDraftScope(user:string|null,childId:string){owner=user||'guest';child=childId;restoreDrafts();}
+export function clearPrivateDrafts(){for(const k of Object.keys(sessionStorage))if(k.startsWith('bb-update-draft:'))sessionStorage.removeItem(k);inheritedDrafts.clear();}
 export function setPendingMutations(check:()=>boolean){pendingMutations=check;}
 export function updateBlockReason(){
  if(pendingMutations()||Array.from(document.querySelectorAll('[aria-busy="true"]')).some(e=>!e.closest('.pwa-update')))return 'Дождитесь сохранения текущего действия.';
@@ -62,7 +63,9 @@ export function recoverModuleLoad(){
  if(!navigator.onLine)return false;
  const guard=`bb-preload-recovery:${__BB_BUILD_ID__}`;
  if(sessionStorage.getItem(guard)||updateBlockReason())return false;
- saveDrafts();sessionStorage.setItem(guard,'1');location.reload();return true;
+ saveDrafts();sessionStorage.setItem(guard,'1');
+ const recover=(window as Window&{__birgeRecover?:()=>Promise<boolean>}).__birgeRecover;
+ if(recover)void recover();else location.reload();return true;
 }
 export function installModuleRecovery(){
  window.addEventListener('vite:preloadError',event=>{if(recoverModuleLoad())event.preventDefault();});

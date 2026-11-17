@@ -1,0 +1,4 @@
+const fs=require('node:fs');const edit=(p,f)=>fs.writeFileSync(p,f(fs.readFileSync(p,'utf8')));
+edit('tests/promt2.spec.ts',s=>s.replace("name:'Заполнить демоданными'","name:'Заполнить данными'").replace("name:'Добавить демодокументы'","name:'Добавить документы'").replaceAll('Заключение специалиста · демо','Заключение специалиста').replace("name:'Отправить учебный ответ'","name:'Отправить ответ'"));
+edit('src/components/safe-video.tsx',s=>s.replaceAll('<Button onClick=','<Button type="button" onClick=').replace('<Button variant="ghost"','<Button type="button" variant="ghost"'));
+edit('src/pages/auth-recovery.tsx',s=>s.replace('<Button busy={busy} onClick={()=>{setBusy(true);', '<Button busy={busy||!app.authReady} disabled={!app.userId} onClick={()=>{setBusy(true);').replaceAll('type="password" required','type="password" disabled={busy} required'));

@@ -7,15 +7,16 @@ test('adds several children together and keeps profiles separate after reload', 
     await page.getByRole('button', { name: 'Ещё ребёнок', exact: true }).click();
     await page.getByLabel('Имя или псевдоним', { exact: true }).nth(1).fill('Тест Данияр');
     await page.getByRole('dialog').getByRole('combobox', { name: 'Возраст', exact: true }).nth(1).selectOption('6–8');
-    await page.getByRole('checkbox', { name: /Согласен сохранить вымышленные/ }).check();
+    await page.getByRole('checkbox', { name: /Согласен сохранить профили детей/ }).check();
     await page.getByRole('button', { name: /Сохранить детей/ }).click();
     await expect(page.getByRole('dialog')).not.toBeVisible();
     await page.reload();
-    await expect(page.getByRole('heading', { name: 'Тест Амина · демо', exact: true })).toBeVisible();
-    await page.getByRole('combobox', { name: 'Активный профиль', exact: true }).selectOption({ label: 'Тест Данияр · демо' });
-    await expect(page.getByRole('heading', { name: 'Тест Данияр · демо', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Тест Амина', exact: true })).toBeVisible();
+    await page.getByRole('combobox', { name: 'Активный профиль', exact: true }).selectOption({ label: 'Тест Данияр' });
+    await expect(page.getByRole('heading', { name: 'Тест Данияр', exact: true })).toBeVisible();
     await expect(page.locator('.child-profile')).toContainText('6–8');
 });
+test.beforeEach(async({page})=>{await page.addInitScript(()=>localStorage.setItem('bb-cookie-consent-v1',JSON.stringify({version:1,necessary:true,media:false,analytics:false,updatedAt:new Date().toISOString()})));});
 test('clinic saves messenger contacts and a parent opens an editable message to that clinic', async ({ page, context }) => {
     await page.goto('/auth');
     await page.getByRole('button', { name: /Клиника.*clinic@/ }).click();

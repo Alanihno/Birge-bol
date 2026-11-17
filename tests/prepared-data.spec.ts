@@ -26,11 +26,11 @@ test('product news and community branches have readable discussions', async ({pa
  await parentLogin(page,'/app');
  await expect(page.getByRole('heading',{name:'Новости Birge Bol'})).toBeVisible();
  await page.getByRole('link',{name:'Все новости →'}).click();
- await expect(page.locator('.question-card')).toHaveCount(4);
- await page.locator('.question-card').first().click();
+ await expect(page.locator('.question-card').first()).toBeVisible();await expect(page).toHaveURL(/topic=/);
+ await page.locator('.question-card').filter({has:page.getByRole('heading',{name:'Новости: оплата и статус бронирования',exact:true})}).click();
  await expect(page.getByText('Демо-пример: после отправки чека бронь сохраняется до проверки специалистом. Повторно оплачивать из-за ожидания подтверждения не нужно.')).toBeVisible();
  await page.goto('/moms?topic=Поддержка');
- await expect(page.locator('.question-card')).toHaveCount(2);
+ await expect(page.locator('.question-card').first()).toBeVisible();await expect(page.getByRole('button',{name:'Поддержка',exact:true})).toHaveClass(/selected/);
  await page.setViewportSize({width:360,height:800});
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
 });

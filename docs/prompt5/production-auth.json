@@ -1,0 +1,429 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\Администратор\\Desktop\\Birge bol\\playwright.config.ts",
+    "rootDir": "C:/Users/Администратор/Desktop/Birge bol/tests",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Администратор/Desktop/Birge bol/.preview/production-auth",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/Администратор/Desktop/Birge bol/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 45000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.2",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "connected-auth.spec.ts",
+      "file": "connected-auth.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "landing leads to registration and login without a dashboard or a legacy demo session",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6662,
+                  "error": {
+                    "message": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at https://birge-bol.vercel.app/\nCall log:\n\u001b[2m  - navigating to \"https://birge-bol.vercel.app/\", waiting until \"load\"\u001b[22m\n",
+                    "stack": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at https://birge-bol.vercel.app/\nCall log:\n\u001b[2m  - navigating to \"https://birge-bol.vercel.app/\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts:12:16",
+                    "location": {
+                      "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts",
+                      "column": 16,
+                      "line": 12
+                    },
+                    "snippet": "  10 |         sessionStorage.setItem('bb-demo-identity', JSON.stringify({ id: '20000000-0000-4000-8000-000000000002', role: 'specialist', email: 'specialist@birge.example' }));\n  11 |     });\n> 12 |     await page.goto('/');\n     |                ^\n  13 |     await expect(page.getByRole('heading', { name: /Вам не нужно/ })).toBeVisible();\n  14 |     await expect(page.locator('.app-shell')).toHaveCount(0);\n  15 |     await page.getByRole('link', { name: /Начать бесплатно/ }).first().click();"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts",
+                        "column": 16,
+                        "line": 12
+                      },
+                      "message": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at https://birge-bol.vercel.app/\nCall log:\n\u001b[2m  - navigating to \"https://birge-bol.vercel.app/\", waiting until \"load\"\u001b[22m\n\n\n  10 |         sessionStorage.setItem('bb-demo-identity', JSON.stringify({ id: '20000000-0000-4000-8000-000000000002', role: 'specialist', email: 'specialist@birge.example' }));\n  11 |     });\n> 12 |     await page.goto('/');\n     |                ^\n  13 |     await expect(page.getByRole('heading', { name: /Вам не нужно/ })).toBeVisible();\n  14 |     await expect(page.locator('.app-shell')).toHaveCount(0);\n  15 |     await page.getByRole('link', { name: /Начать бесплатно/ }).first().click();\n    at C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts:12:16"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:50:11.133Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\Администратор\\Desktop\\Birge bol\\.preview\\production-auth\\connected-auth-landing-lea-bf28c-rd-or-a-legacy-demo-session\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\Администратор\\Desktop\\Birge bol\\.preview\\production-auth\\connected-auth-landing-lea-bf28c-rd-or-a-legacy-demo-session\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts",
+                    "column": 16,
+                    "line": 12
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "1828d0ba811f2382303d-5c369d54b7718b58e639",
+          "file": "connected-auth.spec.ts",
+          "line": 6,
+          "column": 1
+        },
+        {
+          "title": "registration requires consent, submits signup and shows email confirmation before a cabinet",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6543,
+                  "error": {
+                    "message": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at https://birge-bol.vercel.app/register?role=parent\nCall log:\n\u001b[2m  - navigating to \"https://birge-bol.vercel.app/register?role=parent\", waiting until \"load\"\u001b[22m\n",
+                    "stack": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at https://birge-bol.vercel.app/register?role=parent\nCall log:\n\u001b[2m  - navigating to \"https://birge-bol.vercel.app/register?role=parent\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts:35:16",
+                    "location": {
+                      "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts",
+                      "column": 16,
+                      "line": 35
+                    },
+                    "snippet": "  33 |         await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ user: { id: '20000000-0000-4000-8000-000000000009', email: 'signup-test@example.com', identities: [], aud: 'authenticated', role: 'authenticated', app_metadata: {}, user_metadata: {}, created_at: new Date().toISOString() }, session: null }) });\n  34 |     });\n> 35 |     await page.goto('/register?role=parent');\n     |                ^\n  36 |     await page.getByLabel('Email', { exact: true }).fill('signup-test@example.com');\n  37 |     await page.getByLabel('Пароль', { exact: true }).fill('TestPassword!2026');\n  38 |     const submit = page.getByRole('button', { name: 'Создать аккаунт', exact: true });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts",
+                        "column": 16,
+                        "line": 35
+                      },
+                      "message": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at https://birge-bol.vercel.app/register?role=parent\nCall log:\n\u001b[2m  - navigating to \"https://birge-bol.vercel.app/register?role=parent\", waiting until \"load\"\u001b[22m\n\n\n  33 |         await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ user: { id: '20000000-0000-4000-8000-000000000009', email: 'signup-test@example.com', identities: [], aud: 'authenticated', role: 'authenticated', app_metadata: {}, user_metadata: {}, created_at: new Date().toISOString() }, session: null }) });\n  34 |     });\n> 35 |     await page.goto('/register?role=parent');\n     |                ^\n  36 |     await page.getByLabel('Email', { exact: true }).fill('signup-test@example.com');\n  37 |     await page.getByLabel('Пароль', { exact: true }).fill('TestPassword!2026');\n  38 |     const submit = page.getByRole('button', { name: 'Создать аккаунт', exact: true });\n    at C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts:35:16"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:50:21.214Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\Администратор\\Desktop\\Birge bol\\.preview\\production-auth\\connected-auth-registratio-c6285-nfirmation-before-a-cabinet\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\Администратор\\Desktop\\Birge bol\\.preview\\production-auth\\connected-auth-registratio-c6285-nfirmation-before-a-cabinet\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts",
+                    "column": 16,
+                    "line": 35
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "1828d0ba811f2382303d-2a7892d175b5f6ebdab8",
+          "file": "connected-auth.spec.ts",
+          "line": 29,
+          "column": 1
+        },
+        {
+          "title": "specialist registration and protected deep links stay in the public entry flow",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6601,
+                  "error": {
+                    "message": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at https://birge-bol.vercel.app/register?role=specialist\nCall log:\n\u001b[2m  - navigating to \"https://birge-bol.vercel.app/register?role=specialist\", waiting until \"load\"\u001b[22m\n",
+                    "stack": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at https://birge-bol.vercel.app/register?role=specialist\nCall log:\n\u001b[2m  - navigating to \"https://birge-bol.vercel.app/register?role=specialist\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts:50:16",
+                    "location": {
+                      "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts",
+                      "column": 16,
+                      "line": 50
+                    },
+                    "snippet": "  48 |\n  49 | test('specialist registration and protected deep links stay in the public entry flow', async ({ page }) => {\n> 50 |     await page.goto('/register?role=specialist');\n     |                ^\n  51 |     await expect(page.getByText(/После регистрации специалист проходит модерацию/)).toBeVisible();\n  52 |     await expect(page.getByRole('button', { name: 'Создать аккаунт', exact: true })).toBeVisible();\n  53 |     await page.goto('/pro');"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts",
+                        "column": 16,
+                        "line": 50
+                      },
+                      "message": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at https://birge-bol.vercel.app/register?role=specialist\nCall log:\n\u001b[2m  - navigating to \"https://birge-bol.vercel.app/register?role=specialist\", waiting until \"load\"\u001b[22m\n\n\n  48 |\n  49 | test('specialist registration and protected deep links stay in the public entry flow', async ({ page }) => {\n> 50 |     await page.goto('/register?role=specialist');\n     |                ^\n  51 |     await expect(page.getByText(/После регистрации специалист проходит модерацию/)).toBeVisible();\n  52 |     await expect(page.getByRole('button', { name: 'Создать аккаунт', exact: true })).toBeVisible();\n  53 |     await page.goto('/pro');\n    at C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts:50:16"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:50:30.974Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\Администратор\\Desktop\\Birge bol\\.preview\\production-auth\\connected-auth-specialist--13fa7-ay-in-the-public-entry-flow\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\Администратор\\Desktop\\Birge bol\\.preview\\production-auth\\connected-auth-specialist--13fa7-ay-in-the-public-entry-flow\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\connected-auth.spec.ts",
+                    "column": 16,
+                    "line": 50
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "1828d0ba811f2382303d-9ca060cba51f2ae22d65",
+          "file": "connected-auth.spec.ts",
+          "line": 49,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "password-security.spec.ts",
+      "file": "password-security.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "signup blocks a compromised password before Supabase and sends only a hash prefix to the range service",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6491,
+                  "error": {
+                    "message": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at https://birge-bol.vercel.app/register?role=parent\nCall log:\n\u001b[2m  - navigating to \"https://birge-bol.vercel.app/register?role=parent\", waiting until \"load\"\u001b[22m\n",
+                    "stack": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at https://birge-bol.vercel.app/register?role=parent\nCall log:\n\u001b[2m  - navigating to \"https://birge-bol.vercel.app/register?role=parent\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\password-security.spec.ts:8:13",
+                    "location": {
+                      "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\password-security.spec.ts",
+                      "column": 13,
+                      "line": 8
+                    },
+                    "snippet": "   6 |  await page.route('https://api.pwnedpasswords.com/range/*',async route=>{lookup=route.request().url();const suffix=await page.evaluate(async value=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-1',new TextEncoder().encode(value))),b=>b.toString(16).padStart(2,'0')).join('').toUpperCase().slice(5),password);await route.fulfill({contentType:'text/plain',body:suffix+':42\\r\\n'});});\n   7 |  await page.route('https://*.supabase.co/auth/v1/signup**',async route=>{signup++;await route.fulfill({json:{user:null,session:null}});});\n>  8 |  await page.goto('/register?role=parent');await page.getByLabel('Email',{exact:true}).fill('synthetic@example.invalid');await page.getByLabel('Пароль',{exact:true}).fill(password);await page.getByRole('checkbox').check();await page.getByRole('button',{name:'Создать аккаунт',exact:true}).click();await expect(page.getByRole('alert')).toContainText('встречается в известных утечках');expect(signup).toBe(0);expect(lookup).toMatch(/^https:\\/\\/api\\.pwnedpasswords\\.com\\/range\\/[A-F0-9]{5}$/);expect(lookup).not.toContain(password);\n     |             ^\n   9 | });\n  10 | test('unavailable password checking fails closed, while login and recovery requests remain available',async({page})=>{\n  11 |  await page.route('https://api.pwnedpasswords.com/range/*',route=>route.fulfill({status:503,body:'unavailable'}));await page.goto('/register?role=parent');await page.getByLabel('Email',{exact:true}).fill('synthetic@example.invalid');await page.getByLabel('Пароль',{exact:true}).fill('A synthetic long phrase 487!');await page.getByRole('checkbox').check();await page.getByRole('button',{name:'Создать аккаунт',exact:true}).click();await expect(page.getByRole('alert')).toContainText('Проверка безопасности пароля временно недоступна');"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\password-security.spec.ts",
+                        "column": 13,
+                        "line": 8
+                      },
+                      "message": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at https://birge-bol.vercel.app/register?role=parent\nCall log:\n\u001b[2m  - navigating to \"https://birge-bol.vercel.app/register?role=parent\", waiting until \"load\"\u001b[22m\n\n\n   6 |  await page.route('https://api.pwnedpasswords.com/range/*',async route=>{lookup=route.request().url();const suffix=await page.evaluate(async value=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-1',new TextEncoder().encode(value))),b=>b.toString(16).padStart(2,'0')).join('').toUpperCase().slice(5),password);await route.fulfill({contentType:'text/plain',body:suffix+':42\\r\\n'});});\n   7 |  await page.route('https://*.supabase.co/auth/v1/signup**',async route=>{signup++;await route.fulfill({json:{user:null,session:null}});});\n>  8 |  await page.goto('/register?role=parent');await page.getByLabel('Email',{exact:true}).fill('synthetic@example.invalid');await page.getByLabel('Пароль',{exact:true}).fill(password);await page.getByRole('checkbox').check();await page.getByRole('button',{name:'Создать аккаунт',exact:true}).click();await expect(page.getByRole('alert')).toContainText('встречается в известных утечках');expect(signup).toBe(0);expect(lookup).toMatch(/^https:\\/\\/api\\.pwnedpasswords\\.com\\/range\\/[A-F0-9]{5}$/);expect(lookup).not.toContain(password);\n     |             ^\n   9 | });\n  10 | test('unavailable password checking fails closed, while login and recovery requests remain available',async({page})=>{\n  11 |  await page.route('https://api.pwnedpasswords.com/range/*',route=>route.fulfill({status:503,body:'unavailable'}));await page.goto('/register?role=parent');await page.getByLabel('Email',{exact:true}).fill('synthetic@example.invalid');await page.getByLabel('Пароль',{exact:true}).fill('A synthetic long phrase 487!');await page.getByRole('checkbox').check();await page.getByRole('button',{name:'Создать аккаунт',exact:true}).click();await expect(page.getByRole('alert')).toContainText('Проверка безопасности пароля временно недоступна');\n    at C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\password-security.spec.ts:8:13"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:50:40.701Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\Администратор\\Desktop\\Birge bol\\.preview\\production-auth\\password-security-signup-b-27e8b-prefix-to-the-range-service\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\Администратор\\Desktop\\Birge bol\\.preview\\production-auth\\password-security-signup-b-27e8b-prefix-to-the-range-service\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\password-security.spec.ts",
+                    "column": 13,
+                    "line": 8
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "1ecd4000373ffb6c78b7-ffecbd965d6de8b5c8d9",
+          "file": "password-security.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "unavailable password checking fails closed, while login and recovery requests remain available",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6486,
+                  "error": {
+                    "message": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at https://birge-bol.vercel.app/register?role=parent\nCall log:\n\u001b[2m  - navigating to \"https://birge-bol.vercel.app/register?role=parent\", waiting until \"load\"\u001b[22m\n",
+                    "stack": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at https://birge-bol.vercel.app/register?role=parent\nCall log:\n\u001b[2m  - navigating to \"https://birge-bol.vercel.app/register?role=parent\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\password-security.spec.ts:11:126",
+                    "location": {
+                      "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\password-security.spec.ts",
+                      "column": 126,
+                      "line": 11
+                    },
+                    "snippet": "   9 | });\n  10 | test('unavailable password checking fails closed, while login and recovery requests remain available',async({page})=>{\n> 11 |  await page.route('https://api.pwnedpasswords.com/range/*',route=>route.fulfill({status:503,body:'unavailable'}));await page.goto('/register?role=parent');await page.getByLabel('Email',{exact:true}).fill('synthetic@example.invalid');await page.getByLabel('Пароль',{exact:true}).fill('A synthetic long phrase 487!');await page.getByRole('checkbox').check();await page.getByRole('button',{name:'Создать аккаунт',exact:true}).click();await expect(page.getByRole('alert')).toContainText('Проверка безопасности пароля временно недоступна');\n     |                                                                                                                              ^\n  12 |  await page.route('https://*.supabase.co/auth/v1/recover**',route=>route.fulfill({json:{}}));await page.goto('/auth/recovery');await page.getByLabel('Email',{exact:true}).fill('synthetic@example.invalid');await page.getByRole('button',{name:'Отправить письмо',exact:true}).click();await expect(page.getByText('Если для этого адреса доступна отправка, вы получите письмо с инструкцией.',{exact:true})).toBeVisible();\n  13 | });\n  14 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\password-security.spec.ts",
+                        "column": 126,
+                        "line": 11
+                      },
+                      "message": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at https://birge-bol.vercel.app/register?role=parent\nCall log:\n\u001b[2m  - navigating to \"https://birge-bol.vercel.app/register?role=parent\", waiting until \"load\"\u001b[22m\n\n\n   9 | });\n  10 | test('unavailable password checking fails closed, while login and recovery requests remain available',async({page})=>{\n> 11 |  await page.route('https://api.pwnedpasswords.com/range/*',route=>route.fulfill({status:503,body:'unavailable'}));await page.goto('/register?role=parent');await page.getByLabel('Email',{exact:true}).fill('synthetic@example.invalid');await page.getByLabel('Пароль',{exact:true}).fill('A synthetic long phrase 487!');await page.getByRole('checkbox').check();await page.getByRole('button',{name:'Создать аккаунт',exact:true}).click();await expect(page.getByRole('alert')).toContainText('Проверка безопасности пароля временно недоступна');\n     |                                                                                                                              ^\n  12 |  await page.route('https://*.supabase.co/auth/v1/recover**',route=>route.fulfill({json:{}}));await page.goto('/auth/recovery');await page.getByLabel('Email',{exact:true}).fill('synthetic@example.invalid');await page.getByRole('button',{name:'Отправить письмо',exact:true}).click();await expect(page.getByText('Если для этого адреса доступна отправка, вы получите письмо с инструкцией.',{exact:true})).toBeVisible();\n  13 | });\n  14 |\n    at C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\password-security.spec.ts:11:126"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T09:50:50.327Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\Администратор\\Desktop\\Birge bol\\.preview\\production-auth\\password-security-unavaila-20375-y-requests-remain-available\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\Администратор\\Desktop\\Birge bol\\.preview\\production-auth\\password-security-unavaila-20375-y-requests-remain-available\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\password-security.spec.ts",
+                    "column": 126,
+                    "line": 11
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "1ecd4000373ffb6c78b7-c704ef2de64c92b16cda",
+          "file": "password-security.spec.ts",
+          "line": 10,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-17T09:50:08.622Z",
+    "duration": 49177.867999999995,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 5,
+    "flaky": 0
+  }
+}

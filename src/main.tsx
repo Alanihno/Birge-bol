@@ -27,3 +27,9 @@ import './auth.css';
 import './data-map.css';
 
 import './update.css';
+
+import './design-tokens.css';
+import './components/mascot/mascot.css';
+import './prompt5.css';
+
+import './brand.css';

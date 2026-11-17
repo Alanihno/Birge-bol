@@ -14,7 +14,7 @@ export function demoRatings(state: CareState, age: string, group: string, format
         const mean = (rows: typeof reviews, w = weight) => rows.reduce((sum, review) => sum + review.contact * w(review), 0) / rows.reduce((sum, review) => sum + w(review), 0);
         const c = pool.length ? mean(pool) : null;
         const own = pool.filter(review => review.specialist_id === specialist.id);
-        const overall = c === null ? null : bayesian(own.length, own.length ? mean(own) : c, c);
+        const overall = c === null || own.length===0 ? null : bayesian(own.length, own.length ? mean(own) : c, c);
         const w = (review: typeof reviews[number]) => review.case_consent && review.case_age ? weight(review) * caseSimilarity(group, review.case_group || 'unknown', ageValue(age) - review.case_age, format === 'any' || format === review.visit_format) : 0;
         const count = own.filter(review => w(review) > 0).length;
         const effective = own.reduce((sum, review) => sum + w(review), 0);

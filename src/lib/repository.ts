@@ -16,7 +16,7 @@ export const demoAdapter:Repository={
  async addEntry(userId,goalId,entry){scope=userId;write(d=>{const g=d.goals.find(x=>x.id===goalId);if(g)g.entries.push(entry);});},
  async feedback(userId,specialistId,childId,answers,review){scope=userId;write(d=>{d.feedbacks=[...(d.feedbacks||[]),{id:crypto.randomUUID(),child_id:childId,specialist_id:specialistId,answers}];if(review)d.reviews.unshift({...review,specialist_id:specialistId});d.notifications.unshift({id:crypto.randomUUID(),title:review?'Учебный чек-лист сохранён. Отзыв ожидает демомодерации.':'Учебный чек-лист сохранён без публикации отзыва.',read:false,to:'/profile'});});},
  async appointment(userId,item){scope=userId;write(d=>{d.appointments.push(item);});},async deleteChild(userId,id){scope=userId;write(d=>{d.children=d.children.filter(c=>c.id!==id);d.goals=d.goals.filter(g=>g.child_id!==id);d.appointments=d.appointments.filter(a=>a.child_id!==id);});},
- async removeReview(userId,id){scope=userId;write(d=>{d.reviews=d.reviews.filter(r=>r.id!==id);});},async markRead(userId){scope=userId;write(d=>{d.notifications.forEach(n=>{n.read=true;});});}
+ async removeReview(userId,id){scope=userId;write(d=>{d.reviews=d.reviews.filter(r=>r.id!==id);});},async markRead(userId,id){scope=userId;write(d=>{d.notifications.filter(n=>!id||n.id===id).forEach(n=>{n.read=true;});});}
 };
 function client(){if(!supabase)throw new Error('Supabase не настроен');return supabase;}
 function checked<T extends {error:unknown}>(result:T):T{if(result.error)throw new Error('Не удалось выполнить запрос. Проверьте соединение и повторите.');return result;}
@@ -34,7 +34,7 @@ export const supabaseAdapter:Repository={
  async appointment(userId,item){checked(await client().from('appointments').insert({...item,parent_id:userId}));},
  async deleteChild(userId,id){checked(await client().from('children').delete().eq('id',id).eq('parent_id',userId));},
  async removeReview(userId,id){checked(await client().from('reviews').delete().eq('id',id).eq('parent_id',userId));},
- async markRead(userId){checked(await client().from('notifications').update({read:true}).eq('parent_id',userId));}
+ async markRead(userId,id){let query=client().from('notifications').update({read:true}).eq('parent_id',userId);if(id)query=query.eq('id',id);checked(await query);}
 };
 export const repository=mode==='demo'?demoAdapter:supabaseAdapter;
 export function resetDemo(){for(const k of Object.keys(localStorage))if(k.startsWith('bb-care')||k.startsWith('bb-synthetic')||k==='bb-demo-identity')localStorage.removeItem(k);localStorage.removeItem('bb-journey-v2');localStorage.removeItem(STORAGE);localStorage.removeItem('bb-demo-catalog');localStorage.removeItem('bb-demo-session');sessionStorage.removeItem('bb-demo-identity');sessionStorage.removeItem('bb-active-child');sessionStorage.removeItem('bb-onboarding');location.assign('/');}

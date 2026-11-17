@@ -1,0 +1,3 @@
+import type { Specialist } from '../domain/types';
+import { demoMeta } from './journey';
+export function twoGisLinks(s:Specialist){const point=s.is_demo?demoMeta(s):s;const lat=point.latitude,lon=point.longitude;if(typeof lat!=='number'||typeof lon!=='number'||!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)return {place:`https://2gis.kz/almaty/search/${encodeURIComponent(s.address||s.district+' Алматы')}`,route:null};const coordinate=`${lon},${lat}`;return {place:`https://2gis.kz/almaty/geo/${coordinate}`,route:`https://2gis.kz/almaty/directions/points/|${coordinate}`};}

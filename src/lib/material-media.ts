@@ -1,6 +1,8 @@
+import { youtubeId } from './youtube';
 import { supabase } from './backend';
 export async function resolveMaterialMedia(path:string|null|undefined,token?:string):Promise<string|undefined>{
  if(!path)return undefined;
+ if(youtubeId(path))return path;
  if(/^\/(video|materials)\/[a-zA-Z0-9._/-]+$/.test(path))return path;
  if(!path.startsWith('storage:')||!supabase)return undefined;
  if(token){const {data,error}=await supabase.functions.invoke('care-media',{body:{token,path}});if(error)throw Error('Материал временно недоступен');return data?.url;}

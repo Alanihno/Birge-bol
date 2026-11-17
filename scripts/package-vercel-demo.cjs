@@ -1,9 +1,11 @@
 const fs=require('fs'),path=require('path');
 const target=path.resolve('деплой версель'),source=path.resolve('dist-demo');
 if(!fs.existsSync(path.join(source,'sw.js')))throw Error('Run npm run build:demo first');
+if(path.dirname(target)!==process.cwd()||path.basename(target)!=='деплой версель')throw Error('Unsafe generated output path');
+fs.rmSync(target,{recursive:true,force:true});
 fs.mkdirSync(target,{recursive:true});fs.cpSync(source,target,{recursive:true});
 const config=JSON.parse(fs.readFileSync('vercel.json','utf8'));delete config.framework;delete config.buildCommand;delete config.outputDirectory;
-config.headers.push({source:'/(.*)',headers:[{key:'Content-Security-Policy',value:"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.tile.openstreetmap.org https://tile.openstreetmap.org; font-src 'self'; media-src 'self' blob:; connect-src 'self' https://tile.openstreetmap.org; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"}]});
+config.headers.push({source:'/(.*)',headers:[{key:'Content-Security-Policy',value:"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.tile.openstreetmap.org https://tile.openstreetmap.org; font-src 'self'; media-src 'self' blob:; connect-src 'self' https://api.pwnedpasswords.com https://tile.openstreetmap.org; frame-src https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"}]});
 fs.writeFileSync(path.join(target,'vercel.json'),JSON.stringify(config,null,2)+'\n');
 const licenses=path.join(target,'licenses');fs.mkdirSync(licenses,{recursive:true});
 const lock=JSON.parse(fs.readFileSync('package-lock.json','utf8'));const lines=['# Third-party notices','', 'Оригинальные иллюстрации и нейтральные WAV созданы для Birge Bol. Фотографии людей не используются.','Код перечисленных библиотек используется по их лицензиям; полные доступные тексты находятся в licenses/.','OpenStreetMap: https://www.openstreetmap.org/copyright; атрибуция также показывается на карте.',''];

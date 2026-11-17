@@ -1,0 +1,1 @@
+const fs=require('node:fs');for(const dir of fs.readdirSync('test-results')){const p='test-results/'+dir+'/error-context.md';if(!fs.existsSync(p))continue;console.log(dir);console.log(fs.readFileSync(p,'utf8').split('\n').filter(l=>/heading|button|option|paragraph/.test(l)).slice(-45).join('\n'));}

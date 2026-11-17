@@ -12,3 +12,7 @@ verify_jwt = true
 verify_jwt = false
 [functions.care-media]
 verify_jwt = false
+[functions.translate-message]
+verify_jwt = true
+[functions.push-dispatch]
+verify_jwt = false

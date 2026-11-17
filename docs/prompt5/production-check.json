@@ -1,0 +1,48 @@
+{
+  "url": "https://birge-bol.vercel.app",
+  "deployment": "dpl_Bk2Hm9GxReSbJHBBYoM5QdAK9EFm",
+  "state": "READY",
+  "date": "2026-11-17T09:57:00.752Z",
+  "checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "no-store, no-cache, must-revalidate",
+      "passwordRangeCSP": true,
+      "newPaletteTheme": true
+    },
+    {
+      "path": "/version.json",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "cacheControl": "no-store, no-cache, must-revalidate",
+      "passwordRangeCSP": true,
+      "version": {
+        "buildId": "20261117095340687"
+      }
+    },
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "contentType": "text/plain; charset=utf-8",
+      "cacheControl": "no-cache, must-revalidate",
+      "passwordRangeCSP": true
+    },
+    {
+      "path": "/payments",
+      "status": 200,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "no-cache, must-revalidate",
+      "passwordRangeCSP": true
+    },
+    {
+      "path": "/auth/recovery",
+      "status": 200,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "no-cache, must-revalidate",
+      "passwordRangeCSP": true
+    }
+  ],
+  "browserE2E": "Blocked by environment ERR_NETWORK_ACCESS_DENIED; local connected/mock Auth 5/5 passed"
+}

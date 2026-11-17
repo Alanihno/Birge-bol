@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { dynamicVisitPath } from '../domain/visit-qr';
 import { useApp } from '../lib/app-context';
 import { useCareActions, timeLabel } from '../components/care-ui';
 import { Button, PageHeading, Notice } from '../components/ui';
@@ -14,9 +15,10 @@ export function parseVisitQr(value: string): string | null {
     try { const url = new URL(trimmed); if (!([location.origin, 'https://birge-bol.vercel.app', 'https://birge-bol-alans-projects-f2e926b6.vercel.app'].includes(url.origin)) || !/^https?:$/.test(url.protocol)) return null; const match = url.pathname.match(/^\/check-in\/([^/]+)\/?$/); return match && uuid.test(match[1]) ? match[1] : null; } catch { return null; }
 }
 export default function CheckIn() {
-    useLocale(); const app = useApp(), actions = useCareActions(), params = useParams();
+    useLocale(); const app = useApp(), actions = useCareActions(), params = useParams(),navigate=useNavigate();
     const [input, setInput] = useState(params.code || ''), [camera, setCamera] = useState(false), [error, setError] = useState(''), [choices, setChoices] = useState<Choice[]>([]), [selected, setSelected] = useState(''), [done, setDone] = useState<{ id: string; at: string } | null>(null);
     const video = useRef<HTMLVideoElement>(null), stream = useRef<MediaStream | null>(null);
+    const confirmFromCamera=useEffectEvent((value:string)=>confirm(value));
     useEffect(() => {
         if (!camera) return;
         let alive = true, timer: ReturnType<typeof setTimeout>;
@@ -31,7 +33,7 @@ export default function CheckIn() {
                 const detector = new Constructor({ formats: ['qr_code'] });
                 const scan = async () => {
                     if (!alive || !video.current) return;
-                    try { const codes = await detector.detect(video.current); const value = codes.map(code => parseVisitQr(code.rawValue)).find(Boolean); if (value) { setInput(value); setCamera(false); await confirm(value); return; } } catch { /* Retry after a frame is ready. */ }
+                    try { const codes = await detector.detect(video.current); const value = codes.map(code=>code.rawValue).find(value=>dynamicVisitPath(value,location.origin)||parseVisitQr(value)); if (value) { setInput(value); setCamera(false); await confirmFromCamera(value); return; } } catch { /* Retry after a frame is ready. */ }
                     if (alive) timer = setTimeout(() => void scan(), 250);
                 };
                 await scan();
@@ -40,6 +42,7 @@ export default function CheckIn() {
         return () => { alive = false; clearTimeout(timer); stop(); };
     }, [camera]);
     async function confirm(scanned?: string) {
+        const dynamic=dynamicVisitPath(scanned||input,location.origin);if(dynamic){setCamera(false);navigate(dynamic);return;}
         const code = parseVisitQr(scanned || input); if (!code) { setError('Вставьте ссылку из QR Birge Bol или отсканируйте код'); return; }
         setError('');
         const result = await actions.run('confirm_qr', { code, appointment_id: selected || null }, '');

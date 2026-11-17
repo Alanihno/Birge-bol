@@ -19,7 +19,8 @@ const laterLocal=()=>{const value=new Date(Date.now()+3600000);return new Date(v
 export default function Diary() {
     useLocale();
     const { activeChild } = useApp(), care = useCareActions(), [p, setP] = useSearchParams(), location = useLocation(), home = p.get('tab') === 'home';
-    useEffect(() => { const id = p.get('appointment'); if (!id || !care.data) return; const frame = requestAnimationFrame(() => { const card = document.getElementById('appointment-' + id); card?.closest('details')?.setAttribute('open', ''); card?.scrollIntoView({ block: 'center', behavior: 'smooth' }); card?.focus({ preventScroll: true }); }); return () => cancelAnimationFrame(frame); }, [p, activeChild.id, !!care.data]);
+    const hasCareData=!!care.data;
+    useEffect(() => { const id = p.get('appointment'); if (!id || !hasCareData) return; const frame = requestAnimationFrame(() => { const card = document.getElementById('appointment-' + id); card?.closest('details')?.setAttribute('open', ''); card?.scrollIntoView({ block: 'center', behavior: 'smooth' }); card?.focus({ preventScroll: true }); }); return () => cancelAnimationFrame(frame); }, [p, activeChild.id, hasCareData]);
     if (care.isPending)
         return <Loading />;
     if (care.isError || !care.data)

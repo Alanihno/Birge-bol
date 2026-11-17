@@ -1,0 +1,37 @@
+{
+  "baselineDemo": {
+    "bytes": 1739924,
+    "gzip": 484565,
+    "main": [
+      {
+        "file": "dist-demo\\assets\\index-BxWXUS4u.js",
+        "bytes": 651637,
+        "gzip": 193890
+      }
+    ]
+  },
+  "finalDemo": {
+    "bytes": 1839692,
+    "gzip": 513471,
+    "main": [
+      {
+        "file": "dist-demo\\assets\\index-CzyJMd3n.js",
+        "bytes": 644529,
+        "gzip": 193567
+      }
+    ]
+  },
+  "finalConnected": {
+    "bytes": 2089460,
+    "gzip": 580726,
+    "main": [
+      {
+        "file": "dist\\assets\\index-DTbMTHKB.js",
+        "bytes": 660851,
+        "gzip": 198690
+      }
+    ]
+  },
+  "date": "2026-11-17T10:24:40.562Z",
+  "lighthouse": "Unavailable: package not installed; npm registry blocked. No numeric Lighthouse scores claimed."
+}

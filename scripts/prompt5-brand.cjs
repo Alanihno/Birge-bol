@@ -1,0 +1,19 @@
+const fs=require('node:fs');
+// Replace legacy hard-coded palette with semantic tokens; photos are not recoloured.
+const css=fs.readdirSync('src').filter(f=>f.endsWith('.css')&&!['design-tokens.css','brand.css'].includes(f));
+function token(hex,property){let v=hex.slice(1);if(v.length===3||v.length===4)v=[...v].map(c=>c+c).join('');const rgb=v.slice(0,6),alpha=v.length===8?parseInt(v.slice(6),16)/255:1;const light=(parseInt(rgb.slice(0,2),16)*.2126+parseInt(rgb.slice(2,4),16)*.7152+parseInt(rgb.slice(4,6),16)*.0722)/255;
+ if(rgb.toLowerCase()==='ffffff'&&alpha===1)return 'var(--surface-card)';
+ const base=property==='color'||property==='fill'||property==='stroke'?'--ink-primary':/border|outline/.test(property)?'--border-soft':/shadow/.test(property)?'--ink-primary':light>.94?'--surface-warm':light>.78?'--magnolia':light>.53?'--mauve':'--indigo';
+ return alpha<1?`color-mix(in srgb,var(${base}) ${Math.round(alpha*100)}%,transparent)`:`var(${base})`;
+}
+for(const file of css){const p='src/'+file;let content=fs.readFileSync(p,'utf8');content=content.replace(/([\w-]+)\s*:\s*([^;{}]+)/g,(whole,property,value)=>property.startsWith('--mascot')?whole:`${property}:${value.replace(/#[a-f0-9]{3,8}\b/gi,h=>token(h,property))}`);fs.writeFileSync(p,content);}
+let tokens=fs.readFileSync('src/design-tokens.css','utf8');tokens=tokens.replace(':root{',':root{\n --torch-red:#EB0032;--indigo:#4B0073;--mauve:#C8AAFF;--magnolia:#E6E1FF;');
+const replacements={'#477d65':'var(--indigo)','#c06c59':'var(--torch-red)','#fbf8f2':'#FDFCFF','#fff':'#FFFFFF','#243b32':'var(--indigo)','#56665e':'var(--indigo)','#dce4dc':'var(--magnolia)','#a33c35':'var(--indigo)','#34654e':'var(--indigo)','#76ad91':'var(--mauve)','#c5e5d2':'var(--magnolia)','#97c8ad':'var(--mauve)','#effaf1':'#FFFFFF','#294c40':'var(--indigo)','#e7b9ac':'var(--mauve)'};
+for(const [from,to]of Object.entries(replacements))tokens=tokens.replaceAll(from,to);fs.writeFileSync('src/design-tokens.css',tokens);
+for(const file of ['src/components/catalog-map.tsx','src/pages/data-map.tsx']){let content=fs.readFileSync(file,'utf8');content=content.replace(/#[a-f0-9]{6}\b/gi,h=>h==='#c06c59'?'#4B0073':'#C8AAFF');fs.writeFileSync(file,content);}
+fs.writeFileSync('public/icon.svg','<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="34" fill="#E6E1FF"/><path d="M64 99C49 88 23 68 23 47C23 23 51 19 64 38C79 18 106 25 106 48C106 69 80 89 64 99Z" fill="#EB0032"/><path d="M34 44C35 35 45 31 52 35" fill="none" stroke="#FFFFFF" stroke-opacity=".5" stroke-width="4" stroke-linecap="round"/></svg>');
+let main=fs.readFileSync('src/main.tsx','utf8');main+="\nimport './brand.css';\n";fs.writeFileSync('src/main.tsx',main);
+let app=fs.readFileSync('src/App.tsx','utf8').replace("const Team = lazy", "const Payments=lazy(()=>import('./pages/payments'));\nconst Team = lazy").replace('<Route path="notifications"','<Route path="payments" element={parent(<Payments/>)}/><Route path="notifications"');fs.writeFileSync('src/App.tsx',app);
+let layout=fs.readFileSync('src/components/layout.tsx','utf8').replace('Bell, Home,','ShoppingBag, Bell, Home,').replace("{to:'/diary',label:'Дневник',icon:CalendarDays}","{to:'/diary',label:'Дневник',icon:CalendarDays},{to:'/payments',label:lang==='kk'?'Төлем':'Оплата',icon:ShoppingBag}").replace('<Link className="icon-btn bell"','{role===\'parent\'&&<Link className="icon-btn cart-link" to="/payments" aria-label={lang===\'kk\'?\'Төлем себеті\':\'Корзина оплаты\'}><ShoppingBag size={20}/></Link>}<Link className="icon-btn bell"');fs.writeFileSync('src/components/layout.tsx',layout);
+let vite=fs.readFileSync('vite.config.ts','utf8').replace("theme_color:'#7760a9',background_color:'#faf9f6'","theme_color:'#4B0073',background_color:'#FFFFFF'");fs.writeFileSync('vite.config.ts',vite);
+console.log('Four-colour brand and payment tab applied.');

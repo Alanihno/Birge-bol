@@ -1,0 +1,9 @@
+const fs=require('node:fs');const edit=(p,f)=>fs.writeFileSync(p,f(fs.readFileSync(p,'utf8')));
+edit('scripts/qa-prompt5.cjs',s=>s.replace("locator('h1')","locator('h1,h3')"));
+edit('tests/prompt5.spec.ts',s=>s.replace("locator('h1')","locator('h1,h3')"));
+edit('scripts/check-pwa-install.cjs',s=>s.replace('/* global window */',''));
+edit('src/lib/app-context.tsx',s=>s.replace("const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,session)=>{setUserId(session?.user.email_confirmed_at?session.user.id:null);setAuthReady(true);qc.clear();setVisitCode(null);setDraftState(demoChild);});","let previous:string|null=null;const {data:{subscription}}=supabase.auth.onAuthStateChange((event,session)=>{const next=session?.user.email_confirmed_at?session.user.id:null;if(event==='PASSWORD_RECOVERY')sessionStorage.setItem('bb-recovery-active','1');setUserId(next);setAuthReady(true);if(next!==previous){qc.clear();setVisitCode(null);setDraftState(demoChild);}previous=next;});"));
+edit('tests/auth-helper.ts',s=>s.replace("await page.getByRole('button',{name:/Родитель", "const cookies=page.getByRole('button',{name:'Только необходимые',exact:true});if(await cookies.isVisible())await cookies.click();await page.getByRole('button',{name:/Родитель"));
+edit('tests/visit-upgrade.spec.ts',s=>s.replace("await expect(page).toHaveURL(/\\/diary$/);\n await page.getByRole('button',{name:'Как работает бронь", "await expect(page).toHaveURL(/\\/payments$/);await page.goto('/diary');\n await page.getByRole('button',{name:'Как работает бронь"));
+edit('src/pages/auth-recovery.tsx',s=>s.replace("await supabase.auth.signOut({scope:'global'});","const signedOut=await supabase.auth.signOut({scope:'global'});if(signedOut.error)throw Error('Не удалось завершить старые сессии. Повторите выход из аккаунта.');"));
+console.log('Follow-up constraints applied: no A3, no new specialists, no Telegram changes.');

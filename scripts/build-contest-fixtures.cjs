@@ -2,7 +2,6 @@ const fs=require('node:fs');
 const centers=JSON.parse(fs.readFileSync('src/domain/contest-centers.json','utf8'));
 const q=v=>"'"+String(v).replaceAll("'","''")+"'";
 const id=v=>`md5(${q('bb-contest-'+v)})::uuid`;
-const arr=v=>`array[${v.map(q).join(',')}]::text[]`;
 const out=['-- Contest fixtures. Real directory contacts supplied by the user; all generated people/visits stay is_demo=true.'];
 for(const c of centers){
  const cid=id('center-'+c.key),owner=id('owner-'+c.key);

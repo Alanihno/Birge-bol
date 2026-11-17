@@ -1,3 +1,6 @@
+import { assertPasswordSafe } from '../lib/password-security';
+import { safeError } from '../lib/safe-error';
+import { saveConsent } from '../lib/consents';
 import { tr, useLocale } from '../lib/i18n';
 import { useState } from 'react';
 import { Link, Navigate, useLocation, useSearchParams } from 'react-router-dom';
@@ -41,7 +44,7 @@ export default function Auth() {
             }
             setEntering(true);
         } catch (e) {
-            setError(e instanceof Error ? e.message : 'Вход не удался');
+            setError(safeError(e));
         } finally {
             setBusy(false);
         }
@@ -57,23 +60,23 @@ export default function Auth() {
             sessionStorage.setItem('bb-signup-role', role);
             localStorage.setItem('bb-signup-role', role);
             if (signup) {
-                if (!consent) throw Error('Подтвердите условия');
+                if (!consent) throw Error('Подтвердите условия');await assertPasswordSafe(password);
                 const afterSignup = role === 'parent' ? '/onboarding' : roleHome(role);
                 sessionStorage.setItem('bb-auth-next', afterSignup);
                 const result = await supabase.auth.signUp({
                     email: email.trim(), password,
-                    options: { emailRedirectTo: window.location.origin + '/auth?next=' + encodeURIComponent(afterSignup) },
+                    options: { emailRedirectTo: window.location.origin + '/auth/confirm?next=' + encodeURIComponent(afterSignup) },
                 });
                 if (result.error) throw result.error;
-                if (result.data.session) setEntering(true);
-                else setMessage('Проверьте почту для подтверждения регистрации. Затем войдите в свой аккаунт.');
+                if (result.data.session) { await saveConsent(result.data.user!.id); setEntering(true); }
+                else {sessionStorage.setItem('bb-confirm-email',email.trim());window.location.assign('/auth/confirm');}
             } else {
                 const result = await supabase.auth.signInWithPassword({ email: email.trim(), password });
                 if (result.error) throw result.error;
                 setEntering(true);
             }
         } catch (e) {
-            setError(e instanceof Error ? e.message : 'Не удалось войти');
+            setError(safeError(e));
         } finally {
             setBusy(false);
         }
@@ -102,17 +105,17 @@ export default function Auth() {
                 ].map(({ role: selected, title, text, icon: Icon }) => <button key={selected} className={`panel role-choice ${role === selected ? 'selected' : ''}`} aria-pressed={role === selected} onClick={() => { setRole(selected); setError(''); setMessage(''); }}><Icon/><strong>{tr(title)}</strong><small>{tr(text)}</small></button>))}</div>
                 {tr(role === 'specialist' && <Notice>{tr('После регистрации специалист проходит модерацию. До проверки профиль не появится в выдаче.')}</Notice>)}
                 {tr(mode === 'supabase' && role && <form className="panel stack" onSubmit={event => void submit(event)}>
-                    <div className="child-tabs"><button type="button" className={!signup ? 'active' : ''} onClick={() => { setSignup(false); setError(''); setMessage(''); }}>{tr('Вход')}</button><button type="button" className={signup ? 'active' : ''} onClick={() => { setSignup(true); setError(''); setMessage(''); }}>{tr('Регистрация')}</button></div>
+                    <Link to="/auth/recovery" className="text-link">{tr("Забыли пароль?")}</Link><div className="child-tabs"><button type="button" className={!signup ? 'active' : ''} onClick={() => { setSignup(false); setError(''); setMessage(''); }}>{tr('Вход')}</button><button type="button" className={signup ? 'active' : ''} onClick={() => { setSignup(true); setError(''); setMessage(''); }}>{tr('Регистрация')}</button></div>
                     <label>Email<input required type="email" autoComplete="email" value={email} maxLength={254} onChange={event => setEmail(event.target.value)}/></label>
-                    <label>{tr('Пароль')}<input required type="password" minLength={8} autoComplete={signup ? 'new-password' : 'current-password'} value={password} onChange={event => setPassword(event.target.value)}/></label>
+                    <label>{tr('Пароль')}<input required type="password" minLength={signup?12:8} maxLength={128} disabled={busy} autoComplete={signup ? 'new-password' : 'current-password'} value={password} onChange={event => setPassword(event.target.value)}/></label>
                     {tr(signup && <label className="checkbox"><input type="checkbox" checked={consent} onChange={event => setConsent(event.target.checked)} required/>{tr("Согласен с условиями платформы и обработкой email.")}<Link to="/privacy">{tr('Подробнее')}</Link></label>)}
                     <Button busy={busy} disabled={signup && !consent}>{tr(signup ? 'Создать аккаунт' : 'Войти')}<ArrowRight size={17}/></Button>
                 </form>)}
                 <p className="auth-alternative">{tr(signup ? 'Уже есть аккаунт?' : 'Впервые в Birge Bol?')} <Link to={(signup ? '/auth' : '/register') + (role ? '?role=' + role : '')}>{tr(signup ? 'Войти' : 'Зарегистрироваться')}</Link></p>
-                <details className="panel auth-demo" open={mode === 'demo'}><summary>{tr("Быстрый вход")}<ShieldCheck size={20}/></summary>
+                {(mode==='demo'||import.meta.env.VITE_ENABLE_DEMO_ACCOUNTS==='true')&&<details className="panel auth-demo" open={mode === 'demo'}><summary>{tr("Быстрый вход")}<ShieldCheck size={20}/></summary>
                     <p className="muted">{tr("Выберите аккаунт для быстрого входа.")}{tr(mode === 'demo' ? 'Данные хранятся в этом браузере.' : 'Тестовые аккаунты используют существующую базу Supabase.')}</p>
                     <div className="demo-accounts">{tr(demoAccounts.filter(account => !role || account.role === role).map(account => <Button key={account.role} busy={busy} variant="secondary" onClick={() => void quick(account.role)}><span>{tr(account.label)}<small>{tr(account.email)}</small></span><ArrowRight size={17}/></Button>))}</div>
-                </details>
+                </details>}
                 {tr(message && <Notice>{tr(message)}</Notice>)}{tr(error && <p className="error" role="alert">{tr(error)}</p>)}
             </>)}
         </main>

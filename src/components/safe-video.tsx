@@ -1,0 +1,13 @@
+import { useEffect, useState } from 'react';
+import { youtubeId } from '../lib/youtube';
+import { cookieChoice, openCookieSettings } from '../lib/privacy-preferences';
+import { useLocale } from '../lib/i18n';
+import { Button } from './ui';
+import { Mascot } from './mascot/Mascot';
+export function SafeVideo({url}:{url:string}){
+ const kk=useLocale()==='kk',id=youtubeId(url);const [consent,setConsent]=useState(()=>cookieChoice()?.media===true),[play,setPlay]=useState(false),[loading,setLoading]=useState(false),[wait,setWait]=useState(false),[failed,setFailed]=useState(false);
+ useEffect(()=>{const update=()=>{const value=cookieChoice()?.media===true;setConsent(value);if(!value)setPlay(false);};window.addEventListener('bb-cookie-choice',update);return()=>window.removeEventListener('bb-cookie-choice',update);},[]);
+ useEffect(()=>{if(!loading)return;const timer=setTimeout(()=>setWait(true),10000);return()=>clearTimeout(timer);},[loading]);
+ if(!id)return <p role="alert">{kk?'YouTube сілтемесі жарамсыз.':'Некорректная ссылка YouTube.'}</p>;
+ return <div className="stack"><div className="safe-video">{play&&consent&&!failed?<><iframe title={kk?'Тапсырма бейнесі':'Видео к заданию'} src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&cc_load_policy=1&rel=0`} loading="lazy" referrerPolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen onLoad={()=>setLoading(false)} onError={()=>{setFailed(true);setLoading(false);}}/>{loading&&<div className="safe-video-status" role="status"><Mascot state="loading"/>{wait?(kk?'Ұзағырақ жүктелуде…':'Загрузка занимает больше времени…'):(kk?'Жүктелуде…':'Загружаем видео…')}</div>}</>:<div className="stack"><Mascot state={failed?'comforting':'idle'}/><Button type="button" onClick={()=>{if(!consent)openCookieSettings();else{setPlay(true);setFailed(false);setLoading(true);setWait(false);}}}>{consent?(kk?'Видеоны ойнату':'Воспроизвести видео'):(kk?'Сыртқы медиаға рұқсат беру':'Разрешить внешние медиа')}</Button></div>}</div><div className="safe-video-controls"><a className="text-link" href={`https://www.youtube.com/watch?v=${id}`} target="_blank" rel="noopener noreferrer">{kk?'YouTube-те ашу':'Открыть на YouTube'}</a>{play&&<Button type="button" variant="ghost" onClick={()=>{setPlay(false);setLoading(false);}}>{kk?'Жабу':'Закрыть видео'}</Button>}</div><small className="muted">{kk?'Сілтеме арқылы қолжетімді видео құпия емес. Жеке видео немесе ендіруге тыйым салынған видео ашылмауы мүмкін.':'Видео по ссылке (Unlisted) не является приватным. Private или запрещённое к встраиванию видео может не открыться — используйте ссылку YouTube.'}</small></div>;
+}

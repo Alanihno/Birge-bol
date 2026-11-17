@@ -18,7 +18,7 @@ if (connected) {
   delete config.framework;
   delete config.buildCommand;
   delete config.outputDirectory;
-  config.headers.push({ source: '/(.*)', headers: [{ key: 'Content-Security-Policy', value: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://sychksvkgwrgyhxpaabt.supabase.co; font-src 'self'; media-src 'self' blob: https://sychksvkgwrgyhxpaabt.supabase.co; connect-src 'self' https://tile.openstreetmap.org https://sychksvkgwrgyhxpaabt.supabase.co wss://sychksvkgwrgyhxpaabt.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'" }] });
+  config.headers.push({ source: '/(.*)', headers: [{ key: 'Content-Security-Policy', value: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://sychksvkgwrgyhxpaabt.supabase.co; font-src 'self'; media-src 'self' blob: https://sychksvkgwrgyhxpaabt.supabase.co; connect-src 'self' https://api.pwnedpasswords.com https://tile.openstreetmap.org https://sychksvkgwrgyhxpaabt.supabase.co wss://sychksvkgwrgyhxpaabt.supabase.co; frame-src https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'" }] });
   fs.mkdirSync('.preview/release', { recursive: true });
   configPath = path.resolve('.preview/release/vercel.json');
   fs.writeFileSync(configPath, JSON.stringify(config));
@@ -35,5 +35,5 @@ if (process.argv[2] === 'chunk') {
   const start = Number(process.argv[4]);
   process.stdout.write(data.slice(start, start + 50000));
 } else {
-  process.stdout.write(JSON.stringify(files.map(({ absolute, ...item }, index) => ({ ...item, index }))));
+  process.stdout.write(JSON.stringify(files.map((file,index)=>{const item={...file};delete item.absolute;return {...item,index};})));
 }

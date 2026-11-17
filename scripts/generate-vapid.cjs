@@ -1,0 +1,2 @@
+// Output keys once for transfer to server secrets. Never writes them to the repository.
+const crypto=require('node:crypto');const {publicKey,privateKey}=crypto.generateKeyPairSync('ec',{namedCurve:'prime256v1'});const pub=publicKey.export({format:'jwk'}),priv=privateKey.export({format:'jwk'});const key=Buffer.concat([Buffer.from([4]),Buffer.from(pub.x,'base64url'),Buffer.from(pub.y,'base64url')]).toString('base64url');process.stdout.write(JSON.stringify({VAPID_PUBLIC_KEY:key,VITE_VAPID_PUBLIC_KEY:key,VAPID_PRIVATE_KEY:priv.d},null,2)+'\n');
