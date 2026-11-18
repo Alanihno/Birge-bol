@@ -1,0 +1,116 @@
+{
+  "date": "2026-11-17T17:50:01.687Z",
+  "deployment": "dpl_DF3peiWmsSs2r2kzBL4imGrGQYfU",
+  "state": "READY",
+  "site": "https://birge-bol.vercel.app",
+  "method": "Vercel authenticated HTTP fetch, not a remote browser session",
+  "checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "no-store, no-cache, must-revalidate",
+      "cdnCacheControl": "no-store",
+      "main": "/assets/index-DguDcFhB.js",
+      "recoveryBootstrap": true,
+      "htmlInsteadOfAsset": false
+    },
+    {
+      "path": "/auth",
+      "status": 200,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "no-store, no-cache, must-revalidate",
+      "cdnCacheControl": "no-store",
+      "htmlInsteadOfAsset": false
+    },
+    {
+      "path": "/register",
+      "status": 200,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "no-store, no-cache, must-revalidate",
+      "cdnCacheControl": "no-store",
+      "main": "/assets/index-DguDcFhB.js",
+      "recoveryBootstrap": true,
+      "htmlInsteadOfAsset": false
+    },
+    {
+      "path": "/auth/restore",
+      "status": 200,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "no-store, no-cache, must-revalidate",
+      "cdnCacheControl": "no-store",
+      "htmlInsteadOfAsset": false
+    },
+    {
+      "path": "/auth/update.html",
+      "status": 200,
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "no-store, no-cache, must-revalidate",
+      "cdnCacheControl": "no-store",
+      "htmlInsteadOfAsset": false
+    },
+    {
+      "path": "/version.json",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "cacheControl": "no-store, no-cache, must-revalidate",
+      "cdnCacheControl": "no-store",
+      "version": "{\"buildId\":\"20261117174422037\"}",
+      "htmlInsteadOfAsset": false
+    },
+    {
+      "path": "/manifest.webmanifest",
+      "status": 200,
+      "contentType": "application/manifest+json; charset=utf-8",
+      "cacheControl": "no-store, no-cache, must-revalidate",
+      "cdnCacheControl": "no-store",
+      "officialIcons": true,
+      "htmlInsteadOfAsset": false
+    },
+    {
+      "path": "/brand/mama-pro-logo.png",
+      "status": 200,
+      "contentType": "image/png",
+      "cacheControl": "no-store, no-cache, must-revalidate",
+      "cdnCacheControl": "no-store",
+      "htmlInsteadOfAsset": false
+    },
+    {
+      "path": "/icons/mama-pro-192.png",
+      "status": 200,
+      "contentType": "image/png",
+      "cacheControl": "no-cache, must-revalidate",
+      "htmlInsteadOfAsset": false
+    },
+    {
+      "path": "/boot-recovery.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "cacheControl": "no-store, no-cache, must-revalidate",
+      "cdnCacheControl": "no-store",
+      "htmlInsteadOfAsset": false
+    },
+    {
+      "path": "/sw.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "cacheControl": "no-store, no-cache, must-revalidate",
+      "cdnCacheControl": "no-store",
+      "htmlInsteadOfAsset": false
+    },
+    {
+      "path": "/assets/index-DguDcFhB.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "cacheControl": "public, max-age=31536000, immutable",
+      "htmlInsteadOfAsset": false
+    },
+    {
+      "path": "/assets/nonexistent-release-check.js",
+      "status": 404,
+      "contentType": "text/plain; charset=utf-8",
+      "cacheControl": "public, max-age=31536000, immutable",
+      "htmlInsteadOfAsset": false
+    }
+  ]
+}

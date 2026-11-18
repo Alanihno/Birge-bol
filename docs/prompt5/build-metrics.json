@@ -11,27 +11,27 @@
     ]
   },
   "finalDemo": {
-    "bytes": 1839692,
-    "gzip": 513471,
+    "bytes": 1876662,
+    "gzip": 523719,
     "main": [
       {
-        "file": "dist-demo\\assets\\index-CzyJMd3n.js",
-        "bytes": 644529,
-        "gzip": 193567
+        "file": "dist-demo\\assets\\index-E6cMYH5h.js",
+        "bytes": 643201,
+        "gzip": 192636
       }
     ]
   },
   "finalConnected": {
-    "bytes": 2089460,
-    "gzip": 580726,
+    "bytes": 2088973,
+    "gzip": 580503,
     "main": [
       {
-        "file": "dist\\assets\\index-DTbMTHKB.js",
-        "bytes": 660851,
-        "gzip": 198690
+        "file": "dist\\assets\\index-DguDcFhB.js",
+        "bytes": 624930,
+        "gzip": 188350
       }
     ]
   },
-  "date": "2026-11-17T10:24:40.562Z",
+  "date": "2026-11-17T17:44:57.535Z",
   "lighthouse": "Unavailable: package not installed; npm registry blocked. No numeric Lighthouse scores claimed."
 }

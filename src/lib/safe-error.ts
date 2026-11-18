@@ -1,7 +1,8 @@
 export function safeError(error:unknown):string {
  const code=typeof error==='object'&&error!==null&&'code' in error?String(error.code):'';
  const message=error instanceof Error?error.message:typeof error==='string'?error:'';
- if(/invalid login credentials/i.test(message))return 'Неверный email или пароль.';
+ if(/invalid login credentials/i.test(message))return 'Неверный логин или пароль.';
+ if(/^(Логин:|Этот логин недоступен|Слишком много попыток|Сервис временно недоступен)/.test(message)&&message.length<200)return message;
  if(/email not confirmed/i.test(message))return 'Подтвердите электронную почту перед входом.';
  if(/rate.limit|too many|quota/i.test(message)||code==='429')return 'Слишком много попыток. Попробуйте позже.';
  if(/expired|jwt|session/i.test(message))return 'Сессия истекла. Войдите снова.';

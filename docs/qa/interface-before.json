@@ -1,0 +1,35 @@
+{
+  "label": "before",
+  "viewport": "390x844",
+  "cpuThrottle": 4,
+  "report": [
+    {
+      "route": "/clinics",
+      "elements": 359,
+      "overflow": false,
+      "scrollMilliseconds": 1145.7000000476837,
+      "frameP95": 42.5
+    },
+    {
+      "route": "/find",
+      "elements": 827,
+      "overflow": false,
+      "scrollMilliseconds": 1876.0999999642372,
+      "frameP95": 113.80000001192093
+    },
+    {
+      "route": "/data-map",
+      "elements": 481,
+      "overflow": false,
+      "scrollMilliseconds": 1168,
+      "frameP95": 41.30000001192093
+    },
+    {
+      "route": "/payments",
+      "elements": 432,
+      "overflow": false,
+      "scrollMilliseconds": 1920.800000011921,
+      "frameP95": 81.30000001192093
+    }
+  ]
+}

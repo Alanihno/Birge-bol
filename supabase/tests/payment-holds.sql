@@ -32,6 +32,7 @@ select set_config('request.jwt.claims','{"sub":"f6200000-0000-4000-8000-00000000
 select public.care_command('payment_claim',jsonb_build_object('appointment_id',(select v from payment_test where k='appointment1'),'receipt_path','f6200000-0000-4000-8000-000000000001/test-receipt.pdf'));
 select set_config('request.jwt.claims','{"sub":"20000000-0000-4000-8000-000000000002","role":"authenticated","email":"specialist@birge.example"}',true);
 do $$declare blocked boolean=false;begin
+ if not exists(select 1 from public.notifications where parent_id=auth.uid() and title like '%Я оплатила%') then raise exception 'Receipt claim notification missing';end if;
  begin perform public.care_command('confirm',jsonb_build_object('appointment_id',(select v from payment_test where k='appointment2')));exception when others then blocked=true;end;
  if not blocked then raise exception 'Unpaid confirmation bypass';end if;
  perform public.care_command('payment_extend',jsonb_build_object('appointment_id',(select v from payment_test where k='appointment2'),'deadline',now()+interval '25 hours'));

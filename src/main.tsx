@@ -33,3 +33,4 @@ import './components/mascot/mascot.css';
 import './prompt5.css';
 
 import './brand.css';
+import './product-polish.css';

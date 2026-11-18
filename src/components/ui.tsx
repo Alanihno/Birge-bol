@@ -8,7 +8,7 @@ import type { ReactNode, ButtonHTMLAttributes } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 function buttonText(children:ReactNode):string{return Children.toArray(children).map(node=>typeof node==='string'?node:typeof node==='number'?String(node):isValidElement<{children?:ReactNode}>(node)?buttonText(node.props.children):'').join('');}
 export function Button({ children, className = '', variant = 'primary', busy = false, disabled, ...props }: ButtonHTMLAttributes<HTMLButtonElement> & {
-    variant?: 'primary' | 'secondary' | 'ghost' | 'coral' | 'danger';
+    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'coral' | 'danger' | 'destructive' | 'icon';
     busy?: boolean;
 }) { useLocale(); const main=/^(Войти|Записаться|Начать бесплатно|Кіру|Жазылу|Тегін бастау)$/.test(buttonText(children).trim());return <button className={`btn ${variant} ${main?'primary-action':''} ${className}`} disabled={disabled || busy} aria-busy={busy || undefined} {...props}>{tr(busy && <LoaderCircle size={17} className="spin" aria-hidden="true"/>)}{tr(children)}</button>; }
 export function PageHeading({ eyebrow, title, description, action }: {
@@ -21,12 +21,13 @@ export function Back() { useLocale(); const nav = useNavigate(); return <button 
     nav(-1);
 else
     nav('/find'); }}><ArrowLeft size={17}/>{tr("Назад")}</button>; }
-export function Modal({ open, onOpenChange, title, children }: {
+export function Modal({ open, onOpenChange, title, children, className='' }: {
+    className?:string;
     open: boolean;
     onOpenChange: (b: boolean) => void;
     title: string;
     children: ReactNode;
-}) { useLocale(); const opener = useRef<HTMLElement | null>(null); return <Dialog.Root open={open} onOpenChange={onOpenChange}><Dialog.Portal><Dialog.Overlay className="modal-overlay"/><Dialog.Content className="modal" onOpenAutoFocus={() => { opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null; }} onCloseAutoFocus={event => { event.preventDefault(); if (opener.current?.isConnected)
+}) { useLocale(); const opener = useRef<HTMLElement | null>(null); return <Dialog.Root open={open} onOpenChange={onOpenChange}><Dialog.Portal><Dialog.Overlay className="modal-overlay"/><Dialog.Content className={'modal '+className} onOpenAutoFocus={() => { opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null; }} onCloseAutoFocus={event => { event.preventDefault(); if (opener.current?.isConnected)
     opener.current.focus({ preventScroll: true }); }}><div className="modal-head"><Dialog.Title>{tr(title)}</Dialog.Title><Dialog.Close asChild><button className="icon-btn" aria-label={tr("Закрыть")}><X size={20}/></button></Dialog.Close></div><Dialog.Description className="sr-only">{tr(title)}{tr(". Используйте поля ниже.")}</Dialog.Description>{tr(children)}</Dialog.Content></Dialog.Portal></Dialog.Root>; }
 export function Notice({ children, tone = 'lilac' }: {
     children: ReactNode;

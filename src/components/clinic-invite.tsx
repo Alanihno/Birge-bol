@@ -1,0 +1,7 @@
+import {useState} from 'react';
+import {loginEmail} from '../lib/account-access';
+import {useCareActions,CareError} from './care-ui';
+import {useLocale,tr} from '../lib/i18n';
+import {Button} from './ui';
+import type {CareState} from '../domain/care';
+export function ClinicInvite({clinicId,invitations}:{clinicId:string;invitations:CareState['invitations']}){useLocale();const actions=useCareActions(),[recipient,setRecipient]=useState(''),[error,setError]=useState('');async function submit(e:React.FormEvent){e.preventDefault();setError('');try{const value=recipient.trim(),email=value.includes('@')?value.toLowerCase():await loginEmail(value);const result=await actions.run('invite',{email},'Приглашение сохранено в кабинете специалиста');if(result)setRecipient('');}catch{setError(tr('Проверьте логин или email специалиста'));}}return <form className="panel stack" onSubmit={e=>void submit(e)}><h2>{tr('Пригласить специалиста')}</h2><label>{tr('Логин или email специалиста')}<input name="recipient" type="text" autoComplete="off" required maxLength={254} value={recipient} onChange={e=>setRecipient(e.target.value)}/></label><Button busy={actions.busy}>{tr('Пригласить')}</Button><p className="tiny muted">{tr('Специалист принимает приглашение в своём кабинете. Письмо для этого не требуется.')}</p>{invitations.filter(i=>i.clinic_id===clinicId).map(i=><p key={i.id}>{i.email.endsWith('@accounts.birge.invalid')?tr('Приглашение по логину'):i.email} · {tr(i.status)}</p>)}{error&&<p role="alert" className="error">{error}</p>}<CareError error={actions.error}/></form>;}

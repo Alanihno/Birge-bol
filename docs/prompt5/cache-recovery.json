@@ -77,12 +77,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1032,
+                  "duration": 3326,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T10:26:35.227Z",
+                  "startTime": "2026-11-17T14:50:25.561Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -97,7 +97,7 @@
         },
         {
           "title": "a still broken release stops after one recovery instead of looping",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
@@ -110,53 +110,18 @@
                 {
                   "workerIndex": 0,
                   "parallelIndex": 0,
-                  "status": "failed",
-                  "duration": 5390,
-                  "error": {
-                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m2\u001b[39m\nReceived: \u001b[31m4\u001b[39m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate",
-                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m2\u001b[39m\nReceived: \u001b[31m4\u001b[39m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n    at C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\cache-recovery.spec.ts:33:168",
-                    "location": {
-                      "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\cache-recovery.spec.ts",
-                      "column": 168,
-                      "line": 33
-                    },
-                    "snippet": "  31 | });\n  32 | test('a still broken release stops after one recovery instead of looping',async({page})=>{\n> 33 |  broken=true;navigations=0;await page.goto(base+'/auth');await expect(page.getByRole('button',{name:'Восстановить загрузку',exact:true})).toBeVisible({timeout:15000});await expect.poll(()=>navigations).toBe(2);await page.waitForTimeout(1000);expect(navigations).toBe(2);broken=false;\n     |                                                                                                                                                                        ^\n  34 | });\n  35 | test('an unavailable release keeps offline files and the existing worker',async({page})=>{\n  36 |  failVersion=true;try{await page.goto(base+'/legacy-install.html');await page.evaluate(async()=>{await (window as Window&{installed?:Promise<unknown>}).installed;});await page.goto(base+'/auth');await expect(page.getByRole('button',{name:'Восстановить загрузку',exact:true})).toBeVisible();expect(await page.evaluate(()=>caches.keys())).toContain('birge-bol-precache-legacy');expect(await page.evaluate(async()=>!!await navigator.serviceWorker.getRegistration())).toBe(true);}finally{failVersion=false;}"
-                  },
-                  "errors": [
-                    {
-                      "location": {
-                        "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\cache-recovery.spec.ts",
-                        "column": 168,
-                        "line": 33
-                      },
-                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m2\u001b[39m\nReceived: \u001b[31m4\u001b[39m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n\n  31 | });\n  32 | test('a still broken release stops after one recovery instead of looping',async({page})=>{\n> 33 |  broken=true;navigations=0;await page.goto(base+'/auth');await expect(page.getByRole('button',{name:'Восстановить загрузку',exact:true})).toBeVisible({timeout:15000});await expect.poll(()=>navigations).toBe(2);await page.waitForTimeout(1000);expect(navigations).toBe(2);broken=false;\n     |                                                                                                                                                                        ^\n  34 | });\n  35 | test('an unavailable release keeps offline files and the existing worker',async({page})=>{\n  36 |  failVersion=true;try{await page.goto(base+'/legacy-install.html');await page.evaluate(async()=>{await (window as Window&{installed?:Promise<unknown>}).installed;});await page.goto(base+'/auth');await expect(page.getByRole('button',{name:'Восстановить загрузку',exact:true})).toBeVisible();expect(await page.evaluate(()=>caches.keys())).toContain('birge-bol-precache-legacy');expect(await page.evaluate(async()=>!!await navigator.serviceWorker.getRegistration())).toBe(true);}finally{failVersion=false;}\n    at C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\cache-recovery.spec.ts:33:168"
-                    }
-                  ],
+                  "status": "passed",
+                  "duration": 1831,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T10:26:36.895Z",
+                  "startTime": "2026-11-17T14:50:30.091Z",
                   "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "C:\\Users\\Администратор\\Desktop\\Birge bol\\.preview\\cache-recovery\\cache-recovery-a-still-bro-a70cc-recovery-instead-of-looping\\error-context.md"
-                    },
-                    {
-                      "name": "trace",
-                      "contentType": "application/zip",
-                      "path": "C:\\Users\\Администратор\\Desktop\\Birge bol\\.preview\\cache-recovery\\cache-recovery-a-still-bro-a70cc-recovery-instead-of-looping\\trace.zip"
-                    }
-                  ],
-                  "errorLocation": {
-                    "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\cache-recovery.spec.ts",
-                    "column": 168,
-                    "line": 33
-                  }
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "3124840fbbbc51ac8c47-8474e84a16d20c1b0445",
@@ -177,15 +142,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 698,
+                  "duration": 911,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T10:26:44.469Z",
+                  "startTime": "2026-11-17T14:50:31.980Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -211,15 +176,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 781,
+                  "duration": 1456,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-17T10:26:46.529Z",
+                  "startTime": "2026-11-17T14:50:32.966Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -237,11 +202,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-11-17T10:26:32.897Z",
-    "duration": 14666.372,
-    "expected": 3,
+    "startTime": "2026-11-17T14:50:21.441Z",
+    "duration": 14094.124,
+    "expected": 4,
     "skipped": 0,
-    "unexpected": 1,
+    "unexpected": 0,
     "flaky": 0
   }
 }

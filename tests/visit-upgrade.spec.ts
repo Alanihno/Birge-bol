@@ -3,13 +3,14 @@ import { parentLogin } from './auth-helper';
 test('near slots lead the catalogue; later and unavailable specialists remain distinguishable',async({page})=>{
  await parentLogin(page,'/find');
  await page.evaluate(()=>{const d=JSON.parse(localStorage.getItem('bb-care-v3')!);for(const slot of d.slots)if(slot.specialist_id==='00000000-0000-4000-8000-000000000002'){slot.starts_at=new Date(Date.parse(slot.starts_at)+9*86400000).toISOString();slot.ends_at=new Date(Date.parse(slot.ends_at)+9*86400000).toISOString();}localStorage.setItem('bb-care-v3',JSON.stringify(d));window.dispatchEvent(new Event('bb-care-change'));});
- await expect(page.locator('.specialist-card').first().locator('.availability-badge')).toContainText('Есть окна');
+ const first=page.locator('.specialist-card').first().locator('a.person-name');await expect(first).toHaveAttribute('href','/specialists/00000000-0000-4000-8000-000000000001');
  await page.getByRole('button',{name:/Показать ещё/}).click();
- await expect(page.locator('.availability-badge.later')).toHaveCount(1);
- expect(await page.locator('.specialist-unavailable').count()).toBeGreaterThan(0);
+ expect(await page.locator('.specialist-card').count()).toBeGreaterThan(6);
+ await expect(page.locator('.availability-badge')).toHaveCount(0);
  await page.getByRole('checkbox',{name:'Только со свободным временем на 7 дней'}).click();
  await expect(page.getByRole('checkbox',{name:'Только со свободным временем на 7 дней'})).toBeChecked();
- await expect(page.locator('.specialist-unavailable')).toHaveCount(0);await expect(page.locator('.availability-badge.later')).toHaveCount(0);
+ await expect(page.locator('.specialist-card a.person-name[href$="00000000-0000-4000-8000-000000000002"]')).toHaveCount(0);
+ expect(await page.locator('.specialist-card').count()).toBeGreaterThan(0);
 });
 test('the keyword guide and database-style web map lead to role-appropriate tabs; payment demo shows both paths',async({page})=>{
  await parentLogin(page,'/data-map');await expect(page.getByRole('heading',{name:'Карта связей Birge Bol'})).toBeVisible();

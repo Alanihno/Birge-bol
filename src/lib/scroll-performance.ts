@@ -1,0 +1,2 @@
+/** Keep decorative SVG work out of scrolling without React renders. */
+export function installScrollPerformance(){let timer:ReturnType<typeof setTimeout>|undefined;const root=document.documentElement;const stop=()=>{delete root.dataset.scrolling;};const scroll=()=>{if(root.dataset.scrolling!=='true')root.dataset.scrolling='true';clearTimeout(timer);timer=setTimeout(stop,160);};window.addEventListener('scroll',scroll,{passive:true});return()=>{window.removeEventListener('scroll',scroll);clearTimeout(timer);stop();};}

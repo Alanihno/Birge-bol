@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState ,useCallback} from 'react';
 import type { CSSProperties } from 'react';
 import { mascotConfig, oneShotDuration, transition } from './mascot-states';
 import type { Direction, MascotState } from './mascot-states';
@@ -6,7 +6,7 @@ import type { Direction, MascotState } from './mascot-states';
 export function useMascot(initial:MascotState='idle') {
   const [state,setState]=useState(initial);
   useEffect(()=>{const duration=oneShotDuration[state];if(!duration)return;const timer=setTimeout(()=>setState('idle'),duration);return()=>clearTimeout(timer);},[state]);
-  return {state,react:(next:MascotState,force=false)=>setState(current=>transition(current,next,force))};
+  const react=useCallback((next:MascotState,force=false)=>setState(current=>transition(current,next,force)),[]);return {state,react};
 }
 
 type Props={state?:MascotState;size?:'small'|'medium'|'large'|'hero';direction?:Direction;reducedMotion?:boolean;interactive?:boolean;visible?:boolean;label?:string};

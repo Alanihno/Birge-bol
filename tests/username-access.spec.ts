@@ -1,0 +1,15 @@
+import {test,expect} from '@playwright/test';
+test.skip(process.env.CONNECTED_AUTH_TESTS!=='1','Connected frontend build; backend Auth separately verified with a real synthetic account.');
+test.beforeEach(async({page})=>{await page.route('https://api.pwnedpasswords.com/range/*',route=>route.fulfill({contentType:'text/plain',body:'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:0\r\n'}));});
+
+test('username registration saves the one-time code even if automatic login fails',async({page})=>{
+ const code='BB-UI-ONLY-AD9F47C261E0B';let submitted:Record<string,unknown>|null=null;
+ await page.route('https://*.supabase.co/functions/v1/account-access',async route=>{submitted=route.request().postDataJSON();await route.fulfill({status:201,json:{created:true,recovery_code:code}});});await page.route('https://*.supabase.co/auth/v1/token**',route=>route.fulfill({status:400,json:{error:'invalid_grant',error_description:'Invalid login credentials'}}));
+ await page.goto('/register?role=parent');await page.getByLabel('Логин',{exact:true}).fill('amina_qa');await page.getByLabel('Пароль',{exact:true}).fill('Synthetic secret phrase 458!');await page.getByRole('checkbox').check();await page.getByRole('button',{name:'Создать аккаунт',exact:true}).click();await expect(page.locator('.recovery-code code')).toHaveText(code);expect(submitted).toMatchObject({action:'register',login:'amina_qa',consent:true});expect(submitted).not.toHaveProperty('email');expect(await page.evaluate(value=>JSON.stringify({...localStorage,...sessionStorage}).includes(value),code)).toBe(false);await page.getByRole('checkbox',{name:'Я сохранил код в надёжном месте',exact:true}).check();await page.getByRole('button',{name:'Продолжить',exact:true}).click();await expect(page.locator('.recovery-code')).toHaveCount(0);await expect(page.getByLabel('Логин или email',{exact:true})).toHaveValue('amina_qa');await expect(page.getByLabel('Пароль',{exact:true})).toHaveValue('');
+});
+
+test('a failed role request offers retry and preserves the existing session',async({page})=>{
+ const user={id:'f6400000-0000-4000-8000-000000000001',email:'fixture@example.invalid',email_confirmed_at:new Date().toISOString(),aud:'authenticated',role:'authenticated',app_metadata:{},user_metadata:{},created_at:new Date().toISOString()};
+ await page.addInitScript(value=>localStorage.setItem('sb-sychksvkgwrgyhxpaabt-auth-token',JSON.stringify({access_token:'synthetic-access-token',refresh_token:'synthetic-refresh-token',expires_at:Math.floor(Date.now()/1000)+3600,expires_in:3600,token_type:'bearer',user:value})),user);
+ await page.route('https://*.supabase.co/rest/v1/user_roles**',route=>route.fulfill({status:503,json:{message:'QA unavailable'}}));await page.goto('/settings');await expect(page.getByText('Не удалось проверить доступ к кабинету. Повторите попытку или войдите заново.',{exact:true})).toBeVisible({timeout:15000});await expect(page.getByRole('button',{name:'Повторить',exact:true})).toBeVisible();expect(await page.evaluate(()=>!!localStorage.getItem('sb-sychksvkgwrgyhxpaabt-auth-token'))).toBe(true);await expect(page.getByRole('heading',{name:'Настройки',exact:true})).toHaveCount(0);
+});

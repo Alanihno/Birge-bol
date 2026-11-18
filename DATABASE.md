@@ -2,6 +2,8 @@
 
 Исправление загрузки из старого кэша (17.11.2026): схема, RLS и пользовательские записи не изменялись; восстановление работает с локальными статическими файлами браузера.
 
+Новые миграции 20261117151433 / 20261117153521 / 20261117160806: private.identity_limits (hashed key, bucket, hour, hits) и private.identity_recovery (user_id FK Auth cascade, login_hash unique, recovery_hash, lease, lease_until, created_at). RLS включён, anon/authenticated получают явный deny; identity RPC доступны только service_role. push_public_config возвращает только открытый VAPID-ключ и состояние cron. Секреты Vault не экспортируются. Остальной снимок ниже относится к предыдущему релизу.
+
 Снимок из подключённого PostgreSQL, 17.11.2026. Полный машиночитаемый снимок: docs/prompt5/database-schema.json. Источник изменений — supabase/migrations в хронологическом порядке. Снимок не включает auth.users и секреты Vault.
 
 ## public.consent_events

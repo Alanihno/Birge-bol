@@ -24,7 +24,7 @@ self.addEventListener('message',event=>{if(event.data?.type==='SKIP_WAITING')voi
 self.addEventListener('push',event=>{
  // Ignore free-form text in payloads: lock screens only receive a fixed neutral message.
  let tag='birge-notice';try{const data=event.data?.json();if(typeof data?.tag==='string'&&/^birge-[a-zA-Z0-9-]{1,80}$/.test(data.tag))tag=data.tag;}catch{/* Neutral message remains available. */}
- event.waitUntil(self.registration.showNotification('Birge Bol',{body:'В Birge Bol есть новое уведомление',icon:'/icons/icon-192.png',badge:'/icons/icon-192.png',tag,data:{url:'/notifications'}}));
+ event.waitUntil(self.registration.showNotification('Birge Bol',{body:'В Birge Bol есть новое уведомление',icon:'/icons/mama-pro-192.png',badge:'/icons/mama-pro-192.png',tag,data:{url:'/notifications'}}));
 });
 self.addEventListener('notificationclick',event=>{event.notification.close();event.waitUntil((async()=>{const url=new URL('/notifications',self.location.origin).href;const clients=await self.clients.matchAll({type:'window',includeUncontrolled:true});const existing=clients.find(c=>new URL(c.url).origin===self.location.origin) as WindowClient|undefined;if(existing){await existing.navigate(url);await existing.focus();}else await self.clients.openWindow(url);})());});
 self.addEventListener('activate',event=>event.waitUntil((async()=>{

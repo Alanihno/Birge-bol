@@ -1,4 +1,6 @@
 import { assertPasswordSafe } from '../lib/password-security';
+import {accountAccess,loginEmail,normalizeLogin} from '../lib/account-access';
+import {RecoveryCode} from '../components/recovery-code';
 import { safeError } from '../lib/safe-error';
 import { saveConsent } from '../lib/consents';
 import { tr, useLocale } from '../lib/i18n';
@@ -28,6 +30,8 @@ export default function Auth() {
     const [entering, setEntering] = useState(false);
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
+    const [recoveryCode,setRecoveryCode]=useState('');
+    const emailMethod=params.get('method')==='email';
     const next = params.get('next') || sessionStorage.getItem('bb-auth-next');
     const safe = next?.startsWith('/') && !next.startsWith('//') && !/^\/(auth|register|login)([/?#]|$)/.test(next) ? next : null;
     const destination = app.role === 'parent' ? safe || roleHome(app.role) : roleHome(app.role);
@@ -63,6 +67,10 @@ export default function Auth() {
                 if (!consent) throw Error('Подтвердите условия');await assertPasswordSafe(password);
                 const afterSignup = role === 'parent' ? '/onboarding' : roleHome(role);
                 sessionStorage.setItem('bb-auth-next', afterSignup);
+                if(!emailMethod){
+                    const login=normalizeLogin(email);const result=await accountAccess({action:'register',login,password,consent});setRecoveryCode(result.recovery_code);
+                    const signedIn=await supabase.auth.signInWithPassword({email:await loginEmail(login),password});if(signedIn.error)throw signedIn.error;return;
+                }
                 const result = await supabase.auth.signUp({
                     email: email.trim(), password,
                     options: { emailRedirectTo: window.location.origin + '/auth/confirm?next=' + encodeURIComponent(afterSignup) },
@@ -71,7 +79,7 @@ export default function Auth() {
                 if (result.data.session) { await saveConsent(result.data.user!.id); setEntering(true); }
                 else {sessionStorage.setItem('bb-confirm-email',email.trim());window.location.assign('/auth/confirm');}
             } else {
-                const result = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+                const result = await supabase.auth.signInWithPassword({ email: email.includes('@')?email.trim():await loginEmail(email), password });
                 if (result.error) throw result.error;
                 setEntering(true);
             }
@@ -92,7 +100,7 @@ export default function Auth() {
         </div></header>
         <main id="auth-main" className="auth-page">
             <Link className="back" to="/">{tr('← О проекте')}</Link>
-            {tr(!app.authReady ? <Loading/> : app.userId ? <section className="panel stack">
+            {recoveryCode?<><RecoveryCode code={recoveryCode} onContinue={()=>{if(app.userId){setRecoveryCode('');setEntering(true);}else {setRecoveryCode('');setSignup(false);setPassword('');setError('Аккаунт создан. Войдите с выбранным логином.');}}}/>{error&&<p className="error" role="alert">{tr(error)}</p>}</>:tr(app.authError?<section className="panel stack"><p className="error" role="alert">{tr(app.authError)}</p><Button onClick={app.retryAuth}>{tr('Попробовать снова')}</Button><Button variant="secondary" onClick={()=>void app.logout()}>{tr('Войти в другой аккаунт')}</Button></section>:!app.authReady ? <Loading/> : app.userId ? <section className="panel stack">
                 <PageHeading title={tr('Вы уже вошли')} description={tr('Открыть свой кабинет или войти в другой аккаунт?')}/>
                 <Link className="btn primary" to={destination}>{tr('В кабинет')}<ArrowRight size={17}/></Link>
                 <Button variant="secondary" onClick={() => void app.logout()}>{tr('Войти в другой аккаунт')}</Button>
@@ -105,10 +113,11 @@ export default function Auth() {
                 ].map(({ role: selected, title, text, icon: Icon }) => <button key={selected} className={`panel role-choice ${role === selected ? 'selected' : ''}`} aria-pressed={role === selected} onClick={() => { setRole(selected); setError(''); setMessage(''); }}><Icon/><strong>{tr(title)}</strong><small>{tr(text)}</small></button>))}</div>
                 {tr(role === 'specialist' && <Notice>{tr('После регистрации специалист проходит модерацию. До проверки профиль не появится в выдаче.')}</Notice>)}
                 {tr(mode === 'supabase' && role && <form className="panel stack" onSubmit={event => void submit(event)}>
-                    <Link to="/auth/recovery" className="text-link">{tr("Забыли пароль?")}</Link><div className="child-tabs"><button type="button" className={!signup ? 'active' : ''} onClick={() => { setSignup(false); setError(''); setMessage(''); }}>{tr('Вход')}</button><button type="button" className={signup ? 'active' : ''} onClick={() => { setSignup(true); setError(''); setMessage(''); }}>{tr('Регистрация')}</button></div>
-                    <label>Email<input required type="email" autoComplete="email" value={email} maxLength={254} onChange={event => setEmail(event.target.value)}/></label>
+                    <Link to={email.includes('@')?'/auth/recovery':'/auth/restore'} className="text-link">{tr("Забыли пароль?")}</Link><div className="child-tabs"><button type="button" className={!signup ? 'active' : ''} onClick={() => { setSignup(false); setError(''); setMessage(''); }}>{tr('Вход')}</button><button type="button" className={signup ? 'active' : ''} onClick={() => { setSignup(true); setError(''); setMessage(''); }}>{tr('Регистрация')}</button></div>
+                    {signup&&!emailMethod&&<p className="muted">{tr('Создайте логин и пароль. Письмо не требуется; для восстановления сохраните резервный код.')}</p>}
+                    <label>{signup?(emailMethod?'Email':tr('Логин')):tr('Логин или email')}<input required type={signup&&emailMethod?'email':'text'} autoComplete="username" value={email} maxLength={signup&&!emailMethod?32:254} onChange={event => setEmail(event.target.value)}/></label>
                     <label>{tr('Пароль')}<input required type="password" minLength={signup?12:8} maxLength={128} disabled={busy} autoComplete={signup ? 'new-password' : 'current-password'} value={password} onChange={event => setPassword(event.target.value)}/></label>
-                    {tr(signup && <label className="checkbox"><input type="checkbox" checked={consent} onChange={event => setConsent(event.target.checked)} required/>{tr("Согласен с условиями платформы и обработкой email.")}<Link to="/privacy">{tr('Подробнее')}</Link></label>)}
+                    {tr(signup && <label className="checkbox"><input type="checkbox" checked={consent} onChange={event => setConsent(event.target.checked)} required/>{tr("Согласен с условиями платформы и обработкой данных аккаунта.")}<Link to="/privacy">{tr('Подробнее')}</Link></label>)}
                     <Button busy={busy} disabled={signup && !consent}>{tr(signup ? 'Создать аккаунт' : 'Войти')}<ArrowRight size={17}/></Button>
                 </form>)}
                 <p className="auth-alternative">{tr(signup ? 'Уже есть аккаунт?' : 'Впервые в Birge Bol?')} <Link to={(signup ? '/auth' : '/register') + (role ? '?role=' + role : '')}>{tr(signup ? 'Войти' : 'Зарегистрироваться')}</Link></p>
@@ -119,6 +128,6 @@ export default function Auth() {
                 {tr(message && <Notice>{tr(message)}</Notice>)}{tr(error && <p className="error" role="alert">{tr(error)}</p>)}
             </>)}
         </main>
-        <footer className="public-auth-footer"><Link to="/privacy">{tr('Конфиденциальность')}</Link><Link to="/terms">{tr('Условия')}</Link></footer>
+        <footer className="public-auth-footer"><img className="foundation-signature" src="/brand/mama-pro-logo.png" alt="Мама Про"/><Link to="/privacy">{tr('Конфиденциальность')}</Link><Link to="/terms">{tr('Условия')}</Link></footer>
     </div>;
 }

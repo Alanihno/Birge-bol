@@ -37,6 +37,8 @@ do $$declare blocked boolean=false;begin
 end$$;
 select set_config('request.jwt.claims','{"sub":"f6100000-0000-4000-8000-000000000002","role":"authenticated","email":"specialist@birge.example"}',true);
 do $$declare result jsonb;begin
+ if not exists(select 1 from public.notifications where parent_id=auth.uid() and title='Новая заявка на приём') then raise exception 'Provider booking notification missing';end if;
+ perform public.care_command('message',jsonb_build_object('appointment_id',(select v from care_test_context where k='appointment'),'body','Synthetic provider reply'));
  if exists(select 1 from jsonb_array_elements(public.care_snapshot()->'patients') c where c->>'id'='f6110000-0000-4000-8000-000000000001') then raise exception 'patient visible before confirmation';end if;
  perform public.care_command('payment_confirm',jsonb_build_object('received',true,'appointment_id',(select v from care_test_context where k='appointment')));
  if not exists(select 1 from jsonb_array_elements(public.care_snapshot()->'patients') c where c->>'id'='f6110000-0000-4000-8000-000000000001') then raise exception 'consented patient missing';end if;
@@ -58,6 +60,9 @@ select set_config('request.jwt.claims','{"sub":"f6100000-0000-4000-8000-00000000
 do $$declare result jsonb;blocked boolean=false;begin
  result=public.care_command('redeem_code',jsonb_build_object('appointment_id',(select v from care_test_context where k='appointment'),'code','bad'));
  if result->>'error' is null then raise exception 'invalid code accepted';end if;
+ if not exists(select 1 from public.notifications where parent_id=auth.uid() and title like 'Запись подтверждена%') then raise exception 'Parent confirmation notification missing';end if;
+ if not exists(select 1 from public.notifications where parent_id=auth.uid() and title='Новое сообщение по приёму') then raise exception 'Parent message notification missing';end if;
+ perform public.care_command('message',jsonb_build_object('appointment_id',(select v from care_test_context where k='appointment'),'body','Synthetic parent reply'));
  perform public.care_command('redeem_code',jsonb_build_object('appointment_id',(select v from care_test_context where k='appointment'),'code',(select v from care_test_context where k='code')));
  begin perform public.care_command('redeem_code',jsonb_build_object('appointment_id',(select v from care_test_context where k='appointment'),'code',(select v from care_test_context where k='code')));exception when others then blocked=true;end;
  if not blocked then raise exception 'code reused';end if;

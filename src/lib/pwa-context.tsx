@@ -1,4 +1,5 @@
 import {tr,useLocale} from './i18n';
+import {installScrollPerformance} from './scroll-performance';
 import {createContext,useContext,useEffect,useEffectEvent,useRef,useState} from 'react';
 import type {ReactNode} from 'react';
 import {hasEditedForms,installDraftProtection,saveDrafts,updateBlockReason} from './update-safety';
@@ -21,6 +22,7 @@ function usePwaState(){
  }
  const reloadFromEffect=useEffectEvent(reloadSafely),updateFromEffect=useEffectEvent(updateServiceWorker);
  useEffect(()=>installDraftProtection(),[]);
+ useEffect(()=>installScrollPerformance(),[]);
  useEffect(()=>{
   if(!secure||!('serviceWorker'in navigator)||import.meta.env.DEV)return;
   let disposed=false,auto:ReturnType<typeof setTimeout>|undefined,hadController=!!navigator.serviceWorker.controller;

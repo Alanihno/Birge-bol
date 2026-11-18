@@ -1,0 +1,31 @@
+{
+  "environment": "Hosted Supabase PostgreSQL",
+  "syntheticFixtures": true,
+  "transactionRollback": true,
+  "suites": [
+    {
+      "suite": "care",
+      "passed": true
+    },
+    {
+      "suite": "payment-holds",
+      "passed": true
+    },
+    {
+      "suite": "notification-delivery",
+      "passed": true
+    },
+    {
+      "suite": "rls",
+      "passed": true
+    },
+    {
+      "suite": "prompt5",
+      "passed": true
+    },
+    {
+      "suite": "printed-qr-ratings-calendar",
+      "passed": true
+    }
+  ]
+}

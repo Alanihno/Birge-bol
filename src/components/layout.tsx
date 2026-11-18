@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import { useApp } from '../lib/app-context';
 import { ScrollTop } from './scroll-top';
 import { Modal, Button } from './ui';
-export function Logo() { useLocale(); return <Link to="/" className="logo" aria-label={tr("Birge Bol \u2014 главная")}><img src="/icon.svg" alt=""/><span>birge<span className="logo-light">bol</span><small>{tr("быть рядом")}</small></span></Link>; }
+export function Logo() { useLocale(); return <Link to="/" className="logo" aria-label={tr("Birge Bol \u2014 главная")}><img src="/brand/mama-pro-symbol.png" alt=""/><span>birge<span className="logo-light">bol</span><small>{tr("быть рядом")}</small></span></Link>; }
 export function Layout() {
     useLocale();
     const { role, t, lang, setLang, userId, data, personal, activeChild, setActive, toast, logout } = useApp();

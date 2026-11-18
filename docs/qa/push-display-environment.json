@@ -1,0 +1,142 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\Администратор\\Desktop\\Birge bol\\playwright.config.ts",
+    "rootDir": "C:/Users/Администратор/Desktop/Birge bol/tests",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Администратор/Desktop/Birge bol/.preview/release-e2e-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/Администратор/Desktop/Birge bol/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 45000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.2",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "push-worker.spec.ts",
+      "file": "push-worker.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "installed worker replaces sensitive payload text with a fixed neutral notification",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 14500,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 7\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   Object {\u001b[39m\n\u001b[32m-     \"body\": \"В Birge Bol есть новое уведомление\",\u001b[39m\n\u001b[32m-     \"title\": \"Birge Bol\",\u001b[39m\n\u001b[32m-     \"url\": \"/notifications\",\u001b[39m\n\u001b[32m-   },\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 7\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   Object {\u001b[39m\n\u001b[32m-     \"body\": \"В Birge Bol есть новое уведомление\",\u001b[39m\n\u001b[32m-     \"title\": \"Birge Bol\",\u001b[39m\n\u001b[32m-     \"url\": \"/notifications\",\u001b[39m\n\u001b[32m-   },\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n    at C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\push-worker.spec.ts:4:748",
+                    "location": {
+                      "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\push-worker.spec.ts",
+                      "column": 748,
+                      "line": 4
+                    },
+                    "snippet": "  2 |\n  3 | test('installed worker replaces sensitive payload text with a fixed neutral notification',async({page,context})=>{\n> 4 |  await context.grantPermissions(['notifications']);const cdp=await context.newCDPSession(page);let registrationId='';cdp.on('ServiceWorker.workerRegistrationUpdated',event=>{for(const r of event.registrations)if(r.scopeURL===(process.env.BASE_URL||'http://127.0.0.1:4173')+'/')registrationId=r.registrationId;});await cdp.send('ServiceWorker.enable');await page.goto('/');await page.waitForFunction(async()=>!!(await navigator.serviceWorker.getRegistration())?.active);await expect.poll(()=>registrationId).not.toBe('');await cdp.send('ServiceWorker.deliverPushMessage',{origin:new URL(page.url()).origin,registrationId,data:JSON.stringify({title:'PRIVATE CHILD NAME',body:'PRIVATE MEDICAL DETAILS',url:'https://evil.test',tag:'birge-ui-test'})});await expect.poll(()=>page.evaluate(async()=>{const r=await navigator.serviceWorker.getRegistration();return(await r!.getNotifications()).map(n=>({title:n.title,body:n.body,url:n.data?.url}));})).toEqual([{title:'Birge Bol',body:'В Birge Bol есть новое уведомление',url:'/notifications'}]);await page.evaluate(async()=>{for(const n of await(await navigator.serviceWorker.getRegistration())!.getNotifications())n.close();});await cdp.detach();\n    |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ^\n  5 | });\n  6 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\push-worker.spec.ts",
+                        "column": 748,
+                        "line": 4
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 7\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   Object {\u001b[39m\n\u001b[32m-     \"body\": \"В Birge Bol есть новое уведомление\",\u001b[39m\n\u001b[32m-     \"title\": \"Birge Bol\",\u001b[39m\n\u001b[32m-     \"url\": \"/notifications\",\u001b[39m\n\u001b[32m-   },\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n\n  2 |\n  3 | test('installed worker replaces sensitive payload text with a fixed neutral notification',async({page,context})=>{\n> 4 |  await context.grantPermissions(['notifications']);const cdp=await context.newCDPSession(page);let registrationId='';cdp.on('ServiceWorker.workerRegistrationUpdated',event=>{for(const r of event.registrations)if(r.scopeURL===(process.env.BASE_URL||'http://127.0.0.1:4173')+'/')registrationId=r.registrationId;});await cdp.send('ServiceWorker.enable');await page.goto('/');await page.waitForFunction(async()=>!!(await navigator.serviceWorker.getRegistration())?.active);await expect.poll(()=>registrationId).not.toBe('');await cdp.send('ServiceWorker.deliverPushMessage',{origin:new URL(page.url()).origin,registrationId,data:JSON.stringify({title:'PRIVATE CHILD NAME',body:'PRIVATE MEDICAL DETAILS',url:'https://evil.test',tag:'birge-ui-test'})});await expect.poll(()=>page.evaluate(async()=>{const r=await navigator.serviceWorker.getRegistration();return(await r!.getNotifications()).map(n=>({title:n.title,body:n.body,url:n.data?.url}));})).toEqual([{title:'Birge Bol',body:'В Birge Bol есть новое уведомление',url:'/notifications'}]);await page.evaluate(async()=>{for(const n of await(await navigator.serviceWorker.getRegistration())!.getNotifications())n.close();});await cdp.detach();\n    |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ^\n  5 | });\n  6 |\n    at C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\push-worker.spec.ts:4:748"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T17:23:49.163Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\Администратор\\Desktop\\Birge bol\\.preview\\release-e2e-results\\push-worker-installed-work-8c05a--fixed-neutral-notification\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\Администратор\\Desktop\\Birge bol\\.preview\\release-e2e-results\\push-worker-installed-work-8c05a--fixed-neutral-notification\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Администратор\\Desktop\\Birge bol\\tests\\push-worker.spec.ts",
+                    "column": 748,
+                    "line": 4
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "85aceabcdc0ce54af35f-9b8cc1399afc6735b7cd",
+          "file": "push-worker.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-17T17:23:40.338Z",
+    "duration": 40980.751,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

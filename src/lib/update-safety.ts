@@ -12,6 +12,7 @@ export function setDraftScope(user:string|null,childId:string){owner=user||'gues
 export function clearPrivateDrafts(){for(const k of Object.keys(sessionStorage))if(k.startsWith('bb-update-draft:'))sessionStorage.removeItem(k);inheritedDrafts.clear();}
 export function setPendingMutations(check:()=>boolean){pendingMutations=check;}
 export function updateBlockReason(){
+ if(document.querySelector('[data-block-update="recovery-code"]'))return 'Сохраните резервный код и продолжите перед обновлением.';
  if(pendingMutations()||Array.from(document.querySelectorAll('[aria-busy="true"]')).some(e=>!e.closest('.pwa-update')))return 'Дождитесь сохранения текущего действия.';
  if(Array.from(document.querySelectorAll<HTMLInputElement>('input[type=file]')).some(e=>!!e.files?.length))return 'Сначала отправьте или отмените выбранные файлы.';
  if(/^\/(auth|register)/.test(location.pathname)&&Array.from(document.querySelectorAll<HTMLInputElement>('input[type=password]')).some(e=>!!e.value))return 'Завершите вход перед обновлением.';

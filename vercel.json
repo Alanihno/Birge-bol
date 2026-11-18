@@ -5,7 +5,7 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
-      "source": "/((?!robots\\.txt|sitemap\\.xml|auth/update\\.(?:html|js)|version\\.json|boot-recovery\\.js|assets/|icons/|audio/|portraits/|video/|materials/|design/|sw\\.js|registerSW\\.js|manifest\\.webmanifest|workbox-|icon\\.svg).*)",
+      "source": "/((?!robots\\.txt|sitemap\\.xml|auth/update\\.(?:html|js)|version\\.json|boot-recovery\\.js|assets/|icons/|brand/|audio/|portraits/|video/|materials/|design/|sw\\.js|registerSW\\.js|manifest\\.webmanifest|workbox-|icon\\.svg).*)",
       "destination": "/index.html"
     }
   ],

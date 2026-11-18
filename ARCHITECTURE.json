@@ -18,12 +18,15 @@
   "modules": [
     {
       "name": "identity",
-      "purpose": "Email, roles, account lifecycle",
+      "purpose": "Username/password and recovery code, retained email Auth, guarded roles",
       "paths": [
         "src/lib/app-context.tsx",
         "src/pages/auth.tsx",
         "src/pages/auth-recovery.tsx",
-        "supabase/functions/account-delete/index.ts"
+        "supabase/functions/account-delete/index.ts",
+        "shared/account-identity.ts",
+        "src/pages/username-recovery.tsx",
+        "supabase/functions/account-access/index.ts"
       ],
       "entrypoints": [
         "src/lib/app-context.tsx"
@@ -34,10 +37,15 @@
       "tables": [
         "profiles",
         "user_roles",
-        "consent_events"
+        "consent_events",
+        "private.identity_limits",
+        "private.identity_recovery"
       ],
       "api": [
-        "register_care_role"
+        "register_care_role",
+        "identity_attempt [service only]",
+        "claim_identity_recovery [service only]",
+        "rotate_identity_recovery [service only]"
       ],
       "roles": [
         "parent",
@@ -270,7 +278,7 @@
     },
     {
       "name": "notifications",
-      "purpose": "Inbox, per-device Web Push, server queue",
+      "purpose": "Inbox and Web Push; Vault credentials, per-minute cron, preferences, leases, retries",
       "paths": [
         "src/components/push-settings.tsx",
         "src/lib/push.ts",
@@ -295,7 +303,10 @@
         "remove_push_device",
         "claim_push_batch",
         "finish_push_delivery",
-        "schedule_notification_reminders"
+        "schedule_notification_reminders",
+        "push_public_config [public key only]",
+        "push_server_config [service only]",
+        "claim_test_push [service only]"
       ],
       "roles": [
         "parent",

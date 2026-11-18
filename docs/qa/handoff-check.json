@@ -1,0 +1,20 @@
+[
+  {
+    "archive": "handoff/Birge-Bol-source.zip",
+    "entries": 495,
+    "forbidden": [],
+    "integrityError": null
+  },
+  {
+    "archive": "handoff/Birge-Bol-demo.zip",
+    "entries": 211,
+    "forbidden": [],
+    "integrityError": null
+  },
+  {
+    "archive": "деплой версель.zip",
+    "entries": 211,
+    "forbidden": [],
+    "integrityError": null
+  }
+]

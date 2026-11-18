@@ -17,7 +17,7 @@ test.beforeAll(async()=>{
   let asset=file;if(!existsSync(asset)||statSync(asset).isDirectory()){if(url.pathname.startsWith('/assets/')){res.writeHead(404);res.end();return;}asset=resolve(root,'index.html');}
   const types:Record<string,string>={'.js':'application/javascript','.html':'text/html','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.webmanifest':'application/manifest+json','.woff2':'font/woff2'};
   res.setHeader('Content-Type',types[extname(asset)]||'application/octet-stream');
-  if(extname(asset)==='.html'){navigations++;res.end(broken?stale:readFileSync(asset));}else res.end(readFileSync(asset));
+  if(extname(asset)==='.html'){if(req.headers['sec-fetch-mode']==='navigate')navigations++;res.end(broken?stale:readFileSync(asset));}else res.end(readFileSync(asset));
  });await new Promise<void>(r=>server.listen(0,'127.0.0.1',r));const address=server.address();if(!address||typeof address==='string')throw Error('Server missing');base='http://127.0.0.1:'+address.port;
 });
 test.afterAll(async()=>{await new Promise<void>(r=>server.close(()=>r()));});

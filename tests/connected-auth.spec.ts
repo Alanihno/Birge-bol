@@ -17,7 +17,7 @@ test('landing leads to registration and login without a dashboard or a legacy de
     await expect(page.locator('.sidebar, .bottom-tabs, .app-shell')).toHaveCount(0);
     await page.getByRole('button', { name: /Я родитель/ }).click();
     await expect(page.getByRole('button', { name: 'Создать аккаунт', exact: true })).toBeVisible();
-    await expect(page.getByLabel('Email', { exact: true })).toBeVisible();
+    await expect(page.getByLabel('Логин', { exact: true })).toBeVisible();
     await page.getByRole('link', { name: '← О проекте' }).click();
     await page.getByRole('link', { name: 'Войти', exact: true }).click();
     await expect(page).toHaveURL(/\/auth$/);
@@ -32,7 +32,7 @@ test('registration requires consent, submits signup and shows email confirmation
         submitted = route.request().postDataJSON();
         await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ user: { id: '20000000-0000-4000-8000-000000000009', email: 'signup-test@example.com', identities: [], aud: 'authenticated', role: 'authenticated', app_metadata: {}, user_metadata: {}, created_at: new Date().toISOString() }, session: null }) });
     });
-    await page.goto('/register?role=parent');
+    await page.goto('/register?role=parent&method=email');
     await page.getByLabel('Email', { exact: true }).fill('signup-test@example.com');
     await page.getByLabel('Пароль', { exact: true }).fill('TestPassword!2026');
     const submit = page.getByRole('button', { name: 'Создать аккаунт', exact: true });

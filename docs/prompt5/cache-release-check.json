@@ -1,0 +1,34 @@
+{
+  "deployment": "dpl_GDQUi3rR8S7aKe658VwqeKub287e",
+  "state": "READY",
+  "checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "cacheControl": "no-store, no-cache, must-revalidate"
+    },
+    {
+      "path": "/boot-recovery.js",
+      "status": 200,
+      "cacheControl": "no-store, no-cache, must-revalidate",
+      "recoveryScript": true
+    },
+    {
+      "path": "/auth/update.html",
+      "status": 200,
+      "cacheControl": "no-store, no-cache, must-revalidate",
+      "recoveryPage": true
+    },
+    {
+      "path": "/auth?next=%2Fpayments",
+      "status": 200,
+      "cacheControl": "no-store, no-cache, must-revalidate"
+    }
+  ],
+  "tests": {
+    "cacheRecovery": 4,
+    "pwa": 3,
+    "unit": 55
+  },
+  "date": "2026-11-17T14:52:37.035Z"
+}

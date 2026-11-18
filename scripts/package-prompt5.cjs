@@ -4,8 +4,8 @@ const stage=path.resolve('.preview/source-handoff'),output=path.resolve('handoff
 if(stage!==path.join(process.cwd(),'.preview','source-handoff'))throw Error('Unsafe staging path');
 fs.rmSync(stage,{recursive:true,force:true});
 fs.mkdirSync(stage,{recursive:true});fs.mkdirSync(output,{recursive:true});
-for(const dir of ['src','public','supabase','tests','scripts','docs'])fs.cpSync(dir,path.join(stage,dir),{recursive:true});
-for(const entry of fs.readdirSync('.'))if(/\.md$/.test(entry)||['.env.example','.env.demo','.gitignore','package.json','package-lock.json','ARCHITECTURE.json','index.html','eslint.config.js','playwright.config.ts','vite.config.ts','vercel.json','promt5.txt'].includes(entry)||/^tsconfig.*\.json$/.test(entry))fs.copyFileSync(entry,path.join(stage,entry));
+for(const dir of ['src','public','supabase','tests','scripts','docs','shared'])fs.cpSync(dir,path.join(stage,dir),{recursive:true});
+for(const entry of fs.readdirSync('.'))if(/\.md$/.test(entry)||['.env.example','.env.demo','.gitignore','package.json','package-lock.json','ARCHITECTURE.json','index.html','eslint.config.js','playwright.config.ts','vite.config.ts','vercel.json','Руководство по использованию элементов фирменного стиля Mama Pro.pdf'].includes(entry)||/^tsconfig.*\.json$/.test(entry))fs.copyFileSync(entry,path.join(stage,entry));
 // zipfile avoids shell interpolation and includes the exact staged allowlist.
 const code="import pathlib,zipfile,sys; root=pathlib.Path(sys.argv[1]); out=pathlib.Path(sys.argv[2]); z=zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED); [z.write(p,p.relative_to(root)) for p in root.rglob('*') if p.is_file()]; z.close()";
 for(const [root,name]of [[stage,'Birge-Bol-source.zip'],[path.resolve('деплой версель'),'Birge-Bol-demo.zip']]){if(!fs.existsSync(root))throw Error('Missing package source: '+root);const result=cp.spawnSync('python',['-c',code,root,path.join(output,name)],{encoding:'utf8'});if(result.status!==0)throw Error(result.stderr||'Archive failed');}

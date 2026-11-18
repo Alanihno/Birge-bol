@@ -1,5 +1,5 @@
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2.119.0';
-const allowed=(Deno.env.get('ALLOWED_ORIGINS')||'').split(',').map(x=>x.trim()).filter(Boolean);
+const allowed=(Deno.env.get('ALLOWED_ORIGINS')||'https://birge-bol.vercel.app,https://birge-bol-alans-projects-f2e926b6.vercel.app,http://127.0.0.1:4174,http://127.0.0.1:4180,http://localhost:5173').split(',').map(x=>x.trim()).filter(Boolean);
 Deno.serve(async(req:Request)=>{
  const origin=req.headers.get('origin')||'';
  const headers={'Access-Control-Allow-Origin':allowed.includes(origin)?origin:'null','Vary':'Origin','Access-Control-Allow-Headers':'authorization, apikey, content-type, x-client-info','Content-Type':'application/json','Cache-Control':'no-store'};

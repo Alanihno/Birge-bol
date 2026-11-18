@@ -1,18 +1,13 @@
 import {DemoSpecialistBadge} from './demo-specialist-badge';
-import {formatExperience,formatReviews,formatRating} from '../lib/display-numbers';
-import { availability } from '../domain/availability';
-import { useRatings } from '../lib/ratings';
-import { SpecialistPhoto } from './specialist-photo';
-import { CompareButton } from '../lib/comparison';
-import { useCare } from '../lib/care-api';
-import { strengthsFor } from '../domain/care';
-/* localized-copy */
-import { tr, useLocale, locale } from '../lib/i18n';
-import { Link } from 'react-router-dom';
-import { ArrowUpRight, Clock, MapPin, Star, Video } from 'lucide-react';
-import type { Specialist } from '../domain/types';
-import { money } from '../domain/logic';
-import { demoMeta, distanceKm } from '../lib/journey';
-export function SpecialistCard({ specialist: s }: {
-    specialist: Specialist;
-}) { const care=useCare();const ratings=useRatings();const rating=ratings.data?.find(r=>r.specialist_id===s.id);const reviewCount=rating?.review_count??care.data?.specialists.find(item=>item.id===s.id)?.verified_count??s.verified_count;const reliability=care.data?.reliability?.find(r=>r.specialist_id===s.id);const free=care.data?availability(care.data.slots,s.id):null;const strengths=strengthsFor(care.data?.reviews||[],s.id,s.is_demo); const language=useLocale(); const meta = demoMeta(s), distance = distanceKm(s); return <article className={`specialist-card ${free?.rank===2?'specialist-unavailable':''}`}><span className={`availability-badge ${free?.rank===1?'later':free?.rank===2?'none':''}`}>{tr(!free?'Проверяем свободные окна':free.rank===0?'Есть окна на 7 дней · '+free.count:free.next?'Ближайшее: '+new Date(free.next.starts_at).toLocaleDateString(locale(),{day:'numeric',month:'long'}):'Нет свободных окон')}</span><div className="card-top"><SpecialistPhoto specialist={s}/><div className="card-person"><span className="specialty-label">{tr(s.specialty)}</span><Link to={`/specialists/${s.id}`} className="person-name">{tr(s.name)}</Link><DemoSpecialistBadge show={s.is_demo}/><div className="muted tiny"><Clock size={13}/>{formatExperience(s.experience,language)}</div></div><ArrowUpRight size={20} className="card-arrow" aria-hidden="true"/></div><details className="card-description-details"><summary>{tr("О специалисте")}</summary><p>{tr(s.description)}</p></details><div className="specialist-meta"><span><MapPin size={14}/>{tr(s.district)}{tr(distance !== null ? ` · ${distance.toFixed(1)} км` : '')}</span><span><Video size={14}/>{tr(s.online ? 'Очно и онлайн' : 'Очно')}</span></div><div className="rating-line"><Star size={15} fill="currentColor"/><strong>{formatRating(rating?.overall??s.contact_rating,language)}</strong><span>{formatReviews(reviewCount,language)}</span></div><div className="card-tags"><span>{tr(s.ages.join(', '))}{tr(language==='kk'?' жас':' лет')}</span>{tr(s.is_demo && meta.free && <span className="tag-free">{tr("Бесплатно")}</span>)}</div><p className="strength-snippet">{tr(strengths.length?strengths.slice(0,2).map(s=>`${s.label} · ${s.count}`).join(' / '):'Сильные стороны: пока мало подтверждённых данных')}</p><details className="rating-details"><summary>{tr("Как рассчитана оценка")}</summary><p className="tiny muted">{tr(rating?.similar_count?`По похожим случаям: ${formatRating(rating.similar,language)} · ${rating.similar_count} отзывов`:rating?.overall!=null?rating.review_count===0?'Предварительная оценка по платформе: своих опубликованных отзывов пока нет':'Похожих отзывов нет — показан общий рейтинг':'Для рейтинга пока нет опубликованных отзывов')}</p><small className="muted">{tr(reliability?`Надёжность проверки оплат: ${reliability.score}/100 · ${reliability.late_confirmations} просрочек`:null)}</small></details><CompareButton id={s.id}/><div className="card-footer"><div><strong>{tr(s.price === 0 ? 'Бесплатно' : money(s.price))}</strong><small>{tr(s.price === 0 ? "Консультация" : 'за приём')}</small></div><Link className="btn primary" to={`/specialists/${s.id}#booking`}>{tr(free?.rank===2?"Открыть профиль":"Записаться ")}<ArrowUpRight size={15}/></Link></div></article>; }
+import {formatExperience,formatRating} from '../lib/display-numbers';
+import {useRatings} from '../lib/ratings';
+import {SpecialistPhoto} from './specialist-photo';
+import {CompareButton} from '../lib/comparison';
+import {tr,useLocale} from '../lib/i18n';
+import {Link} from 'react-router-dom';
+import {ArrowUpRight,MapPin,Star,Video} from 'lucide-react';
+import type {Specialist} from '../domain/types';
+export function SpecialistCard({specialist:s}:{specialist:Specialist}){
+ const language=useLocale(),ratings=useRatings(),rating=ratings.data?.find(r=>r.specialist_id===s.id);
+ return <article className="specialist-card compact-specialist"><div className="card-top"><SpecialistPhoto specialist={s}/><div className="card-person"><Link to={'/specialists/'+s.id} className="person-name">{s.name}</Link><span className="specialty-label">{tr(s.specialty)}</span><DemoSpecialistBadge show={s.is_demo}/></div></div><div className="rating-line"><Star size={16} fill="currentColor"/><strong>{rating?.overall!=null?formatRating(rating.overall,language):ratings.isPending?'—':tr(ratings.isError?'Оценка недоступна':'Пока нет отзывов')}</strong>{rating&&rating.review_count>0&&<small>({rating.review_count})</small>}</div><div className="specialist-meta"><span><MapPin size={15}/>{tr(s.district)}</span><span><Video size={15}/>{tr(s.online?'Очно и онлайн':'Очно')}</span></div><p className="compact-experience">{s.ages.join(', ')} {language==='kk'?'жас':'лет'} · {formatExperience(s.experience,language)}</p><div className="compact-card-actions"><Link className="btn primary" to={'/specialists/'+s.id}>{tr('Подробнее')}<ArrowUpRight size={16}/></Link><CompareButton id={s.id}/></div></article>;
+}

@@ -26,5 +26,5 @@ describe('Prompt 5 security and functional boundaries',()=>{
   const stats=clinicAnalytics(rows,[],'2026-11-17','2026-11-17');expect(stats.received).toBe(15000);expect(stats.expected).toBe(15000);expect(stats.cancelled).toBe(1);expect(stats.occupancy).toBeNull();expect(stats.paid).toBe(1);
  });
  it('prevents lower priority mascot reactions from interrupting errors',()=>{expect(transition('offline','waving')).toBe('offline');expect(transition('loading','error')).toBe('error');expect(transition('error','idle',true)).toBe('idle');});
- it('never renders SQL, keys or internal IDs as a user error',()=>{for(const error of ['select secret from vault.decrypted_secrets','function private.secret(uuid) failed','23514 constraint check failed','f0000000-0000-4000-8000-000000000001'])expect(safeError(Error(error))).not.toContain(error);expect(safeError(Error('Invalid login credentials'))).toContain('Неверный email');});
+ it('never renders SQL, keys or internal IDs as a user error',()=>{for(const error of ['select secret from vault.decrypted_secrets','function private.secret(uuid) failed','23514 constraint check failed','f0000000-0000-4000-8000-000000000001'])expect(safeError(Error(error))).not.toContain(error);expect(safeError(Error('Invalid login credentials'))).toContain('Неверный логин');});
 });
